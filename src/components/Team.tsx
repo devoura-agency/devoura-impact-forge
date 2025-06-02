@@ -1,38 +1,37 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Linkedin, Github, Mail } from 'lucide-react';
+import { Linkedin, Instagram, Mail } from 'lucide-react';
 
 const Team = () => {
   const teamMembers = [
     {
-      name: 'Salve Surya Raj',
+      name: 'Surya Raj Salve',
       role: 'Founder & Lead Developer',
-      description: 'With over 2 years of experience in web development, Salve specializes in creating impactful websites for NGOs. He combines technical expertise with a passion for social good.',
+      description: 'With over 2 years of experience in web development, Surya specializes in creating impactful websites for NGOs. He combines technical expertise with a passion for social good.',
       funFact: 'Loves mentoring young developers to create with purpose',
       image: '/lovable-uploads/1c757405-61a4-40fb-b732-c1c154f7a2c4.png',
       linkedin: '#',
-      github: '#',
-      email: 'salve@devoura.com'
+      instagram: '#',
+      email: 'surya@devoura.com'
     },
     {
-      name: 'Amaravadi Sanjay',
+      name: 'Vishnu Margam',
       role: 'Digital Experience Specialist',
-      description: 'Sanjay designs intuitive, accessible interfaces that captivate donors and volunteers. Using AI-powered tools, he ensures websites engage visitors 24/7.',
+      description: 'Vishnu designs intuitive, accessible interfaces that captivate donors and volunteers. Using AI-powered tools, he ensures websites engage visitors 24/7.',
       funFact: 'Volunteers for local education causes in spare time',
       image: '/lovable-uploads/1c757405-61a4-40fb-b732-c1c154f7a2c4.png',
       linkedin: '#',
-      github: '#',
-      email: 'sanjay@devoura.com'
+      instagram: '#',
+      email: 'vishnu@devoura.com'
     },
     {
-      name: 'Margam Vishu',
+      name: 'Sanjay Amaravadi',
       role: 'Web Optimization Specialist',
-      description: 'Vishu boosts website performance with automation and data-driven insights. From SEO to analytics dashboards, he helps NGOs track and grow their impact.',
+      description: 'Sanjay boosts website performance with automation and data-driven insights. From SEO to analytics dashboards, he helps NGOs track and grow their impact.',
       funFact: 'Avid supporter of environmental NGOs',
       image: '/lovable-uploads/1c757405-61a4-40fb-b732-c1c154f7a2c4.png',
       linkedin: '#',
-      github: '#',
-      email: 'vishu@devoura.com'
+      instagram: '#',
+      email: 'sanjay@devoura.com'
     }
   ];
 
@@ -71,13 +70,25 @@ const Team = () => {
                     <p className="text-sm text-gray-600">{member.funFact}</p>
                   </div>
                   <div className="flex justify-center gap-4">
-                    <a href={member.linkedin} className="text-brand-green hover:text-brand-green-light">
+                    <a 
+                      href={member.linkedin} 
+                      className="text-brand-green hover:text-brand-green-light transition-colors"
+                      title="Connect on LinkedIn"
+                    >
                       <Linkedin className="w-5 h-5" />
                     </a>
-                    <a href={member.github} className="text-brand-green hover:text-brand-green-light">
-                      <Github className="w-5 h-5" />
+                    <a 
+                      href={member.instagram} 
+                      className="text-brand-green hover:text-brand-green-light transition-colors"
+                      title="Follow on Instagram"
+                    >
+                      <Instagram className="w-5 h-5" />
                     </a>
-                    <a href={`mailto:${member.email}`} className="text-brand-green hover:text-brand-green-light">
+                    <a 
+                      href={`mailto:${member.email}`} 
+                      className="text-brand-green hover:text-brand-green-light transition-colors"
+                      title="Send Email"
+                    >
                       <Mail className="w-5 h-5" />
                     </a>
                   </div>
