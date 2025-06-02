@@ -1,103 +1,118 @@
 
 import { Card, CardContent } from '@/components/ui/card';
 import { Code, Palette, TrendingUp } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 const About = () => {
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
-    <section id="about" className="py-20 bg-gradient-to-br from-brand-cream to-white">
+    <section id="about" className="py-20 bg-white">
       <div className="container mx-auto px-4">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-4xl md:text-5xl font-bold text-brand-green text-center mb-16">
-            Our Story: From One NGO to a Mission
-          </h2>
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold text-brand-green mb-6">
+              Why Choose Devoura?
+            </h2>
+            <p className="text-xl text-gray-700 max-w-3xl mx-auto">
+              We specialize exclusively in NGO websites, combining technical expertise with deep understanding of your unique challenges.
+            </p>
+          </div>
           
           <div className="grid lg:grid-cols-2 gap-12 items-center mb-20">
             <div>
+              <h3 className="text-3xl font-bold text-brand-green mb-6">Our Mission</h3>
               <p className="text-lg text-gray-700 mb-6">
-                I'm <strong className="text-brand-green">Salve Surya Raj</strong>, founder of Devoura. 
-                Two years ago, while working on diverse web projects, I met an NGO leader who shared a simple truth: 
-                without a strong online presence, their mission was reaching only a fraction of its potential.
+                Founded by <strong className="text-brand-green">Salve Surya Raj</strong>, Devoura emerged from a simple realization: 
+                NGOs need more than just websites—they need digital platforms that truly amplify their impact.
               </p>
-              <p className="text-lg text-gray-700 mb-6">
-                Donors couldn't find them. Volunteers couldn't connect. Their impact was limited by an 
-                outdated website—or none at all. That conversation lit a spark.
+              <p className="text-lg text-gray-700 mb-8">
+                We combine cutting-edge web development with AI-powered tools to create websites that don't just look professional—they drive real results for your cause.
               </p>
-              <p className="text-lg text-gray-700 mb-6">
-                Today, our small but mighty team combines web development expertise with cutting-edge AI 
-                and automation to create websites that don't just look good—they make a difference.
-              </p>
+              <Button 
+                onClick={() => scrollToSection('contact')}
+                className="bg-brand-green hover:bg-brand-green-light text-white px-6 py-3"
+              >
+                Learn Our Story
+              </Button>
             </div>
-            <div className="bg-white p-8 rounded-xl shadow-lg">
-              <h3 className="text-2xl font-bold text-brand-green mb-4">Our Mission</h3>
-              <p className="text-gray-700 text-lg">
-                To ensure every NGO, no matter its size, can share its story, engage donors, 
-                and change lives through powerful digital presence.
-              </p>
+            <div className="bg-gradient-to-br from-brand-cream to-white p-8 rounded-xl shadow-lg">
+              <div className="grid grid-cols-2 gap-6 text-center">
+                <div>
+                  <div className="text-3xl font-bold text-brand-green mb-2">2+</div>
+                  <p className="text-gray-600">Years Experience</p>
+                </div>
+                <div>
+                  <div className="text-3xl font-bold text-brand-green mb-2">50+</div>
+                  <p className="text-gray-600">Projects Delivered</p>
+                </div>
+                <div>
+                  <div className="text-3xl font-bold text-brand-green mb-2">100%</div>
+                  <p className="text-gray-600">NGO Focused</p>
+                </div>
+                <div>
+                  <div className="text-3xl font-bold text-brand-green mb-2">24/7</div>
+                  <p className="text-gray-600">Support</p>
+                </div>
+              </div>
             </div>
           </div>
 
-          <h3 className="text-3xl font-bold text-brand-green text-center mb-12">Meet Our Team</h3>
+          <h3 className="text-3xl font-bold text-brand-green text-center mb-12">Expert Team</h3>
           
           <div className="grid md:grid-cols-3 gap-8">
-            <Card className="bg-white hover:shadow-lg transition-shadow">
+            <Card className="bg-brand-cream hover:shadow-lg transition-shadow">
               <CardContent className="p-8 text-center">
                 <div className="w-16 h-16 bg-brand-green rounded-full flex items-center justify-center mx-auto mb-6">
                   <Code className="w-8 h-8 text-white" />
                 </div>
                 <h4 className="text-xl font-semibold text-brand-green mb-2">
-                  Salve Surya Raj
+                  Lead Developer
                 </h4>
                 <p className="text-sm text-brand-gold font-medium mb-4">
-                  Lead Web Developer & Creative Director
+                  Full-Stack Development & Architecture
                 </p>
-                <p className="text-gray-700 mb-4">
-                  With over two years of experience building websites for startups and organizations, 
-                  I craft functional, responsive sites that bring NGO missions to life.
-                </p>
-                <p className="text-sm text-brand-green font-medium">
-                  Fun Fact: I love mentoring young developers to create with purpose.
+                <p className="text-gray-700">
+                  Expert in modern web technologies, responsive design, and performance optimization for mission-driven organizations.
                 </p>
               </CardContent>
             </Card>
 
-            <Card className="bg-white hover:shadow-lg transition-shadow">
+            <Card className="bg-brand-cream hover:shadow-lg transition-shadow">
               <CardContent className="p-8 text-center">
                 <div className="w-16 h-16 bg-brand-green rounded-full flex items-center justify-center mx-auto mb-6">
                   <Palette className="w-8 h-8 text-white" />
                 </div>
                 <h4 className="text-xl font-semibold text-brand-green mb-2">
-                  Digital Experience Specialist
+                  UX/UI Specialist
                 </h4>
                 <p className="text-sm text-brand-gold font-medium mb-4">
-                  UI/UX Design & Chatbot Development
+                  Design & User Experience
                 </p>
-                <p className="text-gray-700 mb-4">
-                  Designs intuitive, accessible interfaces that captivate donors and volunteers. 
-                  Using AI-powered tools like chatbots, they ensure your website engages visitors 24/7.
-                </p>
-                <p className="text-sm text-brand-green font-medium">
-                  Fun Fact: Volunteers for local education causes in their spare time.
+                <p className="text-gray-700">
+                  Creates intuitive, accessible interfaces that convert visitors into supporters and volunteers.
                 </p>
               </CardContent>
             </Card>
 
-            <Card className="bg-white hover:shadow-lg transition-shadow">
+            <Card className="bg-brand-cream hover:shadow-lg transition-shadow">
               <CardContent className="p-8 text-center">
                 <div className="w-16 h-16 bg-brand-green rounded-full flex items-center justify-center mx-auto mb-6">
                   <TrendingUp className="w-8 h-8 text-white" />
                 </div>
                 <h4 className="text-xl font-semibold text-brand-green mb-2">
-                  Web Optimization Specialist
+                  Growth Strategist
                 </h4>
                 <p className="text-sm text-brand-gold font-medium mb-4">
-                  SEO, Analytics & Automation
+                  SEO & Analytics
                 </p>
-                <p className="text-gray-700 mb-4">
-                  Boosts your website's performance with automation and data-driven insights. 
-                  From SEO to analytics dashboards, they help NGOs track and grow their impact.
-                </p>
-                <p className="text-sm text-brand-green font-medium">
-                  Fun Fact: Avid supporter of environmental NGOs.
+                <p className="text-gray-700">
+                  Optimizes websites for maximum visibility and tracks performance to ensure your mission reaches the right audience.
                 </p>
               </CardContent>
             </Card>

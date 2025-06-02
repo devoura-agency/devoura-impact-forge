@@ -30,10 +30,10 @@ const Header = () => {
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
             <button 
-              onClick={() => scrollToSection('about')}
+              onClick={() => scrollToSection('why-ngos')}
               className="text-gray-700 hover:text-brand-green transition-colors"
             >
-              About
+              Why NGOs
             </button>
             <button 
               onClick={() => scrollToSection('services')}
@@ -48,10 +48,10 @@ const Header = () => {
               Portfolio
             </button>
             <button 
-              onClick={() => scrollToSection('process')}
+              onClick={() => scrollToSection('about')}
               className="text-gray-700 hover:text-brand-green transition-colors"
             >
-              Process
+              About
             </button>
             <button 
               onClick={() => scrollToSection('contact')}
@@ -81,10 +81,10 @@ const Header = () => {
           <nav className="md:hidden mt-4 py-4 border-t border-brand-cream animate-fade-in">
             <div className="flex flex-col space-y-4">
               <button 
-                onClick={() => scrollToSection('about')}
+                onClick={() => scrollToSection('why-ngos')}
                 className="text-left text-gray-700 hover:text-brand-green transition-colors"
               >
-                About
+                Why NGOs
               </button>
               <button 
                 onClick={() => scrollToSection('services')}
@@ -99,10 +99,10 @@ const Header = () => {
                 Portfolio
               </button>
               <button 
-                onClick={() => scrollToSection('process')}
+                onClick={() => scrollToSection('about')}
                 className="text-left text-gray-700 hover:text-brand-green transition-colors"
               >
-                Process
+                About
               </button>
               <button 
                 onClick={() => scrollToSection('contact')}
