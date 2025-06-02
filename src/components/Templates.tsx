@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ExternalLink, Users, Heart, GraduationCap, Leaf, Shield, Building } from 'lucide-react';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 
 interface TemplatesProps {
   showPageMode?: boolean;
@@ -10,7 +11,7 @@ interface TemplatesProps {
 
 const Templates = ({ showPageMode = false }: TemplatesProps) => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   const templates = [
     {
@@ -185,7 +186,7 @@ const Templates = ({ showPageMode = false }: TemplatesProps) => {
                         variant="default"
                         size="sm"
                         className="bg-brand-green hover:bg-brand-green-light text-white"
-                        onClick={() => setSelectedTemplate(template.id)}
+                        onClick={() => navigate('/pricing')}
                       >
                         Select This Template
                       </Button>
@@ -200,102 +201,10 @@ const Templates = ({ showPageMode = false }: TemplatesProps) => {
                 variant="outline"
                 size="lg"
                 className="border-brand-green text-brand-green hover:bg-brand-green hover:text-white"
-                onClick={() => setSelectedTemplate(template.id)}
+                onClick={() => navigate('/pricing')}
               >
                 Request Custom Website
               </Button>
-            </div>
-          </div>
-        </motion.div>
-      </motion.div>
-    );
-  };
-
-  const renderPricingPage = () => {
-    return (
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -20 }}
-        className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50"
-        onClick={() => setSelectedTemplate(null)}
-      >
-        <motion.div
-          initial={{ scale: 0.9 }}
-          animate={{ scale: 1 }}
-          className="bg-white rounded-xl max-w-6xl w-full max-h-[90vh] overflow-y-auto"
-          onClick={e => e.stopPropagation()}
-        >
-          <div className="p-6">
-            <div className="flex justify-between items-center mb-6">
-              <h3 className="text-2xl font-bold text-brand-green">Website Development Services</h3>
-              <Button
-                variant="ghost"
-                onClick={() => setSelectedTemplate(null)}
-                className="text-gray-500 hover:text-gray-700"
-              >
-                Close
-              </Button>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-              {Object.entries(pricingPlans).map(([key, plan]) => (
-                <motion.div
-                  key={key}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="bg-white rounded-lg shadow-lg p-6 border-2 border-brand-cream"
-                >
-                  <h4 className="text-xl font-bold text-brand-green mb-4">{plan.title}</h4>
-                  <ul className="space-y-2 mb-4">
-                    {plan.details.map((detail, index) => (
-                      <li key={index} className="flex items-center text-gray-600">
-                        <span className="mr-2">•</span>
-                        {detail}
-                      </li>
-                    ))}
-                  </ul>
-                  <div className="text-xl font-bold text-brand-green mb-2">{plan.price}</div>
-                  <div className="text-sm text-gray-500 mb-4">Delivery Time: {plan.deliveryTime}</div>
-                  <Button
-                    variant="default"
-                    className="w-full bg-brand-green hover:bg-brand-green-light text-white"
-                    onClick={() => scrollToSection('contact')}
-                  >
-                    Get Started
-                  </Button>
-                </motion.div>
-              ))}
-            </div>
-
-            <h3 className="text-2xl font-bold text-brand-green mb-6">Website Maintenance Plans</h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {Object.entries(maintenancePlans).map(([key, plan]) => (
-                <motion.div
-                  key={key}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="bg-white rounded-lg shadow-lg p-6 border-2 border-brand-cream"
-                >
-                  <h4 className="text-xl font-bold text-brand-green mb-4">{plan.title}</h4>
-                  <ul className="space-y-2 mb-4">
-                    {plan.details.map((detail, index) => (
-                      <li key={index} className="flex items-center text-gray-600">
-                        <span className="mr-2">•</span>
-                        {detail}
-                      </li>
-                    ))}
-                  </ul>
-                  <div className="text-xl font-bold text-brand-green mb-4">{plan.price}</div>
-                  <Button
-                    variant="outline"
-                    className="w-full border-brand-green text-brand-green hover:bg-brand-green hover:text-white"
-                    onClick={() => scrollToSection('contact')}
-                  >
-                    Choose Plan
-                  </Button>
-                </motion.div>
-              ))}
             </div>
           </div>
         </motion.div>
@@ -359,12 +268,6 @@ const Templates = ({ showPageMode = false }: TemplatesProps) => {
                     </CardHeader>
                     <CardContent className="text-center">
                       <p className="text-gray-600 mb-6">{template.description}</p>
-                      <Button 
-                        onClick={() => setSelectedCategory(template.id)}
-                        className="w-full bg-brand-green hover:bg-brand-green-light text-white"
-                      >
-                        View Details
-                      </Button>
                     </CardContent>
                   </Card>
                 </motion.div>
@@ -375,7 +278,21 @@ const Templates = ({ showPageMode = false }: TemplatesProps) => {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-center"
+            className="text-center mt-8"
+          >
+            <Button
+              size="lg"
+              className="bg-brand-green hover:bg-brand-green-light text-white px-10 py-5 text-xl font-bold rounded-xl shadow-lg"
+              onClick={() => navigate('/wizard')}
+            >
+              Start Your Project
+            </Button>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-center mt-8"
           >
             <div className="bg-brand-green p-8 rounded-xl text-white">
               <h3 className="text-2xl font-bold mb-4">Can't Find Your NGO Type?</h3>
@@ -383,7 +300,7 @@ const Templates = ({ showPageMode = false }: TemplatesProps) => {
                 We create custom templates for any cause. Let's discuss your specific needs.
               </p>
               <Button 
-                onClick={() => scrollToSection('contact')}
+                onClick={() => navigate('/wizard')}
                 variant="outline"
                 className="border-white text-white hover:bg-white hover:text-brand-green"
               >
@@ -396,7 +313,6 @@ const Templates = ({ showPageMode = false }: TemplatesProps) => {
 
       <AnimatePresence>
         {selectedCategory && renderTemplatePreview(templates.find(t => t.id === selectedCategory)!)}
-        {selectedTemplate && renderPricingPage()}
       </AnimatePresence>
     </section>
   );
