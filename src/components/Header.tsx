@@ -6,7 +6,7 @@ import { motion } from 'framer-motion';
 
 const navLinks = [
   { name: 'Why NGOs', section: 'why-ngos' },
-  { name: 'Templates', path: '/templates' },
+  // { name: 'Templates', path: '/templates' },
   { name: 'Services', section: 'services' },
   { name: 'Portfolio', section: 'portfolio' },
   { name: 'Team', section: 'team' },

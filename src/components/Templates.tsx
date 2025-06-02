@@ -302,7 +302,7 @@ const Templates = ({ showPageMode = false }: TemplatesProps) => {
               <Button 
                 onClick={() => navigate('/wizard')}
                 variant="outline"
-                className="border-white text-white hover:bg-white hover:text-brand-green"
+                className="border-white text-brand-green hover:bg-white hover:text-brand-green"
               >
                 Request Custom Template
               </Button>

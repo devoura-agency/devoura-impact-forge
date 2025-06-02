@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { GraduationCap, Heart, Leaf, Users, Shield, Building, ArrowLeft, ArrowRight, ExternalLink } from 'lucide-react';
@@ -67,6 +67,7 @@ const WebsiteWizard = () => {
   const [submitted, setSubmitted] = useState(false);
   const [designIndex, setDesignIndex] = useState(0);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const canNext =
     (step === 0 && selectedTemplate) ||
@@ -93,6 +94,16 @@ const WebsiteWizard = () => {
     }
   };
   const handleBack = () => setStep(Math.max(0, step - 1));
+
+  // Restore state if coming back from WebsiteViewer
+  useEffect(() => {
+    if (location.state && location.state.fromViewer) {
+      if (location.state.selectedTemplate) setSelectedTemplate(location.state.selectedTemplate);
+      if (location.state.designIndex !== undefined) setDesignIndex(location.state.designIndex);
+      if (location.state.step !== undefined) setStep(location.state.step);
+    }
+    // eslint-disable-next-line
+  }, [location.state]);
 
   return (
     <div>
@@ -180,7 +191,7 @@ const WebsiteWizard = () => {
                             <Button
                               variant="outline"
                               className="border-brand-green text-brand-green hover:bg-brand-green hover:text-white flex items-center gap-2"
-                              onClick={() => navigate(`/website-viewer?url=${encodeURIComponent(current.url)}&name=${encodeURIComponent(current.name)}`)}
+                              onClick={() => navigate(`/website-viewer?url=${encodeURIComponent(current.url)}&name=${encodeURIComponent(current.name)}`, { state: { fromViewer: true, step, selectedTemplate, designIndex } })}
                             >
                               <ExternalLink className="w-4 h-4" /> View Full
                             </Button>
