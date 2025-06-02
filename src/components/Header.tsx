@@ -36,6 +36,12 @@ const Header = () => {
               Why NGOs
             </button>
             <button 
+              onClick={() => scrollToSection('templates')}
+              className="text-gray-700 hover:text-brand-green transition-colors"
+            >
+              Templates
+            </button>
+            <button 
               onClick={() => scrollToSection('services')}
               className="text-gray-700 hover:text-brand-green transition-colors"
             >
@@ -48,10 +54,10 @@ const Header = () => {
               Portfolio
             </button>
             <button 
-              onClick={() => scrollToSection('about')}
+              onClick={() => scrollToSection('team')}
               className="text-gray-700 hover:text-brand-green transition-colors"
             >
-              About
+              Team
             </button>
             <button 
               onClick={() => scrollToSection('contact')}
@@ -87,6 +93,12 @@ const Header = () => {
                 Why NGOs
               </button>
               <button 
+                onClick={() => scrollToSection('templates')}
+                className="text-left text-gray-700 hover:text-brand-green transition-colors"
+              >
+                Templates
+              </button>
+              <button 
                 onClick={() => scrollToSection('services')}
                 className="text-left text-gray-700 hover:text-brand-green transition-colors"
               >
@@ -99,10 +111,10 @@ const Header = () => {
                 Portfolio
               </button>
               <button 
-                onClick={() => scrollToSection('about')}
+                onClick={() => scrollToSection('team')}
                 className="text-left text-gray-700 hover:text-brand-green transition-colors"
               >
-                About
+                Team
               </button>
               <button 
                 onClick={() => scrollToSection('contact')}
