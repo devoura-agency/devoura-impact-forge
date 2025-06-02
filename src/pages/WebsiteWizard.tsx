@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { GraduationCap, Heart, Leaf, Users, Shield, Building } from 'lucide-react';
+import { GraduationCap, Heart, Leaf, Users, Shield, Building, ArrowLeft, ArrowRight, ExternalLink } from 'lucide-react';
 import Header from '@/components/Header';
 
 const templates = [
@@ -65,6 +65,7 @@ const WebsiteWizard = () => {
   const [contact, setContact] = useState({ name: '', email: '', org: '' });
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [designIndex, setDesignIndex] = useState(0);
   const navigate = useNavigate();
 
   const canNext =
@@ -146,31 +147,74 @@ const WebsiteWizard = () => {
               {(() => {
                 const template = templates.find(t => t.id === selectedTemplate);
                 if (template && template.examples && template.examples.length > 0) {
+                  const current = template.examples[designIndex];
                   return (
-                    <div>
-                      <div className="grid md:grid-cols-2 gap-8 mb-8">
-                        {template.examples.map((ex, idx) => (
-                          <motion.div key={ex.url} className="rounded-2xl shadow-xl bg-white p-4 flex flex-col items-center">
-                            <div className="w-full aspect-video rounded-lg overflow-hidden mb-4 border border-gray-200">
-                              <iframe
-                                src={ex.url}
-                                title={ex.name}
-                                className="w-full h-60 min-h-[240px] max-h-[320px] border-0 rounded-lg"
-                                sandbox="allow-scripts allow-same-origin allow-popups"
-                                loading="lazy"
-                              />
-                            </div>
-                            <h4 className="font-semibold text-lg mb-2 text-brand-green">{ex.name}</h4>
+                    <div className="flex flex-col items-center">
+                      <div className="flex items-center gap-4 mb-6">
+                        <button
+                          onClick={() => setDesignIndex((designIndex - 1 + template.examples.length) % template.examples.length)}
+                          className="p-2 rounded-full bg-gray-200 hover:bg-gray-300"
+                          aria-label="Previous Design"
+                        >
+                          <ArrowLeft className="w-6 h-6 text-brand-green" />
+                        </button>
+                        <div className="bg-white rounded-2xl shadow-xl p-4 flex flex-col items-center w-[900px] max-w-full">
+                          <div className="w-full rounded-lg overflow-hidden mb-4 border border-gray-200" style={{height: '480px'}}>
+                            <iframe
+                              src={current.url}
+                              title={current.name}
+                              className="w-full h-full border-0 rounded-lg"
+                              sandbox="allow-scripts allow-same-origin allow-popups"
+                              loading="lazy"
+                              style={{minHeight: '480px', maxHeight: '480px'}}
+                            />
+                          </div>
+                          <h4 className="font-semibold text-xl mb-2 text-brand-green">{current.name}</h4>
+                          <div className="flex gap-4 mt-2">
                             <Button
-                              className={`bg-brand-green hover:bg-brand-green-light text-white px-6 py-2 rounded-lg font-semibold mt-2 ${selectedDesign === ex.url ? 'ring-2 ring-brand-gold' : ''}`}
-                              onClick={() => setSelectedDesign(ex.url)}
+                              className={`bg-brand-green hover:bg-brand-green-light text-white px-6 py-2 rounded-lg font-semibold ${selectedDesign === current.url ? 'ring-2 ring-brand-gold' : ''}`}
+                              onClick={() => setSelectedDesign(current.url)}
                             >
                               Use This Design
                             </Button>
-                          </motion.div>
+                            <Button
+                              variant="outline"
+                              className="border-brand-green text-brand-green hover:bg-brand-green hover:text-white flex items-center gap-2"
+                              onClick={() => navigate(`/website-viewer?url=${encodeURIComponent(current.url)}&name=${encodeURIComponent(current.name)}`)}
+                            >
+                              <ExternalLink className="w-4 h-4" /> View Full
+                            </Button>
+                          </div>
+                        </div>
+                        <button
+                          onClick={() => setDesignIndex((designIndex + 1) % template.examples.length)}
+                          className="p-2 rounded-full bg-gray-200 hover:bg-gray-300"
+                          aria-label="Next Design"
+                        >
+                          <ArrowRight className="w-6 h-6 text-brand-green" />
+                        </button>
+                      </div>
+                      {/* Small slider of thumbnails */}
+                      <div className="flex gap-4 overflow-x-auto py-4 mb-6 w-full justify-center">
+                        {template.examples.map((ex, idx) => (
+                          <div
+                            key={ex.url}
+                            className={`rounded-xl border-2 transition-all duration-200 cursor-pointer bg-white shadow-md flex flex-col items-center ${designIndex === idx ? 'border-brand-gold ring-2 ring-brand-gold' : 'border-gray-200'}`}
+                            style={{ width: 180, minWidth: 180, height: 120, overflow: 'hidden' }}
+                            onClick={() => setDesignIndex(idx)}
+                          >
+                            <iframe
+                              src={ex.url}
+                              title={ex.name}
+                              className="w-full h-full border-0 rounded-xl"
+                              sandbox="allow-scripts allow-same-origin allow-popups"
+                              loading="lazy"
+                              style={{ pointerEvents: 'none', minHeight: '120px', maxHeight: '120px', background: '#f3f4f6' }}
+                            />
+                          </div>
                         ))}
                       </div>
-                      <div className="text-center mt-6">
+                      <div className="text-center mt-2">
                         <Button
                           variant="outline"
                           className={`border-brand-green text-brand-green hover:bg-brand-green hover:text-white px-8 py-3 text-lg font-bold rounded-lg ${selectedDesign === 'custom' ? 'ring-2 ring-brand-gold' : ''}`}

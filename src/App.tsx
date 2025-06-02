@@ -9,6 +9,7 @@ import TemplatesPage from './pages/TemplatesPage';
 import PricingPage from './pages/PricingPage';
 import SelectPlanPage from './pages/SelectPlanPage';
 import WebsiteWizard from './pages/WebsiteWizard';
+import WebsiteViewer from './pages/WebsiteViewer';
 
 const queryClient = new QueryClient();
 
@@ -24,6 +25,7 @@ const App = () => (
           <Route path="/pricing" element={<PricingPage />} />
           <Route path="/select-plan" element={<SelectPlanPage />} />
           <Route path="/wizard" element={<WebsiteWizard />} />
+          <Route path="/website-viewer" element={<WebsiteViewer />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
