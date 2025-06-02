@@ -62,10 +62,11 @@ const WebsiteWizard = () => {
   const [selectedDesign, setSelectedDesign] = useState(null);
   const [selectedPackage, setSelectedPackage] = useState(null);
   const [selectedMaintenance, setSelectedMaintenance] = useState(null);
-  const [contact, setContact] = useState({ name: '', email: '', org: '' });
+  const [contact, setContact] = useState({ name: '', email: '', org: '', mobile: '' });
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [designIndex, setDesignIndex] = useState(0);
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -74,23 +75,41 @@ const WebsiteWizard = () => {
     (step === 1 && (selectedDesign || selectedDesign === 'custom')) ||
     (step === 2 && selectedPackage) ||
     (step === 3 && selectedMaintenance) ||
-    (step === 4 && contact.name && contact.email && contact.org);
+    (step === 4 && contact.name && contact.email && contact.org && contact.mobile);
 
   const handleNext = async () => {
     if (step < steps.length - 1) setStep(step + 1);
     else {
       setSubmitting(true);
-      // Send email using mailto as fallback (for demo)
-      const subject = encodeURIComponent('New Website Inquiry from Devoura Wizard');
-      const body = encodeURIComponent(
-        `Template: ${selectedTemplate}\nDesign: ${selectedDesign}\nPackage: ${selectedPackage}\nMaintenance: ${selectedMaintenance}\nName: ${contact.name}\nEmail: ${contact.email}\nOrganization: ${contact.org}`
-      );
-      window.location.href = `mailto:devoura.agency@gmail.com?subject=${subject}&body=${body}`;
-      setTimeout(() => {
+      setError(null);
+      try {
+        const response = await fetch('http://localhost:5001/api/wizard', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: contact.name,
+            email: contact.email,
+            org: contact.org,
+            mobile: contact.mobile,
+            template: selectedTemplate,
+            design: selectedDesign,
+            package: selectedPackage,
+            maintenance: selectedMaintenance,
+          }),
+        });
+        const data = await response.json();
+        if (data.success) {
+          setSubmitting(false);
+          setSubmitted(true);
+          setTimeout(() => navigate('/'), 3000);
+        } else {
+          setSubmitting(false);
+          setError('There was a problem submitting your request. Please try again.');
+        }
+      } catch (err) {
         setSubmitting(false);
-        setSubmitted(true);
-        setTimeout(() => navigate('/'), 3000);
-      }, 2000);
+        setError('There was a problem submitting your request. Please try again.');
+      }
     }
   };
   const handleBack = () => setStep(Math.max(0, step - 1));
@@ -256,48 +275,58 @@ const WebsiteWizard = () => {
           {step === 2 && (
             <motion.div initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} className="mb-12">
               <div className="grid md:grid-cols-2 gap-8">
-                {packages.map((plan, idx) => (
-                  <motion.div
-                    key={plan.id}
-                    whileHover={{ scale: 1.04, boxShadow: '0 8px 32px rgba(0,0,0,0.10)' }}
-                    className={`rounded-2xl shadow-xl bg-gradient-to-br ${plan.color} text-white p-8 flex flex-col items-center cursor-pointer border-4 ${selectedPackage === plan.id ? 'border-brand-gold' : 'border-transparent'}`}
-                    onClick={() => setSelectedPackage(plan.id)}
-                  >
-                    <h2 className="text-2xl font-bold mb-2">{plan.name}</h2>
-                    <div className="text-3xl font-extrabold mb-4">{plan.price}</div>
-                    <ul className="mb-6 space-y-2 text-base">
-                      {plan.features.map((f, i) => (
-                        <li key={i} className="flex items-center gap-2">
-                          <span className="text-lg">•</span> {f}
-                        </li>
-                      ))}
-                    </ul>
-                  </motion.div>
-                ))}
+                {packages.map((plan, idx) => {
+                  const isSelected = selectedPackage === plan.id;
+                  const isAnySelected = !!selectedPackage;
+                  const cardColor = !isAnySelected || isSelected ? plan.color + ' text-white' : 'from-gray-200 to-gray-300 text-gray-400';
+                  return (
+                    <motion.div
+                      key={plan.id}
+                      whileHover={{ scale: 1.04, boxShadow: '0 8px 32px rgba(0,0,0,0.10)' }}
+                      className={`rounded-2xl shadow-xl bg-gradient-to-br ${cardColor} p-8 flex flex-col items-center cursor-pointer border-4 ${isSelected ? 'border-brand-gold' : 'border-transparent'}`}
+                      onClick={() => setSelectedPackage(plan.id)}
+                    >
+                      <h2 className="text-2xl font-bold mb-2">{plan.name}</h2>
+                      <div className="text-3xl font-extrabold mb-4">{plan.price}</div>
+                      <ul className="mb-6 space-y-2 text-base">
+                        {plan.features.map((f, i) => (
+                          <li key={i} className="flex items-center gap-2">
+                            <span className="text-lg">•</span> {f}
+                          </li>
+                        ))}
+                      </ul>
+                    </motion.div>
+                  );
+                })}
               </div>
             </motion.div>
           )}
           {step === 3 && (
             <motion.div initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} className="mb-12">
               <div className="grid md:grid-cols-2 gap-8">
-                {maintenance.map((plan, idx) => (
-                  <motion.div
-                    key={plan.id}
-                    whileHover={{ scale: 1.04, boxShadow: '0 8px 32px rgba(0,0,0,0.10)' }}
-                    className={`rounded-2xl shadow-xl bg-gradient-to-br ${plan.color} text-brand-green-dark p-8 flex flex-col items-center cursor-pointer border-4 ${selectedMaintenance === plan.id ? 'border-brand-gold' : 'border-transparent'}`}
-                    onClick={() => setSelectedMaintenance(plan.id)}
-                  >
-                    <h3 className="text-xl font-bold mb-2">{plan.name}</h3>
-                    <div className="text-2xl font-extrabold mb-4">{plan.price}</div>
-                    <ul className="mb-6 space-y-2 text-base">
-                      {plan.features.map((f, i) => (
-                        <li key={i} className="flex items-center gap-2">
-                          <span className="text-lg">•</span> {f}
-                        </li>
-                      ))}
-                    </ul>
-                  </motion.div>
-                ))}
+                {maintenance.map((plan, idx) => {
+                  const isSelected = selectedMaintenance === plan.id;
+                  const isAnySelected = !!selectedMaintenance;
+                  const cardColor = !isAnySelected || isSelected ? plan.color + ' text-brand-green-dark' : 'from-gray-100 to-gray-200 text-gray-400';
+                  return (
+                    <motion.div
+                      key={plan.id}
+                      whileHover={{ scale: 1.04, boxShadow: '0 8px 32px rgba(0,0,0,0.10)' }}
+                      className={`rounded-2xl shadow-xl bg-gradient-to-br ${cardColor} p-8 flex flex-col items-center cursor-pointer border-4 ${isSelected ? 'border-brand-gold' : 'border-transparent'}`}
+                      onClick={() => setSelectedMaintenance(plan.id)}
+                    >
+                      <h3 className="text-xl font-bold mb-2">{plan.name}</h3>
+                      <div className="text-2xl font-extrabold mb-4">{plan.price}</div>
+                      <ul className="mb-6 space-y-2 text-base">
+                        {plan.features.map((f, i) => (
+                          <li key={i} className="flex items-center gap-2">
+                            <span className="text-lg">•</span> {f}
+                          </li>
+                        ))}
+                      </ul>
+                    </motion.div>
+                  );
+                })}
               </div>
             </motion.div>
           )}
@@ -323,6 +352,16 @@ const WebsiteWizard = () => {
                   />
                 </div>
                 <div className="mb-4">
+                  <label className="block text-gray-700 font-semibold mb-2">Mobile Number</label>
+                  <input
+                    className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-brand-green"
+                    value={contact.mobile}
+                    onChange={e => setContact({ ...contact, mobile: e.target.value })}
+                    placeholder="Your Mobile Number"
+                    type="tel"
+                  />
+                </div>
+                <div className="mb-4">
                   <label className="block text-gray-700 font-semibold mb-2">Organization</label>
                   <input
                     className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-brand-green"
@@ -340,6 +379,9 @@ const WebsiteWizard = () => {
               <p className="text-lg text-gray-700 mb-4">We have received your details and will contact you soon.</p>
               <p className="text-gray-500">Redirecting to homepage...</p>
             </motion.div>
+          )}
+          {error && (
+            <div className="text-center text-red-600 font-semibold mb-4">{error}</div>
           )}
         </div>
         {/* Navigation Buttons */}

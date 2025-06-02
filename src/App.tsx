@@ -10,6 +10,8 @@ import PricingPage from './pages/PricingPage';
 import SelectPlanPage from './pages/SelectPlanPage';
 import WebsiteWizard from './pages/WebsiteWizard';
 import WebsiteViewer from './pages/WebsiteViewer';
+import RequestCall from './pages/RequestCall';
+import ChatbotFAB from './components/ChatbotFAB';
 
 const queryClient = new QueryClient();
 
@@ -21,15 +23,17 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
-          {/* <Route path="/templates" element={<TemplatesPage />} /> */}
+          <Route path="/templates" element={<TemplatesPage />} />
           <Route path="/pricing" element={<PricingPage />} />
           <Route path="/select-plan" element={<SelectPlanPage />} />
           <Route path="/wizard" element={<WebsiteWizard />} />
           <Route path="/website-viewer" element={<WebsiteViewer />} />
+          <Route path="/request-call" element={<RequestCall />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
+      <ChatbotFAB />
     </TooltipProvider>
   </QueryClientProvider>
 );

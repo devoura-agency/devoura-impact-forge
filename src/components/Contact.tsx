@@ -3,13 +3,15 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Mail, Calendar, MessageCircle, BarChart, Rocket, Sparkles } from 'lucide-react';
+import { Mail, Calendar, MessageCircle, BarChart, Rocket, Sparkles, Linkedin, Instagram, Phone } from 'lucide-react';
 import ConsultationForm from './ConsultationForm';
 import AuditForm from './AuditForm';
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 
 const Contact = () => {
   const [activeForm, setActiveForm] = useState('contact');
+  const navigate = useNavigate();
 
   return (
     <section id="contact" className="py-20 bg-gradient-to-br from-brand-cream to-white">
@@ -50,6 +52,14 @@ const Contact = () => {
             >
               <BarChart className="w-4 h-4 mr-2" />
               Request Audit
+            </Button>
+            <Button
+              onClick={() => navigate('/request-call')}
+              variant="outline"
+              className="border-brand-green text-brand-green hover:bg-brand-green hover:text-white"
+            >
+              <Phone className="w-4 h-4 mr-2" />
+              Request a Call
             </Button>
           </div>
 
@@ -128,21 +138,39 @@ const Contact = () => {
               <Card className="bg-white hover:shadow-lg transition-shadow">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-3 text-brand-green">
-                    <MessageCircle className="w-6 h-6" />
-                    Connect on X
+                    <Linkedin className="w-6 h-6" />
+                    Connect on LinkedIn
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-700 mb-4">
-                    Follow us for web design tips and NGO success stories.
-                  </p>
+                  <p className="text-gray-700 mb-4">Connect with us for professional updates and insights.</p>
                   <a 
-                    href="https://twitter.com/DevouraAgency"
+                    href="#" // TODO: Replace with actual LinkedIn handle
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-brand-green hover:text-brand-green-light font-semibold"
                   >
-                    @DevouraAgency
+                    LinkedIn
+                  </a>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-white hover:shadow-lg transition-shadow">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-3 text-brand-green">
+                    <Instagram className="w-6 h-6" />
+                    Follow on Instagram
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-gray-700 mb-4">See our latest projects and stories on Instagram.</p>
+                  <a 
+                    href="#" // TODO: Replace with actual Instagram handle
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-brand-green hover:text-brand-green-light font-semibold"
+                  >
+                    Instagram
                   </a>
                 </CardContent>
               </Card>
