@@ -6,12 +6,24 @@ import { GraduationCap, Heart, Leaf, Users, Shield, Building } from 'lucide-reac
 import Header from '@/components/Header';
 
 const templates = [
-  { id: 'education', title: 'Education NGOs', icon: GraduationCap, color: 'bg-blue-500' },
-  { id: 'women-empowerment', title: 'Women Empowerment', icon: Heart, color: 'bg-pink-500' },
-  { id: 'wildlife', title: 'Wildlife Conservation', icon: Leaf, color: 'bg-green-500' },
-  { id: 'social-welfare', title: 'Social Welfare', icon: Users, color: 'bg-purple-500' },
-  { id: 'healthcare', title: 'Healthcare', icon: Shield, color: 'bg-red-500' },
-  { id: 'disaster-relief', title: 'Disaster Relief', icon: Building, color: 'bg-orange-500' },
+  { id: 'education', title: 'Education NGOs', icon: GraduationCap, color: 'bg-blue-500', examples: [
+    { name: 'EduCare Foundation', url: 'https://educare-foundation-ngo.vercel.app/' },
+    { name: 'Future Bright Girls', url: 'https://future-bright-girls-ngo.vercel.app/' },
+    { name: 'Education NGO', url: 'https://edu-ngo.vercel.app/' }
+  ] },
+  { id: 'women-empowerment', title: 'Women Empowerment', icon: Heart, color: 'bg-pink-500', examples: [
+    { name: 'Empowering Women NGO', url: 'https://empowering-women-ngo.vercel.app/' }
+  ] },
+  { id: 'wildlife', title: 'Wildlife Conservation', icon: Leaf, color: 'bg-green-500', examples: [
+    { name: 'Wildlife Hope', url: 'https://wildlife-hope-ngo.vercel.app/' },
+    { name: 'Wildlife Legacy', url: 'https://wildlife-legacy-ngo.vercel.app/' }
+  ] },
+  { id: 'social-welfare', title: 'Social Welfare', icon: Users, color: 'bg-purple-500', examples: [
+    { name: 'Seva Bharat', url: 'https://seva-bharat-ngo.vercel.app/' },
+    { name: 'Jeevan Safar Sangam', url: 'https://jeevan-safar-sangam-ngo.vercel.app/' }
+  ] },
+  { id: 'healthcare', title: 'Healthcare', icon: Shield, color: 'bg-red-500', examples: [] },
+  { id: 'disaster-relief', title: 'Disaster Relief', icon: Building, color: 'bg-orange-500', examples: [] },
 ];
 
 const packages = [
@@ -30,6 +42,7 @@ const maintenance = [
 
 const steps = [
   'Choose Template',
+  'Choose a Design',
   'Choose Website Package',
   'Choose Maintenance Plan',
   'Contact Details',
@@ -37,6 +50,7 @@ const steps = [
 
 const stepInstructions = [
   'Select the type of NGO template you want to start with. This helps us tailor the experience to your mission.',
+  'Preview real websites for your chosen category. Select a design or choose a custom website.',
   'Pick the website package that best fits your needs and budget.',
   'Choose a maintenance plan, or select "No Maintenance" if you only want the website built.',
   'Enter your contact details so we can reach out and start your project!'
@@ -45,6 +59,7 @@ const stepInstructions = [
 const WebsiteWizard = () => {
   const [step, setStep] = useState(0);
   const [selectedTemplate, setSelectedTemplate] = useState(null);
+  const [selectedDesign, setSelectedDesign] = useState(null);
   const [selectedPackage, setSelectedPackage] = useState(null);
   const [selectedMaintenance, setSelectedMaintenance] = useState(null);
   const [contact, setContact] = useState({ name: '', email: '', org: '' });
@@ -54,9 +69,10 @@ const WebsiteWizard = () => {
 
   const canNext =
     (step === 0 && selectedTemplate) ||
-    (step === 1 && selectedPackage) ||
-    (step === 2 && selectedMaintenance) ||
-    (step === 3 && contact.name && contact.email && contact.org);
+    (step === 1 && (selectedDesign || selectedDesign === 'custom')) ||
+    (step === 2 && selectedPackage) ||
+    (step === 3 && selectedMaintenance) ||
+    (step === 4 && contact.name && contact.email && contact.org);
 
   const handleNext = async () => {
     if (step < steps.length - 1) setStep(step + 1);
@@ -65,7 +81,7 @@ const WebsiteWizard = () => {
       // Send email using mailto as fallback (for demo)
       const subject = encodeURIComponent('New Website Inquiry from Devoura Wizard');
       const body = encodeURIComponent(
-        `Template: ${selectedTemplate}\nPackage: ${selectedPackage}\nMaintenance: ${selectedMaintenance}\nName: ${contact.name}\nEmail: ${contact.email}\nOrganization: ${contact.org}`
+        `Template: ${selectedTemplate}\nDesign: ${selectedDesign}\nPackage: ${selectedPackage}\nMaintenance: ${selectedMaintenance}\nName: ${contact.name}\nEmail: ${contact.email}\nOrganization: ${contact.org}`
       );
       window.location.href = `mailto:devoura.agency@gmail.com?subject=${subject}&body=${body}`;
       setTimeout(() => {
@@ -125,7 +141,64 @@ const WebsiteWizard = () => {
               </div>
             </motion.div>
           )}
-          {step === 1 && (
+          {step === 1 && selectedTemplate && (
+            <motion.div initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} className="mb-12">
+              {(() => {
+                const template = templates.find(t => t.id === selectedTemplate);
+                if (template && template.examples && template.examples.length > 0) {
+                  return (
+                    <div>
+                      <div className="grid md:grid-cols-2 gap-8 mb-8">
+                        {template.examples.map((ex, idx) => (
+                          <motion.div key={ex.url} className="rounded-2xl shadow-xl bg-white p-4 flex flex-col items-center">
+                            <div className="w-full aspect-video rounded-lg overflow-hidden mb-4 border border-gray-200">
+                              <iframe
+                                src={ex.url}
+                                title={ex.name}
+                                className="w-full h-60 min-h-[240px] max-h-[320px] border-0 rounded-lg"
+                                sandbox="allow-scripts allow-same-origin allow-popups"
+                                loading="lazy"
+                              />
+                            </div>
+                            <h4 className="font-semibold text-lg mb-2 text-brand-green">{ex.name}</h4>
+                            <Button
+                              className={`bg-brand-green hover:bg-brand-green-light text-white px-6 py-2 rounded-lg font-semibold mt-2 ${selectedDesign === ex.url ? 'ring-2 ring-brand-gold' : ''}`}
+                              onClick={() => setSelectedDesign(ex.url)}
+                            >
+                              Use This Design
+                            </Button>
+                          </motion.div>
+                        ))}
+                      </div>
+                      <div className="text-center mt-6">
+                        <Button
+                          variant="outline"
+                          className={`border-brand-green text-brand-green hover:bg-brand-green hover:text-white px-8 py-3 text-lg font-bold rounded-lg ${selectedDesign === 'custom' ? 'ring-2 ring-brand-gold' : ''}`}
+                          onClick={() => setSelectedDesign('custom')}
+                        >
+                          Custom Website
+                        </Button>
+                      </div>
+                    </div>
+                  );
+                } else {
+                  return (
+                    <div className="text-center">
+                      <p className="text-lg text-gray-700 mb-6">No ready-made designs for this category yet.</p>
+                      <Button
+                        variant="outline"
+                        className={`border-brand-green text-brand-green hover:bg-brand-green hover:text-white px-8 py-3 text-lg font-bold rounded-lg ${selectedDesign === 'custom' ? 'ring-2 ring-brand-gold' : ''}`}
+                        onClick={() => setSelectedDesign('custom')}
+                      >
+                        Custom Website
+                      </Button>
+                    </div>
+                  );
+                }
+              })()}
+            </motion.div>
+          )}
+          {step === 2 && (
             <motion.div initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} className="mb-12">
               <div className="grid md:grid-cols-2 gap-8">
                 {packages.map((plan, idx) => (
@@ -149,7 +222,7 @@ const WebsiteWizard = () => {
               </div>
             </motion.div>
           )}
-          {step === 2 && (
+          {step === 3 && (
             <motion.div initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} className="mb-12">
               <div className="grid md:grid-cols-2 gap-8">
                 {maintenance.map((plan, idx) => (
@@ -173,7 +246,7 @@ const WebsiteWizard = () => {
               </div>
             </motion.div>
           )}
-          {step === 3 && !submitted && (
+          {step === 4 && !submitted && (
             <motion.div initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} className="mb-12">
               <div className="bg-white rounded-2xl shadow-xl p-8 max-w-lg mx-auto">
                 <div className="mb-4">
