@@ -1,10 +1,22 @@
-
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Menu, X } from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom';
+import { motion } from 'framer-motion';
+
+const navLinks = [
+  { name: 'Why NGOs', section: 'why-ngos' },
+  { name: 'Templates', path: '/templates' },
+  { name: 'Services', section: 'services' },
+  { name: 'Portfolio', section: 'portfolio' },
+  { name: 'Team', section: 'team' },
+  { name: 'Contact', section: 'contact' },
+  { name: 'Pricing', path: '/pricing' },
+];
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const location = useLocation();
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
@@ -29,42 +41,27 @@ const Header = () => {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
-            <button 
-              onClick={() => scrollToSection('why-ngos')}
-              className="text-gray-700 hover:text-brand-green transition-colors"
-            >
-              Why NGOs
-            </button>
-            <button 
-              onClick={() => scrollToSection('templates')}
-              className="text-gray-700 hover:text-brand-green transition-colors"
-            >
-              Templates
-            </button>
-            <button 
-              onClick={() => scrollToSection('services')}
-              className="text-gray-700 hover:text-brand-green transition-colors"
-            >
-              Services
-            </button>
-            <button 
-              onClick={() => scrollToSection('portfolio')}
-              className="text-gray-700 hover:text-brand-green transition-colors"
-            >
-              Portfolio
-            </button>
-            <button 
-              onClick={() => scrollToSection('team')}
-              className="text-gray-700 hover:text-brand-green transition-colors"
-            >
-              Team
-            </button>
-            <button 
-              onClick={() => scrollToSection('contact')}
-              className="text-gray-700 hover:text-brand-green transition-colors"
-            >
-              Contact
-            </button>
+            {navLinks.map((link, idx) =>
+              link.path ? (
+                <motion.div key={link.name} whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.96 }}>
+                  <Link
+                    to={link.path}
+                    className={`text-gray-700 hover:text-brand-green transition-colors font-medium ${location.pathname === link.path ? 'text-brand-green font-bold' : ''}`}
+                  >
+                    {link.name}
+                  </Link>
+                </motion.div>
+              ) : (
+                <motion.div key={link.name} whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.96 }}>
+                  <button
+                    onClick={() => scrollToSection(link.section!)}
+                    className="text-gray-700 hover:text-brand-green transition-colors font-medium"
+                  >
+                    {link.name}
+                  </button>
+                </motion.div>
+              )
+            )}
             <Button 
               onClick={() => scrollToSection('contact')}
               className="bg-brand-green hover:bg-brand-green-light text-white"
@@ -86,42 +83,28 @@ const Header = () => {
         {isMenuOpen && (
           <nav className="md:hidden mt-4 py-4 border-t border-brand-cream animate-fade-in">
             <div className="flex flex-col space-y-4">
-              <button 
-                onClick={() => scrollToSection('why-ngos')}
-                className="text-left text-gray-700 hover:text-brand-green transition-colors"
-              >
-                Why NGOs
-              </button>
-              <button 
-                onClick={() => scrollToSection('templates')}
-                className="text-left text-gray-700 hover:text-brand-green transition-colors"
-              >
-                Templates
-              </button>
-              <button 
-                onClick={() => scrollToSection('services')}
-                className="text-left text-gray-700 hover:text-brand-green transition-colors"
-              >
-                Services
-              </button>
-              <button 
-                onClick={() => scrollToSection('portfolio')}
-                className="text-left text-gray-700 hover:text-brand-green transition-colors"
-              >
-                Portfolio
-              </button>
-              <button 
-                onClick={() => scrollToSection('team')}
-                className="text-left text-gray-700 hover:text-brand-green transition-colors"
-              >
-                Team
-              </button>
-              <button 
-                onClick={() => scrollToSection('contact')}
-                className="text-left text-gray-700 hover:text-brand-green transition-colors"
-              >
-                Contact
-              </button>
+              {navLinks.map((link, idx) =>
+                link.path ? (
+                  <motion.div key={link.name} whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.96 }}>
+                    <Link
+                      to={link.path}
+                      className={`text-left text-gray-700 hover:text-brand-green transition-colors font-medium ${location.pathname === link.path ? 'text-brand-green font-bold' : ''}`}
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      {link.name}
+                    </Link>
+                  </motion.div>
+                ) : (
+                  <motion.div key={link.name} whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.96 }}>
+                    <button
+                      onClick={() => scrollToSection(link.section!)}
+                      className="text-left text-gray-700 hover:text-brand-green transition-colors font-medium"
+                    >
+                      {link.name}
+                    </button>
+                  </motion.div>
+                )
+              )}
               <Button 
                 onClick={() => scrollToSection('contact')}
                 className="bg-brand-green hover:bg-brand-green-light text-white w-fit"
