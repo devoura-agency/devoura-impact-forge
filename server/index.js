@@ -317,57 +317,68 @@ function callRequestEmail({ number, time, language, name }, isAdmin = false) {
   `;
 }
 
-// Wizard form submission endpoint
-app.post('/api/wizard', async (req, res) => {
-  const { name, email, org, mobile, template, design, package: pkg, maintenance } = req.body;
+// Add your API routes here
+app.post('/api/contact', async (req, res) => {
   try {
-    // Email to owner (admin)
+    const { name, email, org, mobile, template, design, pkg, maintenance } = req.body;
+    
+    // Send email to admin
     await transporter.sendMail({
       from: EMAIL_USER,
-      to: 'devoura.agency@gmail.com',
-      subject: `New Website Inquiry from ${name}`,
+      to: EMAIL_USER,
+      subject: 'New Website Inquiry',
       html: websiteInquiryEmail({ name, email, org, mobile, template, design, pkg, maintenance }, true),
     });
-    // Email to user
+
+    // Send confirmation email to user
     await transporter.sendMail({
       from: EMAIL_USER,
       to: email,
-      subject: `Thank you, ${name}! We have received your website inquiry`,
-      html: websiteInquiryEmail({ name, email, org, mobile, template, design, pkg, maintenance }, false),
+      subject: 'Welcome to Devoura - Your Digital Journey Begins!',
+      html: websiteInquiryEmail({ name, email, org, mobile, template, design, pkg, maintenance }),
     });
-    res.json({ success: true });
-  } catch (err) {
-    res.status(500).json({ success: false, error: err.message });
+
+    res.status(200).json({ message: 'Emails sent successfully' });
+  } catch (error) {
+    console.error('Error sending emails:', error);
+    res.status(500).json({ error: 'Failed to send emails' });
   }
 });
 
-// Request a Call endpoint
-app.post('/api/request-call', async (req, res) => {
-  const { number, time, language, name = '', email = '' } = req.body;
+app.post('/api/call-request', async (req, res) => {
   try {
-    // Email to owner (admin)
+    const { number, time, language, name } = req.body;
+    
+    // Send email to admin
     await transporter.sendMail({
       from: EMAIL_USER,
-      to: 'devoura.agency@gmail.com',
-      subject: `New Call Request${name ? ' from ' + name : ''}`,
+      to: EMAIL_USER,
+      subject: 'New Call Request',
       html: callRequestEmail({ number, time, language, name }, true),
     });
-    // Email to user (if email provided)
-    if (email) {
-      await transporter.sendMail({
-        from: EMAIL_USER,
-        to: email,
-        subject: `Thank you${name ? ', ' + name : ''}! We have received your call request`,
-        html: callRequestEmail({ number, time, language, name }, false),
-      });
-    }
-    res.json({ success: true });
-  } catch (err) {
-    res.status(500).json({ success: false, error: err.message });
+
+    // Send confirmation email to user
+    await transporter.sendMail({
+      from: EMAIL_USER,
+      to: email,
+      subject: 'Your Consultation Call is Confirmed!',
+      html: callRequestEmail({ number, time, language, name }),
+    });
+
+    res.status(200).json({ message: 'Emails sent successfully' });
+  } catch (error) {
+    console.error('Error sending emails:', error);
+    res.status(500).json({ error: 'Failed to send emails' });
   }
 });
 
-const PORT = process.env.PORT || 5001;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+// For local development
+if (process.env.NODE_ENV !== 'production') {
+  const PORT = process.env.PORT || 3001;
+  app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+  });
+}
+
+// Export the Express API
+export default app;
