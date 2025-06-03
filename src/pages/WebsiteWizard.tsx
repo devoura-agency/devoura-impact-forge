@@ -224,27 +224,55 @@ const WebsiteWizard = () => {
                           <ArrowRight className="w-6 h-6 text-brand-green" />
                         </button>
                       </div>
-                      {/* Small slider of thumbnails */}
-                      <div className="flex gap-4 overflow-x-auto py-4 mb-6 w-full justify-center">
+                      {/* Desktop Preview Thumbnails */}
+                      <div className="flex gap-6 overflow-x-auto py-4 mb-6 w-full justify-center">
                         {template.examples.map((ex, idx) => (
                           <div
                             key={ex.url}
-                            className={`rounded-xl border-2 transition-all duration-200 cursor-pointer bg-white shadow-md flex flex-col items-center ${designIndex === idx ? 'border-brand-gold ring-2 ring-brand-gold' : 'border-gray-200'}`}
-                            style={{ width: 180, minWidth: 180, height: 120, overflow: 'hidden' }}
+                            className={`cursor-pointer transition-all duration-200 ${designIndex === idx ? 'transform scale-105' : ''}`}
                             onClick={() => setDesignIndex(idx)}
                           >
-                            <iframe
-                              src={ex.url}
-                              title={ex.name}
-                              className="w-full h-full border-0 rounded-xl"
-                              sandbox="allow-scripts allow-same-origin allow-popups"
-                              loading="lazy"
-                              style={{ pointerEvents: 'none', minHeight: '120px', maxHeight: '120px', background: '#f3f4f6' }}
-                            />
+                            <div className={`relative bg-white rounded-xl shadow-lg border-2 transition-all duration-200 ${designIndex === idx ? 'border-brand-gold ring-2 ring-brand-gold' : 'border-gray-200'}`}
+                                 style={{ width: 240, height: 160 }}>
+                              {/* Desktop mockup frame */}
+                              <div className="absolute inset-2 bg-gray-100 rounded-lg overflow-hidden">
+                                {/* Browser bar */}
+                                <div className="h-6 bg-gray-300 flex items-center px-2 gap-1">
+                                  <div className="flex gap-1">
+                                    <div className="w-2 h-2 bg-red-400 rounded-full"></div>
+                                    <div className="w-2 h-2 bg-yellow-400 rounded-full"></div>
+                                    <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                                  </div>
+                                  <div className="flex-1 mx-2 h-3 bg-white rounded text-xs"></div>
+                                </div>
+                                {/* Website preview */}
+                                <div className="h-full bg-white relative overflow-hidden">
+                                  <iframe
+                                    src={ex.url}
+                                    title={ex.name}
+                                    className="w-full h-full border-0 transform scale-50 origin-top-left"
+                                    sandbox="allow-scripts allow-same-origin allow-popups"
+                                    loading="lazy"
+                                    style={{ 
+                                      pointerEvents: 'none', 
+                                      width: '200%', 
+                                      height: '200%',
+                                      background: '#f9fafb'
+                                    }}
+                                  />
+                                </div>
+                              </div>
+                              {/* Website name */}
+                              <div className="absolute -bottom-8 left-0 right-0 text-center">
+                                <span className={`text-sm font-medium ${designIndex === idx ? 'text-brand-green' : 'text-gray-600'}`}>
+                                  {ex.name}
+                                </span>
+                              </div>
+                            </div>
                           </div>
                         ))}
                       </div>
-                      <div className="text-center mt-2">
+                      <div className="text-center mt-8">
                         <Button
                           variant="outline"
                           className={`border-brand-green text-brand-green hover:bg-brand-green hover:text-white px-8 py-3 text-lg font-bold rounded-lg ${selectedDesign === 'custom' ? 'ring-2 ring-brand-gold' : ''}`}
@@ -408,4 +436,4 @@ const WebsiteWizard = () => {
   );
 };
 
-export default WebsiteWizard; 
+export default WebsiteWizard;
