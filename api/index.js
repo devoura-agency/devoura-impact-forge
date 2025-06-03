@@ -22,7 +22,7 @@ const transporter = createTransport({
 import { websiteInquiryEmail, callRequestEmail } from '../server/email-templates.js';
 
 // Contact form endpoint
-app.post('/contact', async (req, res) => {
+app.post('/api/contact', async (req, res) => {
   try {
     const { name, email, org, mobile, template, design, pkg, maintenance } = req.body;
     
@@ -50,7 +50,7 @@ app.post('/contact', async (req, res) => {
 });
 
 // Call request endpoint
-app.post('/call-request', async (req, res) => {
+app.post('/api/call-request', async (req, res) => {
   try {
     const { number, time, language, name, email } = req.body;
     

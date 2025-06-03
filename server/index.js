@@ -357,13 +357,15 @@ app.post('/api/call-request', async (req, res) => {
       html: callRequestEmail({ number, time, language, name }, true),
     });
 
-    // Send confirmation email to user
-    await transporter.sendMail({
-      from: EMAIL_USER,
-      to: email,
-      subject: 'Your Consultation Call is Confirmed!',
-      html: callRequestEmail({ number, time, language, name }),
-    });
+    // Send confirmation email to user if email is provided
+    if (email) {
+      await transporter.sendMail({
+        from: EMAIL_USER,
+        to: email,
+        subject: 'Your Consultation Call is Confirmed!',
+        html: callRequestEmail({ number, time, language, name }),
+      });
+    }
 
     res.status(200).json({ message: 'Emails sent successfully' });
   } catch (error) {
