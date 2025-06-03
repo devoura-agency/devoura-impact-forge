@@ -16,13 +16,13 @@ const RequestCall = () => {
     setSubmitting(true);
     setError(null);
     try {
-      const response = await fetch('http://localhost:5001/api/request-call', {
+      const response = await fetch('/api/call-request', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form),
       });
       const data = await response.json();
-      if (data.success) {
+      if (data.message === 'Emails sent successfully') {
         setSubmitted(true);
       } else {
         setError('There was a problem submitting your request. Please try again.');

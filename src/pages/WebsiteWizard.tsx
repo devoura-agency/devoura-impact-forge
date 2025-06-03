@@ -83,7 +83,7 @@ const WebsiteWizard = () => {
       setSubmitting(true);
       setError(null);
       try {
-        const response = await fetch('http://localhost:5001/api/wizard', {
+        const response = await fetch('/api/contact', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -93,12 +93,12 @@ const WebsiteWizard = () => {
             mobile: contact.mobile,
             template: selectedTemplate,
             design: selectedDesign,
-            package: selectedPackage,
+            pkg: selectedPackage,
             maintenance: selectedMaintenance,
           }),
         });
         const data = await response.json();
-        if (data.success) {
+        if (data.message === 'Emails sent successfully') {
           setSubmitting(false);
           setSubmitted(true);
           setTimeout(() => navigate('/'), 3000);
