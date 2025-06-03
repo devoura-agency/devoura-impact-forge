@@ -347,7 +347,7 @@ app.post('/api/contact', async (req, res) => {
 
 app.post('/api/call-request', async (req, res) => {
   try {
-    const { number, time, language, name } = req.body;
+    const { number, time, language, name, email } = req.body;
     
     // Send email to admin
     await transporter.sendMail({

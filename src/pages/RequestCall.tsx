@@ -6,7 +6,7 @@ import Header from '@/components/Header';
 const languages = ['English', 'Hindi', 'Telugu', 'Tamil', 'Kannada', 'Other'];
 
 const RequestCall = () => {
-  const [form, setForm] = useState({ number: '', time: '', language: '' });
+  const [form, setForm] = useState({ number: '', time: '', language: '', email: '' });
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState(null);
@@ -47,6 +47,17 @@ const RequestCall = () => {
           ) : (
             <form onSubmit={handleSubmit}>
               <div className="mb-4">
+                <label className="block text-gray-700 font-semibold mb-2">Email</label>
+                <input
+                  className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-brand-green"
+                  value={form.email}
+                  onChange={e => setForm({ ...form, email: e.target.value })}
+                  placeholder="Your Email"
+                  type="email"
+                  required
+                />
+              </div>
+              <div className="mb-4">
                 <label className="block text-gray-700 font-semibold mb-2">Phone Number</label>
                 <input
                   className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-brand-green"
@@ -68,7 +79,7 @@ const RequestCall = () => {
                   required
                 />
               </div>
-              <div className="mb-6">
+              <div className="mb-4">
                 <label className="block text-gray-700 font-semibold mb-2">Preferred Language</label>
                 <select
                   className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-brand-green"
