@@ -80,4 +80,11 @@ app.post('/api/call-request', async (req, res) => {
 });
 
 // Export the Express API
-export default app; 
+export default app;
+
+// For Vercel serverless functions
+export const config = {
+  api: {
+    bodyParser: true,
+  },
+}; 
