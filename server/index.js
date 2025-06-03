@@ -25,7 +25,7 @@ function websiteInquiryEmail({ name, email, org, mobile, template, design, pkg, 
       
       <!-- Header Section -->
       <div style="background: linear-gradient(135deg, #4A6741 0%, #5d7c53 50%, #d4af37 100%); padding: 40px 30px; text-align: center; position: relative;">
-        <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: url('data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><defs><pattern id=\"pattern\" x=\"0\" y=\"0\" width=\"20\" height=\"20\" patternUnits=\"userSpaceOnUse\"><circle cx=\"10\" cy=\"10\" r=\"1\" fill=\"%23ffffff\" opacity=\"0.1\"/></pattern></defs><rect width=\"100\" height=\"100\" fill=\"url(%23pattern)\"/></svg>'); opacity: 0.3;"></div>
+        <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; opacity: 0.1;"></div>
         <div style="position: relative; z-index: 1;">
           <div style="width: 70px; height: 70px; background: rgba(255,255,255,0.2); border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(10px);">
             <div style="width: 40px; height: 40px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
@@ -59,7 +59,7 @@ function websiteInquiryEmail({ name, email, org, mobile, template, design, pkg, 
 
         <!-- Inspirational Quote -->
         <div style="background: linear-gradient(135deg, #f0f9f7 0%, #e8f5f0 100%); border-radius: 15px; padding: 25px; margin: 30px 0; border-left: 5px solid #d4af37; position: relative; overflow: hidden;">
-          <div style="position: absolute; top: -20px; right: -20px; width: 80px; height: 80px; background: url('data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><path d=\"M20,20 L80,20 L60,80 L40,80 Z\" fill=\"%23d4af37\" opacity=\"0.1\"/></svg>'); opacity: 0.3;"></div>
+          <div style="position: absolute; top: -20px; right: -20px; width: 80px; height: 80px; opacity: 0.1;"></div>
           <p style="color: #4A6741; font-size: 16px; font-style: italic; margin: 0; text-align: center; line-height: 1.6; position: relative; z-index: 1;">
             "${isAdmin 
               ? 'Every great digital transformation begins with a single inquiry. This could be the start of something extraordinary!' 
@@ -72,7 +72,7 @@ function websiteInquiryEmail({ name, email, org, mobile, template, design, pkg, 
 
         <!-- Details Card -->
         <div style="background: white; border-radius: 15px; padding: 30px; margin: 30px 0; box-shadow: 0 8px 25px rgba(74, 103, 65, 0.08); border: 2px solid #f0f9f7; position: relative; overflow: hidden;">
-          <div style="position: absolute; top: 0; right: 0; width: 100px; height: 100px; background: url('data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><defs><pattern id=\"dots\" x=\"0\" y=\"0\" width=\"10\" height=\"10\" patternUnits=\"userSpaceOnUse\"><circle cx=\"5\" cy=\"5\" r=\"1\" fill=\"%234A6741\" opacity=\"0.05\"/></pattern></defs><rect width=\"100\" height=\"100\" fill=\"url(%23dots)\"/></svg>'); opacity: 0.5;"></div>
+          <div style="position: absolute; top: 0; right: 0; width: 100px; height: 100px; opacity: 0.05;"></div>
           <h3 style="color: #4A6741; font-size: 18px; margin: 0 0 20px; font-weight: 600; border-bottom: 2px solid #f0f9f7; padding-bottom: 10px; position: relative; z-index: 1;">
             📋 ${isAdmin ? 'Partnership Details' : 'Your Digital Vision Summary'}
           </h3>
@@ -98,7 +98,7 @@ function websiteInquiryEmail({ name, email, org, mobile, template, design, pkg, 
 
         <!-- Contact Information -->
         <div style="background: linear-gradient(135deg, #4A6741 0%, #5d7c53 100%); border-radius: 15px; padding: 25px; margin: 30px 0; color: white; position: relative; overflow: hidden;">
-          <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: url('data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><defs><pattern id=\"hearts\" x=\"0\" y=\"0\" width=\"25\" height=\"25\" patternUnits=\"userSpaceOnUse\"><path d=\"M12.5,8 C10,8 8,10 8,12.5 C8,17 12.5,21 12.5,21 S17,17 17,12.5 C17,10 15,8 12.5,8 Z\" fill=\"%23ffffff\" opacity=\"0.03\"/></pattern></defs><rect width=\"100\" height=\"100\" fill=\"url(%23hearts)\"/></svg>'); opacity: 0.4;"></div>
+          <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; opacity: 0.1;"></div>
           <h3 style="color: white; font-size: 18px; margin: 0 0 20px; font-weight: 600; position: relative; z-index: 1;">
             👤 ${isAdmin ? 'NGO Leader Contact Details' : 'Your Contact Information'}
           </h3>
@@ -124,7 +124,7 @@ function websiteInquiryEmail({ name, email, org, mobile, template, design, pkg, 
 
         <!-- Action Message -->
         <div style="text-align: center; margin: 35px 0; padding: 30px; background: linear-gradient(135deg, #f0f9f7 0%, #e8f5f0 100%); border-radius: 15px; border-left: 5px solid #4A6741; position: relative; overflow: hidden;">
-          <div style="position: absolute; top: -30px; right: -30px; width: 120px; height: 120px; background: url('data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><circle cx=\"50\" cy=\"50\" r=\"20\" fill=\"none\" stroke=\"%23d4af37\" stroke-width=\"1\" opacity=\"0.1\"/><circle cx=\"50\" cy=\"50\" r=\"30\" fill=\"none\" stroke=\"%23d4af37\" stroke-width=\"1\" opacity=\"0.08\"/><circle cx=\"50\" cy=\"50\" r=\"40\" fill=\"none\" stroke=\"%23d4af37\" stroke-width=\"1\" opacity=\"0.06\"/></svg>'); opacity: 0.6;"></div>
+          <div style="position: absolute; top: -30px; right: -30px; width: 120px; height: 120px; opacity: 0.1;"></div>
           <p style="color: #4A6741; font-size: 16px; margin: 0; line-height: 1.8; font-weight: 500; position: relative; z-index: 1;">
             ${isAdmin
               ? '⚡ <strong>High-Priority Partnership Opportunity:</strong> This dedicated NGO leader is ready to transform their digital presence and amplify their social impact. Please reach out within 2 hours with our personalized approach and portfolio. Let\'s help them touch more lives and create lasting change! 🌍💚'
@@ -135,14 +135,14 @@ function websiteInquiryEmail({ name, email, org, mobile, template, design, pkg, 
 
         <!-- Impact Statement -->
         <div style="background: linear-gradient(135deg, #d4af37 0%, #f4d03f 100%); border-radius: 15px; padding: 25px; margin: 30px 0; text-align: center; position: relative; overflow: hidden;">
-          <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: url('data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><defs><pattern id=\"stars\" x=\"0\" y=\"0\" width=\"20\" height=\"20\" patternUnits=\"userSpaceOnUse\"><polygon points=\"10,2 12,8 18,8 13,12 15,18 10,14 5,18 7,12 2,8 8,8\" fill=\"%23ffffff\" opacity=\"0.1\"/></pattern></defs><rect width=\"100\" height=\"100\" fill=\"url(%23stars)\"/></svg>'); opacity: 0.3;"></div>
+          <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; opacity: 0.1;"></div>
           <h3 style="color: #4A6741; font-size: 18px; margin: 0 0 15px; font-weight: 700; position: relative; z-index: 1;">
             🌍 Together, We're Creating Ripples of Change!
           </h3>
           <p style="color: #4A6741; font-size: 14px; margin: 0; line-height: 1.6; font-weight: 500; position: relative; z-index: 1;">
             ${isAdmin 
               ? 'With each NGO we partner with, we\'re not just building websites – we\'re amplifying voices of change, connecting hearts across the globe, and empowering organizations to create lasting social impact. This inquiry represents another opportunity to make the world a better place! 🚀'
-              : 'You\'ve just joined a community of 500+ NGOs who trust us to amplify their missions. Together, we\'ve helped raise awareness for countless causes, connected donors with meaningful projects, and enabled organizations to reach over 2 million hearts worldwide. Your story will be the next to inspire and create positive change! ✨'
+              : 'You\'ve just taken the first step in joining a community of changemakers who are committed to making a difference. Together, we\'ll build a digital platform that amplifies your mission, connects you with supporters, and helps you create the positive impact your community needs. Your story will inspire and create meaningful change! ✨'
             }
           </p>
         </div>
@@ -163,7 +163,7 @@ function websiteInquiryEmail({ name, email, org, mobile, template, design, pkg, 
 
       <!-- Footer -->
       <div style="background: linear-gradient(135deg, #d4af37 0%, #f4d03f 100%); padding: 25px 30px; text-align: center; position: relative; overflow: hidden;">
-        <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: url('data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><defs><pattern id=\"waves\" x=\"0\" y=\"0\" width=\"50\" height=\"20\" patternUnits=\"userSpaceOnUse\"><path d=\"M0,10 Q12.5,0 25,10 T50,10\" stroke=\"%23ffffff\" stroke-width=\"0.5\" fill=\"none\" opacity=\"0.1\"/></pattern></defs><rect width=\"100\" height=\"100\" fill=\"url(%23waves)\"/></svg>'); opacity: 0.4;"></div>
+        <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; opacity: 0.1;"></div>
         <div style="display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 15px; position: relative; z-index: 1;">
           <div style="width: 35px; height: 35px; background: rgba(74, 103, 65, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
             <span style="color: #4A6741; font-size: 16px; font-weight: bold;">D</span>
@@ -171,7 +171,7 @@ function websiteInquiryEmail({ name, email, org, mobile, template, design, pkg, 
           <span style="color: #4A6741; font-size: 18px; font-weight: 700;">Devoura</span>
         </div>
         <p style="color: #4A6741; margin: 0; font-size: 13px; font-weight: 500; opacity: 0.8; position: relative; z-index: 1;">
-          🌐 Crafting Digital Stories That Matter | 💚 Trusted by 500+ NGOs Globally | 🌟 2M+ Lives Touched Through Our Platforms
+          🌐 Crafting Digital Stories That Matter | 💚 Dedicated to NGO Success | 🌟 Building Platforms for Positive Impact
         </p>
         <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(74, 103, 65, 0.2); position: relative; z-index: 1;">
           <p style="color: #4A6741; margin: 0; font-size: 11px; opacity: 0.7;">
@@ -189,7 +189,7 @@ function callRequestEmail({ number, time, language, name }, isAdmin = false) {
       
       <!-- Header Section -->
       <div style="background: linear-gradient(135deg, #4A6741 0%, #5d7c53 50%, #d4af37 100%); padding: 40px 30px; text-align: center; position: relative;">
-        <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: url('data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><defs><pattern id=\"pattern\" x=\"0\" y=\"0\" width=\"20\" height=\"20\" patternUnits=\"userSpaceOnUse\"><circle cx=\"10\" cy=\"10\" r=\"1\" fill=\"%23ffffff\" opacity=\"0.1\"/></pattern></defs><rect width=\"100\" height=\"100\" fill=\"url(%23pattern)\"/></svg>'); opacity: 0.3;"></div>
+        <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; opacity: 0.1;"></div>
         <div style="position: relative; z-index: 1;">
           <div style="width: 70px; height: 70px; background: rgba(255,255,255,0.2); border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(10px);">
             <div style="width: 40px; height: 40px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
@@ -223,7 +223,7 @@ function callRequestEmail({ number, time, language, name }, isAdmin = false) {
 
         <!-- Inspirational Quote -->
         <div style="background: linear-gradient(135deg, #f0f9f7 0%, #e8f5f0 100%); border-radius: 15px; padding: 25px; margin: 30px 0; border-left: 5px solid #d4af37; position: relative; overflow: hidden;">
-          <div style="position: absolute; top: -20px; right: -20px; width: 80px; height: 80px; background: url('data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><path d=\"M20,20 L80,20 L60,80 L40,80 Z\" fill=\"%23d4af37\" opacity=\"0.1\"/></svg>'); opacity: 0.3;"></div>
+          <div style="position: absolute; top: -20px; right: -20px; width: 80px; height: 80px; opacity: 0.1;"></div>
           <p style="color: #4A6741; font-size: 16px; font-style: italic; margin: 0; text-align: center; line-height: 1.6; position: relative; z-index: 1;">
             "${isAdmin 
               ? 'Every meaningful conversation has the power to spark extraordinary change. This call could be the beginning of a beautiful partnership!' 
@@ -236,7 +236,7 @@ function callRequestEmail({ number, time, language, name }, isAdmin = false) {
 
         <!-- Call Details Card -->
         <div style="background: white; border-radius: 15px; padding: 30px; margin: 30px 0; box-shadow: 0 8px 25px rgba(74, 103, 65, 0.08); border: 2px solid #f0f9f7; position: relative; overflow: hidden;">
-          <div style="position: absolute; top: 0; right: 0; width: 100px; height: 100px; background: url('data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><defs><pattern id=\"phone-pattern\" x=\"0\" y=\"0\" width=\"15\" height=\"15\" patternUnits=\"userSpaceOnUse\"><path d=\"M7.5,2 C9,2 10,3 10,4.5 C10,6 9,7 7.5,7 S5,6 5,4.5 C5,3 6,2 7.5,2 Z\" fill=\"%234A6741\" opacity=\"0.05\"/></pattern></defs><rect width=\"100\" height=\"100\" fill=\"url(%23phone-pattern)\"/></svg>'); opacity: 0.5;"></div>
+          <div style="position: absolute; top: 0; right: 0; width: 100px; height: 100px; opacity: 0.05;"></div>
           <h3 style="color: #4A6741; font-size: 18px; margin: 0 0 20px; font-weight: 600; border-bottom: 2px solid #f0f9f7; padding-bottom: 10px; position: relative; z-index: 1;">
             📞 ${isAdmin ? 'Consultation Call Information' : 'Your Scheduled Call Details'}
           </h3>
@@ -258,7 +258,7 @@ function callRequestEmail({ number, time, language, name }, isAdmin = false) {
 
         <!-- Action Message -->
         <div style="text-align: center; margin: 35px 0; padding: 30px; background: linear-gradient(135deg, #f0f9f7 0%, #e8f5f0 100%); border-radius: 15px; border-left: 5px solid #4A6741; position: relative; overflow: hidden;">
-          <div style="position: absolute; top: -30px; right: -30px; width: 120px; height: 120px; background: url('data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><circle cx=\"50\" cy=\"50\" r=\"20\" fill=\"none\" stroke=\"%23d4af37\" stroke-width=\"1\" opacity=\"0.1\"/><circle cx=\"50\" cy=\"50\" r=\"30\" fill=\"none\" stroke=\"%23d4af37\" stroke-width=\"1\" opacity=\"0.08\"/><circle cx=\"50\" cy=\"50\" r=\"40\" fill=\"none\" stroke=\"%23d4af37\" stroke-width=\"1\" opacity=\"0.06\"/></svg>'); opacity: 0.6;"></div>
+          <div style="position: absolute; top: -30px; right: -30px; width: 120px; height: 120px; opacity: 0.1;"></div>
           <p style="color: #4A6741; font-size: 16px; margin: 0; line-height: 1.8; font-weight: 500; position: relative; z-index: 1;">
             ${isAdmin
               ? '⚡ <strong>Mission-Critical Call Ahead:</strong> This changemaker is ready to discuss their vision and explore how we can amplify their NGO\'s digital impact. Please call within their preferred time window with our portfolio ready, pricing information prepared, and most importantly – your passion for social impact! Let\'s help them reach more hearts and create lasting change! 🌍💚'
@@ -269,7 +269,7 @@ function callRequestEmail({ number, time, language, name }, isAdmin = false) {
 
         <!-- Impact Statement -->
         <div style="background: linear-gradient(135deg, #d4af37 0%, #f4d03f 100%); border-radius: 15px; padding: 25px; margin: 30px 0; text-align: center; position: relative; overflow: hidden;">
-          <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: url('data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><defs><pattern id=\"hearts-pattern\" x=\"0\" y=\"0\" width=\"25\" height=\"25\" patternUnits=\"userSpaceOnUse\"><path d=\"M12.5,8 C10,8 8,10 8,12.5 C8,17 12.5,21 12.5,21 S17,17 17,12.5 C17,10 15,8 12.5,8 Z\" fill=\"%23ffffff\" opacity=\"0.08\"/></pattern></defs><rect width=\"100\" height=\"100\" fill=\"url(%23hearts-pattern)\"/></svg>'); opacity: 0.3;"></div>
+          <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; opacity: 0.1;"></div>
           <h3 style="color: #4A6741; font-size: 18px; margin: 0 0 15px; font-weight: 700; position: relative; z-index: 1;">
             💫 This Call Could Change Everything!
           </h3>
@@ -297,7 +297,7 @@ function callRequestEmail({ number, time, language, name }, isAdmin = false) {
 
       <!-- Footer -->
       <div style="background: linear-gradient(135deg, #d4af37 0%, #f4d03f 100%); padding: 25px 30px; text-align: center; position: relative; overflow: hidden;">
-        <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: url('data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><defs><pattern id=\"waves-pattern\" x=\"0\" y=\"0\" width=\"50\" height=\"20\" patternUnits=\"userSpaceOnUse\"><path d=\"M0,10 Q12.5,0 25,10 T50,10\" stroke=\"%23ffffff\" stroke-width=\"0.5\" fill=\"none\" opacity=\"0.1\"/></pattern></defs><rect width=\"100\" height=\"100\" fill=\"url(%23waves-pattern)\"/></svg>'); opacity: 0.4;"></div>
+        <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; opacity: 0.1;"></div>
         <div style="display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 15px; position: relative; z-index: 1;">
           <div style="width: 35px; height: 35px; background: rgba(74, 103, 65, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
             <span style="color: #4A6741; font-size: 16px; font-weight: bold;">D</span>
@@ -305,7 +305,7 @@ function callRequestEmail({ number, time, language, name }, isAdmin = false) {
           <span style="color: #4A6741; font-size: 18px; font-weight: 700;">Devoura</span>
         </div>
         <p style="color: #4A6741; margin: 0; font-size: 13px; font-weight: 500; opacity: 0.8; position: relative; z-index: 1;">
-          📞 Meaningful Consultations | 💼 Trusted Digital Partner | 🌍 Global NGO Network | 💚 500+ Success Stories
+          📞 Meaningful Consultations | 💼 Trusted Digital Partner | 🌍 NGO-Focused Solutions | 💚 Dedicated to Your Success
         </p>
         <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(74, 103, 65, 0.2); position: relative; z-index: 1;">
           <p style="color: #4A6741; margin: 0; font-size: 11px; opacity: 0.7;">
