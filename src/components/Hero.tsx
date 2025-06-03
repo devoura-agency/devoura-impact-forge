@@ -2,6 +2,8 @@
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Users, Globe, Award } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 
 const websites = [
   {
@@ -43,12 +45,47 @@ const websites = [
 ];
 
 const Hero = () => {
+  const navigate = useNavigate();
+  const [isManualScroll, setIsManualScroll] = useState(false);
+  const [scrollY, setScrollY] = useState(0);
+
   const scrollToContact = () => {
     const contactSection = document.getElementById('contact');
     if (contactSection) {
       contactSection.scrollIntoView({ behavior: 'smooth' });
     }
   };
+
+  const handleWebsiteClick = (website: typeof websites[0]) => {
+    navigate(`/website-viewer?url=${encodeURIComponent(website.url)}&name=${encodeURIComponent(website.title)}`);
+  };
+
+  const handleStartProject = () => {
+    navigate('/wizard');
+  };
+
+  const handleExploreWork = () => {
+    navigate('/templates');
+  };
+
+  const handleManualScroll = (e: React.WheelEvent) => {
+    setIsManualScroll(true);
+    setScrollY(prev => {
+      const newY = prev + e.deltaY * 0.5;
+      return Math.max(-200, Math.min(200, newY));
+    });
+    
+    // Reset auto-scroll after 3 seconds of no manual scrolling
+    setTimeout(() => {
+      setIsManualScroll(false);
+    }, 3000);
+  };
+
+  useEffect(() => {
+    if (!isManualScroll) {
+      setScrollY(0);
+    }
+  }, [isManualScroll]);
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-brand-cream to-white">
@@ -125,7 +162,7 @@ const Hero = () => {
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
               <Button 
                 size="lg"
-                onClick={scrollToContact}
+                onClick={handleStartProject}
                 className="bg-brand-green hover:bg-brand-green-light text-white px-8 py-4 text-lg group"
               >
                 Start Your Project
@@ -134,7 +171,7 @@ const Hero = () => {
               <Button 
                 size="lg" 
                 variant="outline"
-                onClick={() => document.getElementById('portfolio')?.scrollIntoView({ behavior: 'smooth' })}
+                onClick={handleExploreWork}
                 className="border-brand-green text-brand-green hover:bg-brand-green hover:text-white px-8 py-4 text-lg"
               >
                 View Our Work
@@ -153,19 +190,21 @@ const Hero = () => {
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent transform -skew-x-12"></div>
               
               {/* Scrolling Website Cards */}
-              <div className="relative h-full">
+              <div 
+                className="relative h-full cursor-pointer"
+                onWheel={handleManualScroll}
+                title="Scroll to control manually or let it auto-scroll"
+              >
                 <motion.div
                   className="absolute inset-0 flex flex-col gap-4"
-                  animate={{ y: [0, -100, 0] }}
-                  transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+                  animate={!isManualScroll ? { y: [0, -100, 0] } : { y: scrollY }}
+                  transition={!isManualScroll ? { duration: 15, repeat: Infinity, ease: "linear" } : { duration: 0.1 }}
                 >
                   {[...websites, ...websites].map((website, index) => (
-                    <motion.a
+                    <motion.div
                       key={index}
-                      href={website.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="group block"
+                      className="group block cursor-pointer"
+                      onClick={() => handleWebsiteClick(website)}
                       whileHover={{ scale: 1.05, rotate: 2 }}
                       transition={{ type: "spring", stiffness: 300 }}
                     >
@@ -185,7 +224,7 @@ const Hero = () => {
                           </div>
                         </div>
                       </div>
-                    </motion.a>
+                    </motion.div>
                   ))}
                 </motion.div>
               </div>
@@ -198,6 +237,11 @@ const Hero = () => {
             {/* Call to action overlay */}
             <div className="absolute top-4 right-4 bg-brand-gold text-white px-4 py-2 rounded-full text-sm font-semibold shadow-lg">
               ✨ Click to explore
+            </div>
+            
+            {/* Manual scroll hint */}
+            <div className="absolute bottom-4 left-4 bg-white/90 backdrop-blur-sm text-brand-green px-3 py-1 rounded-full text-xs font-medium shadow-lg">
+              💡 Scroll to control manually
             </div>
           </motion.div>
         </div>
