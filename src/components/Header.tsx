@@ -1,12 +1,12 @@
+
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Menu, X } from 'lucide-react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
 const navLinks = [
   { name: 'Why NGOs', section: 'why-ngos' },
-  // { name: 'Templates', path: '/templates' },
   { name: 'Services', section: 'services' },
   { name: 'Portfolio', section: 'portfolio' },
   { name: 'Team', section: 'team' },
@@ -17,27 +17,65 @@ const navLinks = [
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
 
   const scrollToSection = (sectionId: string) => {
-    const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+    // If not on home page, navigate to home first
+    if (location.pathname !== '/') {
+      navigate('/', { replace: true });
+      // Wait for navigation to complete before scrolling
+      setTimeout(() => {
+        const element = document.getElementById(sectionId);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 100);
+    } else {
+      const element = document.getElementById(sectionId);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
     }
     setIsMenuOpen(false);
+  };
+
+  const handleLogoClick = () => {
+    navigate('/');
+    setIsMenuOpen(false);
+  };
+
+  const handleGetStarted = () => {
+    if (location.pathname !== '/') {
+      navigate('/', { replace: true });
+      setTimeout(() => {
+        const element = document.getElementById('contact');
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 100);
+    } else {
+      scrollToSection('contact');
+    }
   };
 
   return (
     <header className="fixed top-0 w-full bg-white/95 backdrop-blur-sm z-50 border-b border-brand-cream">
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
+          <motion.div 
+            className="flex items-center space-x-3 cursor-pointer"
+            onClick={handleLogoClick}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
             <img 
               src="/lovable-uploads/1c757405-61a4-40fb-b732-c1c154f7a2c4.png" 
               alt="Devoura Logo" 
-              className="w-10 h-10"
+              className="w-10 h-10 drop-shadow-lg"
+              style={{ filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.15))' }}
             />
             <span className="text-2xl font-bold text-brand-green">Devoura</span>
-          </div>
+          </motion.div>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
@@ -63,7 +101,7 @@ const Header = () => {
               )
             )}
             <Button 
-              onClick={() => scrollToSection('contact')}
+              onClick={handleGetStarted}
               className="bg-brand-green hover:bg-brand-green-light text-white"
             >
               Get Started
@@ -106,7 +144,7 @@ const Header = () => {
                 )
               )}
               <Button 
-                onClick={() => scrollToSection('contact')}
+                onClick={handleGetStarted}
                 className="bg-brand-green hover:bg-brand-green-light text-white w-fit"
               >
                 Get Started

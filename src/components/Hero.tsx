@@ -1,332 +1,218 @@
+
 import { Button } from '@/components/ui/button';
-import { ArrowDown, ExternalLink } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
+import { ArrowRight, Users, Globe, Award } from 'lucide-react';
 import { motion } from 'framer-motion';
 
+const websites = [
+  {
+    title: "EduCare Foundation",
+    category: "Education NGO",
+    url: "https://educare-foundation-ngo.vercel.app/",
+    image: "/placeholder.svg"
+  },
+  {
+    title: "Empowering Women",
+    category: "Women's Rights",
+    url: "https://empowering-women-ngo.vercel.app/",
+    image: "/placeholder.svg"
+  },
+  {
+    title: "Wildlife Hope",
+    category: "Wildlife Conservation",
+    url: "https://wildlife-hope-ngo.vercel.app/",
+    image: "/placeholder.svg"
+  },
+  {
+    title: "Future Bright Girls",
+    category: "Girl Child Education",
+    url: "https://future-bright-girls-ngo.vercel.app/",
+    image: "/placeholder.svg"
+  },
+  {
+    title: "Seva Bharat",
+    category: "Community Service",
+    url: "https://seva-bharat-ngo.vercel.app/",
+    image: "/placeholder.svg"
+  },
+  {
+    title: "Jeevan Safar Sangam",
+    category: "Health & Wellness",
+    url: "https://jeevan-safar-sangam-ngo.vercel.app/",
+    image: "/placeholder.svg"
+  }
+];
+
 const Hero = () => {
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const topRowRef = useRef<HTMLDivElement>(null);
-  const bottomRowRef = useRef<HTMLDivElement>(null);
-  const [selectedSite, setSelectedSite] = useState<string | null>(null);
-
-  const websites = [
-    {
-      name: "EduCare Foundation",
-      url: "https://educare-foundation-ngo.vercel.app/",
-      image: "/api/placeholder/400/300",
-      category: "Education",
-      description: "Empowering education for all"
-    },
-    {
-      name: "Wildlife Hope",
-      url: "https://wildlife-hope-ngo.vercel.app/",
-      image: "/api/placeholder/400/300",
-      category: "Wildlife",
-      description: "Protecting wildlife habitats"
-    },
-    {
-      name: "Future Bright Girls",
-      url: "https://future-bright-girls-ngo.vercel.app/",
-      image: "/api/placeholder/400/300",
-      category: "Women Empowerment",
-      description: "Brightening futures for girls"
-    },
-    {
-      name: "Seva Bharat",
-      url: "https://seva-bharat-ngo.vercel.app/",
-      image: "/api/placeholder/400/300",
-      category: "Community Service",
-      description: "Serving communities across India"
-    },
-    {
-      name: "Wildlife Legacy",
-      url: "https://wildlife-legacy-ngo.vercel.app/",
-      image: "/api/placeholder/400/300",
-      category: "Conservation",
-      description: "Preserving nature's legacy"
-    },
-    {
-      name: "Jeevan Safar Sangam",
-      url: "https://jeevan-safar-sangam-ngo.vercel.app/",
-      image: "/api/placeholder/400/300",
-      category: "Healthcare",
-      description: "Healthcare for everyone"
-    }
-  ];
-
-  useEffect(() => {
-    const scrollContainer = scrollRef.current;
-    if (!scrollContainer) return;
-    let frame: number;
-    let scrollAmount = 0;
-    const scrollSpeed = 0.5;
-    function animateScroll() {
-      if (!scrollContainer) return;
-      scrollAmount += scrollSpeed;
-      if (scrollAmount > scrollContainer.scrollWidth - scrollContainer.clientWidth) {
-        scrollAmount = 0;
-      }
-      scrollContainer.scrollLeft = scrollAmount;
-      frame = requestAnimationFrame(animateScroll);
-    }
-    frame = requestAnimationFrame(animateScroll);
-    return () => cancelAnimationFrame(frame);
-  }, []);
-
-  // Auto-scroll effect for top and bottom rows in opposite directions
-  useEffect(() => {
-    const top = topRowRef.current;
-    const bottom = bottomRowRef.current;
-    let frame: number;
-    let topScroll = 0;
-    let bottomScroll = 0;
-    const speed = 0.7;
-    function animateScroll() {
-      if (top) {
-        topScroll += speed;
-        if (topScroll > top.scrollWidth - top.clientWidth) topScroll = 0;
-        top.scrollLeft = topScroll;
-      }
-      if (bottom) {
-        bottomScroll -= speed;
-        if (bottomScroll < 0) bottomScroll = bottom.scrollWidth - bottom.clientWidth;
-        bottom.scrollLeft = bottomScroll;
-      }
-      frame = requestAnimationFrame(animateScroll);
-    }
-    frame = requestAnimationFrame(animateScroll);
-    return () => cancelAnimationFrame(frame);
-  }, []);
-
-  const scrollToSection = (sectionId: string) => {
-    const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+  const scrollToContact = () => {
+    const contactSection = document.getElementById('contact');
+    if (contactSection) {
+      contactSection.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
   return (
-    <section className="min-h-screen flex flex-col justify-center bg-gradient-to-br from-brand-cream to-white pt-20 overflow-hidden">
-      <div className="container mx-auto px-4 py-12">
-        <div className="max-w-7xl mx-auto">
-          {/* Main Hero Content */}
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-brand-cream to-white">
+      {/* Professional Pattern Background */}
+      <div className="absolute inset-0 opacity-5">
+        <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <pattern id="grid" width="60" height="60" patternUnits="userSpaceOnUse">
+              <path d="M 60 0 L 0 0 0 60" fill="none" stroke="#4A6741" strokeWidth="1"/>
+            </pattern>
+            <pattern id="dots" width="40" height="40" patternUnits="userSpaceOnUse">
+              <circle cx="20" cy="20" r="2" fill="#4A6741"/>
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#grid)" />
+          <rect width="100%" height="100%" fill="url(#dots)" />
+        </svg>
+      </div>
+
+      {/* Floating geometric shapes */}
+      <div className="absolute inset-0 overflow-hidden">
+        <motion.div
+          className="absolute top-20 left-10 w-20 h-20 bg-brand-green/10 rounded-full"
+          animate={{ y: [0, -20, 0], rotate: [0, 180, 360] }}
+          transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+        />
+        <motion.div
+          className="absolute top-40 right-20 w-16 h-16 bg-brand-gold/10 rotate-45"
+          animate={{ y: [0, 20, 0], rotate: [45, 225, 405] }}
+          transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+        />
+        <motion.div
+          className="absolute bottom-40 left-20 w-12 h-12 bg-brand-green/10 rounded-full"
+          animate={{ y: [0, -15, 0], x: [0, 10, 0] }}
+          transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
+        />
+      </div>
+
+      <div className="container mx-auto px-4 relative z-10">
+        <div className="grid lg:grid-cols-2 gap-12 items-center">
+          {/* Left Content */}
           <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+            className="text-center lg:text-left"
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
-            className="text-center mb-16"
           >
-            <motion.h1 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="text-4xl md:text-6xl lg:text-7xl font-bold text-brand-green mb-6 leading-tight"
-            >
-              Elevate Your NGO's <motion.span 
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.5, delay: 0.4 }}
-                className="text-brand-gold inline-block"
-              >Digital Impact</motion.span>
-            </motion.h1>
+            <h1 className="text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">
+              Empowering
+              <span className="text-brand-green block">NGOs</span>
+              <span className="text-brand-gold">Digitally</span>
+            </h1>
+            <p className="text-xl text-gray-600 mb-8 leading-relaxed">
+              We create powerful, professional websites that help NGOs amplify their impact, 
+              reach more supporters, and drive meaningful change in communities worldwide.
+            </p>
             
-            <motion.p 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
-              className="text-lg md:text-xl text-gray-700 mb-8 leading-relaxed max-w-3xl mx-auto"
-            >
-              Professional websites that drive donations, engage volunteers, and amplify your mission. 
-              Built specifically for NGOs who want to make a real difference online.
-            </motion.p>
+            {/* Key Metrics */}
+            <div className="flex flex-wrap justify-center lg:justify-start gap-6 mb-8">
+              <div className="flex items-center gap-2 bg-white/70 backdrop-blur-sm rounded-full px-4 py-2 shadow-lg">
+                <Users className="w-5 h-5 text-brand-green" />
+                <span className="font-semibold text-gray-800">500+ NGOs</span>
+              </div>
+              <div className="flex items-center gap-2 bg-white/70 backdrop-blur-sm rounded-full px-4 py-2 shadow-lg">
+                <Globe className="w-5 h-5 text-brand-green" />
+                <span className="font-semibold text-gray-800">50+ Countries</span>
+              </div>
+              <div className="flex items-center gap-2 bg-white/70 backdrop-blur-sm rounded-full px-4 py-2 shadow-lg">
+                <Award className="w-5 h-5 text-brand-green" />
+                <span className="font-semibold text-gray-800">99% Success</span>
+              </div>
+            </div>
 
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.6 }}
-              className="grid md:grid-cols-3 gap-6 mb-12 max-w-3xl mx-auto"
-            >
-              {[
-                { value: "50%", label: "Increase in donations" },
-                { value: "24/7", label: "AI-powered engagement" },
-                { value: "100%", label: "Accessibility compliant" }
-              ].map((stat, index) => (
-                <motion.div
-                  key={index}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="bg-white p-4 rounded-xl shadow-sm border border-brand-cream hover:shadow-md transition-shadow"
-                >
-                  <div className="text-2xl font-bold text-brand-green mb-1">{stat.value}</div>
-                  <p className="text-gray-600 text-sm">{stat.label}</p>
-                </motion.div>
-              ))}
-            </motion.div>
-
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.8 }}
-              className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16"
-            >
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Button 
-                  onClick={() => scrollToSection('contact')}
-                  size="lg"
-                  className="bg-brand-green hover:bg-brand-green-light text-white px-8 py-4 text-lg font-semibold"
-                >
-                  Get Free Consultation
-                </Button>
-              </motion.div>
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Button 
-                  onClick={() => scrollToSection('templates')}
-                  variant="outline"
-                  size="lg"
-                  className="border-brand-green text-brand-green hover:bg-brand-green hover:text-white px-8 py-4 text-lg"
-                >
-                  View Templates
-                </Button>
-              </motion.div>
-            </motion.div>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+              <Button 
+                size="lg"
+                onClick={scrollToContact}
+                className="bg-brand-green hover:bg-brand-green-light text-white px-8 py-4 text-lg group"
+              >
+                Start Your Project
+                <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+              </Button>
+              <Button 
+                size="lg" 
+                variant="outline"
+                onClick={() => document.getElementById('portfolio')?.scrollIntoView({ behavior: 'smooth' })}
+                className="border-brand-green text-brand-green hover:bg-brand-green hover:text-white px-8 py-4 text-lg"
+              >
+                View Our Work
+              </Button>
+            </div>
           </motion.div>
 
-          {/* Website Showcase with two tilted, auto-scrolling rows */}
-          <div className="relative mb-16">
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              className="text-center mb-8"
-            >
-              <h2 className="text-2xl md:text-3xl font-bold text-brand-green mb-4">
-                See Our Work in Action
-              </h2>
-              <p className="text-gray-600 max-w-2xl mx-auto">
-                Explore our carefully crafted websites designed specifically for different types of NGOs
-              </p>
-            </motion.div>
-
-            {/* Top Row: right-tilted, scrolls left-to-right */}
-            <div
-              ref={topRowRef}
-              className="flex gap-10 overflow-x-auto no-scrollbar py-6"
-              style={{
-                transform: 'rotate(0deg)',
-                WebkitOverflowScrolling: 'touch',
-                marginLeft: '-20vw',
-                marginRight: '-20vw',
-                paddingLeft: '20vw',
-                paddingRight: '20vw',
-              }}
-            >
-              {[...websites, ...websites].map((site, idx) => (
-                <motion.div
-                  key={`top-${site.url}-${idx}`}
-                  className="flex-shrink-0 bg-white rounded-xl shadow-lg overflow-hidden"
-                  style={{
-                    width: 480,
-                    height: 300,
-                  }}
-                  whileHover={{ scale: 1.04 }}
-                >
-                  <div className="w-full" style={{ height: 270, background: '#e5e7eb' }}>
-                    <iframe
-                      src={site.url}
-                      title={site.name}
-                      width="100%"
-                      height="100%"
-                      style={{
-                        width: '480px',
-                        height: '270px',
-                        border: 0,
-                        pointerEvents: 'auto',
-                        background: '#fff',
-                        borderRadius: '12px',
-                        boxShadow: '0 2px 8px rgba(0,0,0,0.07)'
-                      }}
-                      sandbox="allow-scripts allow-same-origin allow-popups"
-                    />
-                  </div>
-                  <div className="p-4">
-                    <h3 className="font-semibold text-lg mb-1 text-brand-green">{site.name}</h3>
-                    <p className="text-sm text-gray-600 mb-2">{site.category}</p>
-                    <p className="text-gray-600 text-xs mb-3">{site.description}</p>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-
-            {/* Bottom Row: left-tilted, scrolls right-to-left */}
-            <div
-              ref={bottomRowRef}
-              className="flex gap-10 overflow-x-auto no-scrollbar py-6 mt-[-40px]"
-              style={{
-                transform: 'rotate(-0deg)',
-                marginTop: '4vw',
-                WebkitOverflowScrolling: 'touch',
-                marginLeft: '-20vw',
-                marginRight: '-20vw',
-                paddingLeft: '20vw',
-                paddingRight: '20vw',
-              }}
-            >
-              {[...websites.slice().reverse(), ...websites.slice().reverse()].map((site, idx) => (
-                <motion.div
-                  key={`bottom-${site.url}-${idx}`}
-                  className="flex-shrink-0 bg-white rounded-xl shadow-lg overflow-hidden"
-                  style={{
-                    width: 480,
-                    height: 300,
-                  }}
-                  whileHover={{ scale: 1.04 }}
-                >
-                  <div className="w-full" style={{ height: 270, background: '#e5e7eb' }}>
-                    <iframe
-                      src={site.url}
-                      title={site.name}
-                      width="100%"
-                      height="100%"
-                      style={{
-                        width: '480px',
-                        height: '270px',
-                        border: 0,
-                        pointerEvents: 'auto',
-                        background: '#fff',
-                        borderRadius: '12px',
-                        boxShadow: '0 2px 8px rgba(0,0,0,0.07)'
-                      }}
-                      sandbox="allow-scripts allow-same-origin allow-popups"
-                    />
-                  </div>
-                  <div className="p-4">
-                    <h3 className="font-semibold text-lg mb-1 text-brand-green">{site.name}</h3>
-                    <p className="text-sm text-gray-600 mb-2">{site.category}</p>
-                    <p className="text-gray-600 text-xs mb-3">{site.description}</p>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-
-          {/* Scroll Indicator */}
+          {/* Right Content - Website Showcase */}
           <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: 1 }}
-            className="text-center"
+            className="relative"
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
           >
-            <motion.button 
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              onClick={() => scrollToSection('why-ngos')}
-              className="text-brand-green hover:text-brand-green-light transition-colors"
-            >
-              <ArrowDown size={32} />
-            </motion.button>
+            <div className="relative h-[600px] overflow-hidden rounded-2xl bg-gradient-to-br from-brand-green/5 to-brand-gold/5 p-8">
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent transform -skew-x-12"></div>
+              
+              {/* Scrolling Website Cards */}
+              <div className="relative h-full">
+                <motion.div
+                  className="absolute inset-0 flex flex-col gap-4"
+                  animate={{ y: [0, -100, 0] }}
+                  transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+                >
+                  {[...websites, ...websites].map((website, index) => (
+                    <motion.a
+                      key={index}
+                      href={website.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group block"
+                      whileHover={{ scale: 1.05, rotate: 2 }}
+                      transition={{ type: "spring", stiffness: 300 }}
+                    >
+                      <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-100 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                        <div className="flex items-center gap-4">
+                          <div className="w-16 h-16 bg-gradient-to-br from-brand-green to-brand-green-light rounded-lg flex items-center justify-center">
+                            <Globe className="w-8 h-8 text-white" />
+                          </div>
+                          <div>
+                            <h3 className="font-semibold text-gray-900 group-hover:text-brand-green transition-colors">
+                              {website.title}
+                            </h3>
+                            <p className="text-sm text-gray-600">{website.category}</p>
+                            <div className="mt-2 text-xs text-brand-green font-medium opacity-0 group-hover:opacity-100 transition-opacity">
+                              Click to explore →
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </motion.a>
+                  ))}
+                </motion.div>
+              </div>
+
+              {/* Gradient overlays for smooth effect */}
+              <div className="absolute top-0 left-0 right-0 h-20 bg-gradient-to-b from-white/80 to-transparent pointer-events-none"></div>
+              <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-white/80 to-transparent pointer-events-none"></div>
+            </div>
+
+            {/* Call to action overlay */}
+            <div className="absolute top-4 right-4 bg-brand-gold text-white px-4 py-2 rounded-full text-sm font-semibold shadow-lg">
+              ✨ Click to explore
+            </div>
           </motion.div>
         </div>
       </div>
+
+      {/* Bottom scroll indicator */}
+      <motion.div 
+        className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
+        animate={{ y: [0, 10, 0] }}
+        transition={{ duration: 2, repeat: Infinity }}
+      >
+        <div className="w-6 h-10 border-2 border-brand-green rounded-full flex justify-center">
+          <div className="w-1 h-3 bg-brand-green rounded-full mt-2"></div>
+        </div>
+      </motion.div>
     </section>
   );
 };
