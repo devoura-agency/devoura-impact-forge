@@ -1,5 +1,5 @@
 import express from 'express';
-import nodemailer from 'nodemailer';
+import { createTransport } from 'nodemailer';
 import cors from 'cors';
 import dotenv from 'dotenv';
 
@@ -10,7 +10,7 @@ app.use(express.json());
 
 const { EMAIL_USER, EMAIL_PASS } = process.env;
 
-const transporter = nodemailer.createTransporter({
+const transporter = createTransport({
   service: 'gmail',
   auth: {
     user: EMAIL_USER,
