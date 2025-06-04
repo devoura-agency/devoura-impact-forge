@@ -143,7 +143,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { name, email, ngoType } = req.body;
+    const { name, email, ngoType, subject, text } = req.body;
 
     if (!name || !email || !ngoType) {
       return res.status(400).json({ error: 'Missing required fields' });
@@ -152,8 +152,8 @@ export default async function handler(req, res) {
     await transporter.sendMail({
       from: EMAIL_USER,
       to: email,
-      subject: 'Devoura NGO Collaboration',
-      text: getEmailTemplate(name, ngoType),
+      subject: subject || 'Devoura NGO Collaboration',
+      text: text || getEmailTemplate(name, ngoType),
     });
 
     res.status(200).json({ message: 'Email sent successfully' });

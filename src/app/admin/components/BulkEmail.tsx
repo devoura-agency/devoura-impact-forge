@@ -239,10 +239,10 @@ export default function BulkEmail() {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            to: r.email,
-            subject: 'Devoura NGO Collaboration',
             name: r.name,
+            email: r.email,
             ngoType: r.ngoType,
+            subject: 'Devoura NGO Collaboration',
             text: getEmailTemplate(r.name, r.ngoType),
           })
         });
