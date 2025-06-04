@@ -13,10 +13,16 @@ interface Recipient {
   location: string;
 }
 
-const defaultTemplate = (ngoName: string) => `
+const defaultTemplate = (ngoName: string, category: string, location: string, email: string) => `
 Dear ${ngoName},
 
-We are excited to connect with you regarding our latest initiatives for NGOs. Please let us know if you have any questions or would like to collaborate!
+We are excited to connect with you regarding our latest initiatives for NGOs.
+
+Category: ${category || 'N/A'}
+Location: ${location || 'N/A'}
+Email: ${email}
+
+Please let us know if you have any questions or would like to collaborate!
 
 Best regards,
 Devoura Team
@@ -92,10 +98,11 @@ export default function BulkEmail() {
           body: JSON.stringify({
             to: r.email,
             subject: 'Devoura NGO Collaboration',
-            text: defaultTemplate(r.ngoName),
             ngoName: r.ngoName,
             category: r.category,
-            location: r.location
+            location: r.location,
+            email: r.email,
+            text: defaultTemplate(r.ngoName, r.category, r.location, r.email),
           })
         });
         if (res.ok) success++;
@@ -159,6 +166,10 @@ export default function BulkEmail() {
           ))}
         </TableBody>
       </Table>
+      <div className="bg-gray-50 p-4 rounded-md border text-sm text-gray-700">
+        <strong>Email Preview:</strong>
+        <pre className="whitespace-pre-wrap mt-2">{defaultTemplate('NGO Name', 'Category', 'Location', 'email@ngo.org')}</pre>
+      </div>
       <Button onClick={handleSendEmails} disabled={sending || recipients.length === 0} className="w-full">
         {sending ? 'Sending...' : 'Continue & Send Emails'}
       </Button>
