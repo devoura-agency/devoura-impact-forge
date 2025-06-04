@@ -65,7 +65,7 @@ const Hero = () => {
   };
 
   const handleExploreWork = () => {
-    navigate('/templates');
+    navigate('/portfolio');
   };
 
   const handleManualScroll = (e: React.WheelEvent) => {
@@ -144,18 +144,21 @@ const Hero = () => {
             </p>
             
             {/* Key Metrics */}
-            <div className="flex flex-wrap justify-center lg:justify-start gap-6 mb-8">
-              <div className="flex items-center gap-2 bg-white/70 backdrop-blur-sm rounded-full px-4 py-2 shadow-lg">
-                <Users className="w-5 h-5 text-brand-green" />
-                <span className="font-semibold text-gray-800">500+ NGOs</span>
-              </div>
-              <div className="flex items-center gap-2 bg-white/70 backdrop-blur-sm rounded-full px-4 py-2 shadow-lg">
-                <Globe className="w-5 h-5 text-brand-green" />
-                <span className="font-semibold text-gray-800">50+ Countries</span>
-              </div>
-              <div className="flex items-center gap-2 bg-white/70 backdrop-blur-sm rounded-full px-4 py-2 shadow-lg">
-                <Award className="w-5 h-5 text-brand-green" />
-                <span className="font-semibold text-gray-800">99% Success</span>
+            <div className="mb-4">
+              <h3 className="text-lg font-semibold text-brand-green mb-4">Our Goal</h3>
+              <div className="flex flex-wrap justify-center lg:justify-start gap-6 mb-8">
+                <div className="flex items-center gap-2 bg-white/70 backdrop-blur-sm rounded-full px-4 py-2 shadow-lg">
+                  <Users className="w-5 h-5 text-brand-green" />
+                  <span className="font-semibold text-gray-800">500+ NGOs</span>
+                </div>
+                <div className="flex items-center gap-2 bg-white/70 backdrop-blur-sm rounded-full px-4 py-2 shadow-lg">
+                  <Globe className="w-5 h-5 text-brand-green" />
+                  <span className="font-semibold text-gray-800">50+ Countries</span>
+                </div>
+                <div className="flex items-center gap-2 bg-white/70 backdrop-blur-sm rounded-full px-4 py-2 shadow-lg">
+                  <Award className="w-5 h-5 text-brand-green" />
+                  <span className="font-semibold text-gray-800">99% Success</span>
+                </div>
               </div>
             </div>
 
@@ -256,7 +259,7 @@ const Hero = () => {
         <div className="w-6 h-10 border-2 border-brand-green rounded-full flex justify-center">
           <div className="w-1 h-3 bg-brand-green rounded-full mt-2"></div>
         </div>
-      </motion.div>
+      </div>
     </section>
   );
 };

@@ -15,6 +15,10 @@ const Portfolio = () => {
     <section id="portfolio" className="py-20 bg-gradient-to-br from-brand-cream to-white">
       <div className="container mx-auto px-4">
         <div className="max-w-6xl mx-auto">
+          {/* 
+          Commented out for now since we haven't created websites for clients yet
+          Will be enabled in the future
+          
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold text-brand-green mb-6">
               Stories of Impact
@@ -83,6 +87,7 @@ const Portfolio = () => {
               </CardContent>
             </Card>
           </div>
+          */}
 
           <div className="text-center bg-white p-12 rounded-xl shadow-lg">
             <h3 className="text-3xl font-bold text-brand-green mb-6">Your NGO's Story</h3>

@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -11,6 +12,10 @@ import SelectPlanPage from './pages/SelectPlanPage';
 import WebsiteWizard from './pages/WebsiteWizard';
 import WebsiteViewer from './pages/WebsiteViewer';
 import RequestCall from './pages/RequestCall';
+import PortfolioPage from './pages/PortfolioPage';
+import StoryPage from './pages/StoryPage';
+import BlogPage from './pages/BlogPage';
+import AdminPanel from './pages/AdminPanel';
 import ChatbotFAB from './components/ChatbotFAB';
 
 const queryClient = new QueryClient();
@@ -29,6 +34,10 @@ const App = () => (
           <Route path="/wizard" element={<WebsiteWizard />} />
           <Route path="/website-viewer" element={<WebsiteViewer />} />
           <Route path="/request-call" element={<RequestCall />} />
+          <Route path="/portfolio" element={<PortfolioPage />} />
+          <Route path="/story" element={<StoryPage />} />
+          <Route path="/why-ngos" element={<BlogPage />} />
+          <Route path="/admin" element={<AdminPanel />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

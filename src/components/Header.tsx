@@ -6,9 +6,9 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
 const navLinks = [
-  { name: 'Why NGOs', section: 'why-ngos' },
+  { name: 'Why NGOs', path: '/why-ngos' },
   { name: 'Services', section: 'services' },
-  { name: 'Portfolio', section: 'portfolio' },
+  { name: 'Portfolio', path: '/portfolio' },
   { name: 'Team', section: 'team' },
   { name: 'Contact', section: 'contact' },
   { name: 'Pricing', path: '/pricing' },
@@ -45,17 +45,7 @@ const Header = () => {
   };
 
   const handleGetStarted = () => {
-    if (location.pathname !== '/') {
-      navigate('/', { replace: true });
-      setTimeout(() => {
-        const element = document.getElementById('contact');
-        if (element) {
-          element.scrollIntoView({ behavior: 'smooth' });
-        }
-      }, 100);
-    } else {
-      scrollToSection('contact');
-    }
+    navigate('/wizard');
   };
 
   return (
