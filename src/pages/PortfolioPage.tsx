@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Globe, ExternalLink } from 'lucide-react';
+import { Globe, ExternalLink, Home } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import Header from '@/components/Header';
@@ -99,6 +99,18 @@ const PortfolioPage = () => {
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
             
+            {/* Go To Home Button */}
+            <div className="mb-6">
+              <Button
+                onClick={() => navigate('/')}
+                variant="outline"
+                className="border-brand-green text-brand-green hover:bg-brand-green hover:text-white"
+              >
+                <Home className="w-4 h-4 mr-2" />
+                Go To Home
+              </Button>
+            </div>
+
             {/* Header Section */}
             <div className="text-center mb-12">
               <motion.h1 
@@ -169,8 +181,21 @@ const PortfolioPage = () => {
                 >
                   <Card className="bg-white hover:shadow-xl transition-all duration-300 hover:-translate-y-2 overflow-hidden">
                     <div className="relative">
-                      <div className="h-48 bg-gradient-to-br from-brand-green/10 to-brand-gold/10 flex items-center justify-center">
-                        <Globe className="w-16 h-16 text-brand-green" />
+                      {/* Live iframe preview */}
+                      <div className="h-48 relative overflow-hidden bg-gray-100">
+                        <iframe
+                          src={website.url}
+                          title={website.title}
+                          className="w-full h-full border-0 transform scale-50 origin-top-left pointer-events-none"
+                          style={{ 
+                            width: '200%', 
+                            height: '200%',
+                            pointerEvents: 'none'
+                          }}
+                          loading="lazy"
+                        />
+                        {/* Overlay for click protection */}
+                        <div className="absolute inset-0 bg-transparent"></div>
                       </div>
                       <Badge className={`absolute top-4 right-4 ${getTagColor(website.tag)}`}>
                         {website.tag}

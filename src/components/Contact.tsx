@@ -1,11 +1,9 @@
+
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Mail, Calendar, MessageCircle, BarChart, Rocket, Sparkles, Linkedin, Instagram, Phone } from 'lucide-react';
-import ConsultationForm from './ConsultationForm';
-import AuditForm from './AuditForm';
+import { Mail, Calendar, Phone, Rocket, Sparkles, Linkedin, Instagram } from 'lucide-react';
+import GeneralContactForm from './GeneralContactForm';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 
@@ -38,22 +36,6 @@ const Contact = () => {
               General Contact
             </Button>
             <Button
-              onClick={() => setActiveForm('consultation')}
-              variant={activeForm === 'consultation' ? 'default' : 'outline'}
-              className={activeForm === 'consultation' ? 'bg-brand-green text-white' : 'border-brand-green text-brand-green hover:bg-brand-green hover:text-white'}
-            >
-              <Calendar className="w-4 h-4 mr-2" />
-              Book Consultation
-            </Button>
-            <Button
-              onClick={() => setActiveForm('audit')}
-              variant={activeForm === 'audit' ? 'default' : 'outline'}
-              className={activeForm === 'audit' ? 'bg-brand-green text-white' : 'border-brand-green text-brand-green hover:bg-brand-green hover:text-white'}
-            >
-              <BarChart className="w-4 h-4 mr-2" />
-              Request Audit
-            </Button>
-            <Button
               onClick={() => navigate('/request-call')}
               variant="outline"
               className="border-brand-green text-brand-green hover:bg-brand-green hover:text-white"
@@ -64,53 +46,9 @@ const Contact = () => {
           </div>
 
           <div className="grid lg:grid-cols-2 gap-12 mb-16">
-            {/* Dynamic Form */}
+            {/* Contact Form */}
             <div>
-              {activeForm === 'contact' && (
-                <Card className="bg-white shadow-lg">
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-3 text-brand-green">
-                      <Mail className="w-6 h-6" />
-                      Get in Touch
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <form className="space-y-6">
-                      <div className="grid md:grid-cols-2 gap-4">
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">First Name</label>
-                          <Input placeholder="Your first name" />
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">Last Name</label>
-                          <Input placeholder="Your last name" />
-                        </div>
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
-                        <Input type="email" placeholder="your@email.com" />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Organization</label>
-                        <Input placeholder="Your NGO name" />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Message</label>
-                        <Textarea 
-                          placeholder="Tell us about your mission and how we can help..." 
-                          rows={4}
-                        />
-                      </div>
-                      <Button className="w-full bg-brand-green hover:bg-brand-green-light text-white py-3">
-                        Send Message
-                      </Button>
-                    </form>
-                  </CardContent>
-                </Card>
-              )}
-
-              {activeForm === 'consultation' && <ConsultationForm />}
-              {activeForm === 'audit' && <AuditForm />}
+              <GeneralContactForm />
             </div>
 
             {/* Contact Information */}
@@ -126,12 +64,12 @@ const Contact = () => {
                   <p className="text-gray-700 mb-4">
                     Prefer email? Drop us a line and we'll get back to you within 24 hours.
                   </p>
-                  <a 
-                    href="mailto:hello@devoura.com"
-                    className="text-brand-green hover:text-brand-green-light font-semibold"
+                  <Button
+                    onClick={() => window.location.href = 'mailto:devoura.agency@gmail.com'}
+                    className="bg-brand-green hover:bg-brand-green-light text-white"
                   >
-                    hello@devoura.com
-                  </a>
+                    Send Email
+                  </Button>
                 </CardContent>
               </Card>
 
@@ -213,14 +151,24 @@ const Contact = () => {
                 >
                   Join us to elevate your online presence and amplify your impact. <Sparkles className="inline w-6 h-6 text-yellow-200 ml-1 animate-pulse" />
                 </motion.p>
-                <motion.button
-                  whileHover={{ scale: 1.08 }}
-                  whileTap={{ scale: 0.97 }}
-                  className="bg-white text-brand-green font-bold px-8 py-4 rounded-lg shadow-lg hover:bg-brand-green hover:text-white transition text-lg"
-                  onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
-                >
-                  Book Free Consultation
-                </motion.button>
+                <div className="flex gap-4">
+                  <motion.button
+                    whileHover={{ scale: 1.08 }}
+                    whileTap={{ scale: 0.97 }}
+                    className="bg-white text-brand-green font-bold px-8 py-4 rounded-lg shadow-lg hover:bg-brand-green hover:text-white transition text-lg"
+                    onClick={() => navigate('/request-call')}
+                  >
+                    Request a Call
+                  </motion.button>
+                  <motion.button
+                    whileHover={{ scale: 1.08 }}
+                    whileTap={{ scale: 0.97 }}
+                    className="bg-transparent border-2 border-white text-white font-bold px-8 py-4 rounded-lg shadow-lg hover:bg-white hover:text-brand-green transition text-lg"
+                    onClick={() => setActiveForm('contact')}
+                  >
+                    General Contact
+                  </motion.button>
+                </div>
               </div>
             </motion.div>
           </div>

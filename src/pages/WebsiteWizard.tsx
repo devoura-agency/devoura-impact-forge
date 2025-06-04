@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { GraduationCap, Heart, Leaf, Users, Shield, Building, ArrowLeft, ArrowRight, ExternalLink } from 'lucide-react';
+import { GraduationCap, Heart, Leaf, Users, Shield, Building, ArrowLeft, ArrowRight, ExternalLink, Palette } from 'lucide-react';
 import Header from '@/components/Header';
 
 const templates = [
@@ -77,6 +77,14 @@ const WebsiteWizard = () => {
     (step === 3 && selectedMaintenance) ||
     (step === 4 && contact.name && contact.email && contact.org && contact.mobile);
 
+  const handleBack = () => {
+    if (step === 0) {
+      navigate('/');
+    } else {
+      setStep(Math.max(0, step - 1));
+    }
+  };
+
   const handleNext = async () => {
     if (step < steps.length - 1) setStep(step + 1);
     else {
@@ -112,7 +120,6 @@ const WebsiteWizard = () => {
       }
     }
   };
-  const handleBack = () => setStep(Math.max(0, step - 1));
 
   // Restore state if coming back from WebsiteViewer
   useEffect(() => {
@@ -128,6 +135,27 @@ const WebsiteWizard = () => {
     <div>
       <Header />
       <main className="min-h-screen bg-gradient-to-br from-brand-cream to-white flex flex-col items-center justify-start pt-32 pb-16">
+        {/* Go To Home Button */}
+        <div className="w-full max-w-3xl mx-auto mb-4">
+          <Button
+            onClick={() => navigate('/')}
+            variant="outline"
+            className="border-brand-green text-brand-green hover:bg-brand-green hover:text-white"
+          >
+            Go To Home
+          </Button>
+        </div>
+
+        {/* Form Description */}
+        <div className="w-full max-w-3xl mx-auto mb-6 text-center">
+          <div className="bg-brand-green/10 border border-brand-green/20 rounded-lg p-4">
+            <p className="text-brand-green font-medium">
+              📝 This form helps us understand your NGO's needs so we can create the perfect website for you. 
+              Fill out the steps below and we'll contact you to discuss your project!
+            </p>
+          </div>
+        </div>
+
         {/* Progress Bar */}
         <div className="w-full max-w-3xl mx-auto mb-10">
           <div className="flex items-center justify-between mb-2">
@@ -148,6 +176,7 @@ const WebsiteWizard = () => {
             />
           </div>
         </div>
+
         {/* Step Content */}
         <div className="w-full max-w-3xl mx-auto">
           <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center text-lg text-brand-green font-medium mb-8">
@@ -169,6 +198,21 @@ const WebsiteWizard = () => {
                     <h3 className="text-xl font-bold text-brand-green mb-2">{t.title}</h3>
                   </motion.div>
                 ))}
+                
+                {/* Request Custom Template Card */}
+                <motion.div
+                  whileHover={{ scale: 1.04, boxShadow: '0 8px 32px rgba(0,0,0,0.10)' }}
+                  className={`rounded-2xl shadow-xl bg-white p-8 flex flex-col items-center cursor-pointer border-4 ${selectedTemplate === 'custom' ? 'border-brand-gold' : 'border-transparent'}`}
+                  onClick={() => setSelectedTemplate('custom')}
+                >
+                  <div className="w-16 h-16 bg-gradient-to-br from-brand-green to-brand-gold rounded-full flex items-center justify-center mb-4">
+                    <Palette className="w-8 h-8 text-white" />
+                  </div>
+                  <h3 className="text-xl font-bold text-brand-green mb-2">Request Custom Template</h3>
+                  <p className="text-gray-600 text-center text-sm">
+                    Need something unique? We'll create a custom design just for your NGO.
+                  </p>
+                </motion.div>
               </div>
             </motion.div>
           )}
@@ -412,15 +456,16 @@ const WebsiteWizard = () => {
             <div className="text-center text-red-600 font-semibold mb-4">{error}</div>
           )}
         </div>
+
         {/* Navigation Buttons */}
         {!submitted && (
           <div className="flex justify-between w-full max-w-3xl mx-auto mt-8">
             <Button
               onClick={handleBack}
-              disabled={step === 0 || submitting}
+              disabled={submitting}
               className="bg-gray-200 text-gray-700 px-8 py-3 rounded-lg font-semibold disabled:opacity-50"
             >
-              Back
+              {step === 0 ? 'Go to Home' : 'Back'}
             </Button>
             <Button
               onClick={handleNext}

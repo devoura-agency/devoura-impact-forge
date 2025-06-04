@@ -50,8 +50,8 @@ const Footer = () => {
               <h4 className="text-lg font-semibold mb-4">Contact</h4>
               <ul className="space-y-2 text-brand-cream">
                 <li>
-                  <a href="mailto:hello@devoura.com" className="hover:text-white transition-colors">
-                    hello@devoura.com
+                  <a href="mailto:devoura.agency@gmail.com" className="hover:text-white transition-colors">
+                    devoura.agency@gmail.com
                   </a>
                 </li>
                 <li>
@@ -70,7 +70,7 @@ const Footer = () => {
 
           <div className="border-t border-brand-green-light pt-8 text-center">
             <p className="text-brand-cream">
-              © 2024 Devoura. Built with passion for NGOs worldwide.
+              © 2025 Devoura. Built with passion for NGOs worldwide.
             </p>
           </div>
         </div>

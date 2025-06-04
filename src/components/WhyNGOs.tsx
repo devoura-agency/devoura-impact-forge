@@ -1,8 +1,11 @@
 
 import { Heart, Users, Globe } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useNavigate } from 'react-router-dom';
 
 const WhyNGOs = () => {
+  const navigate = useNavigate();
+
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
     if (element) {
@@ -63,13 +66,13 @@ const WhyNGOs = () => {
           <div className="text-center">
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button 
-                onClick={() => scrollToSection('portfolio')}
+                onClick={() => navigate('/portfolio')}
                 className="bg-brand-green hover:bg-brand-green-light text-white px-8 py-3"
               >
                 See Our Work Portfolio
               </Button>
               <Button 
-                onClick={() => scrollToSection('contact')}
+                onClick={() => navigate('/wizard')}
                 variant="outline"
                 className="border-brand-green text-brand-green hover:bg-brand-green hover:text-white px-8 py-3"
               >

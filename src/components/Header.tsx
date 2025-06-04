@@ -6,6 +6,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
 const navLinks = [
+  { name: 'Home', path: '/' },
   { name: 'Why NGOs', path: '/why-ngos' },
   { name: 'Services', section: 'services' },
   { name: 'Portfolio', path: '/portfolio' },
