@@ -1,7 +1,7 @@
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { ArrowRight, CheckCircle, TrendingUp, Users, Heart, Globe, Phone, Mail, ExternalLink } from 'lucide-react';
+import { ArrowRight, CheckCircle, TrendingUp, Users, Heart, Globe, Phone, Mail, ExternalLink, Code, Palette, Shield, Zap } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 
@@ -35,7 +35,7 @@ const PitchDeck = () => {
         </Button>
       </div>
 
-      {/* Slide 1: Welcome */}
+      {/* Slide 1: Welcome with Logo */}
       <motion.section 
         className="min-h-screen flex items-center justify-center px-4 pt-20"
         initial="initial"
@@ -44,8 +44,13 @@ const PitchDeck = () => {
       >
         <div className="max-w-6xl mx-auto text-center">
           <motion.div variants={fadeInUp} className="mb-8">
-            <div className="w-24 h-24 bg-brand-green rounded-full flex items-center justify-center mx-auto mb-6">
-              <span className="text-3xl font-bold text-white">D</span>
+            {/* Devoura Logo */}
+            <div className="flex items-center justify-center mb-8">
+              <img 
+                src="/lovable-uploads/1c757405-61a4-40fb-b732-c1c154f7a2c4.png" 
+                alt="Devoura Logo" 
+                className="h-20 w-auto"
+              />
             </div>
             <h1 className="text-5xl md:text-7xl font-bold text-brand-green mb-6">
               Welcome to Devoura
@@ -350,7 +355,7 @@ const PitchDeck = () => {
         </div>
       </motion.section>
 
-      {/* Slide 7: Success Stories */}
+      {/* Slide 7: Our Capabilities - Replacing Success Stories */}
       <motion.section 
         className="min-h-screen flex items-center justify-center px-4 bg-gradient-to-br from-brand-green to-brand-green-light"
         initial="initial"
@@ -361,34 +366,66 @@ const PitchDeck = () => {
         <div className="max-w-6xl mx-auto text-white">
           <motion.div variants={fadeInUp} className="text-center mb-16">
             <h2 className="text-5xl md:text-6xl font-bold mb-8">
-              Impact in Action
+              What We Deliver
             </h2>
             <p className="text-2xl opacity-90">
-              Real results from real NGOs
+              Comprehensive solutions designed for NGO success
             </p>
           </motion.div>
           
           <motion.div variants={staggerChildren} className="grid md:grid-cols-2 gap-8">
             <motion.div variants={fadeInUp} className="bg-white/10 backdrop-blur-sm p-8 rounded-2xl">
-              <div className="text-4xl font-bold text-brand-gold mb-4">+30%</div>
-              <h3 className="text-2xl font-bold mb-4">Donation Increase</h3>
-              <p className="text-xl opacity-90">
-                "Helped Hope Foundation increase donations by 30% with integrated payment systems and compelling storytelling."
-              </p>
+              <div className="flex items-center gap-4 mb-6">
+                <div className="w-16 h-16 bg-brand-gold rounded-full flex items-center justify-center">
+                  <Palette className="w-8 h-8 text-white" />
+                </div>
+                <div>
+                  <h3 className="text-2xl font-bold mb-2">Custom Design</h3>
+                  <p className="text-xl opacity-90">Unique, mission-focused designs that tell your story</p>
+                </div>
+              </div>
             </motion.div>
             
             <motion.div variants={fadeInUp} className="bg-white/10 backdrop-blur-sm p-8 rounded-2xl">
-              <div className="text-4xl font-bold text-brand-gold mb-4">+25%</div>
-              <h3 className="text-2xl font-bold mb-4">Volunteer Growth</h3>
-              <p className="text-xl opacity-90">
-                "Designed a volunteer portal for Green Earth Initiative, boosting sign-ups by 25% through clear calls-to-action."
-              </p>
+              <div className="flex items-center gap-4 mb-6">
+                <div className="w-16 h-16 bg-brand-gold rounded-full flex items-center justify-center">
+                  <Code className="w-8 h-8 text-white" />
+                </div>
+                <div>
+                  <h3 className="text-2xl font-bold mb-2">Modern Development</h3>
+                  <p className="text-xl opacity-90">Fast, secure, mobile-responsive websites</p>
+                </div>
+              </div>
+            </motion.div>
+            
+            <motion.div variants={fadeInUp} className="bg-white/10 backdrop-blur-sm p-8 rounded-2xl">
+              <div className="flex items-center gap-4 mb-6">
+                <div className="w-16 h-16 bg-brand-gold rounded-full flex items-center justify-center">
+                  <Shield className="w-8 h-8 text-white" />
+                </div>
+                <div>
+                  <h3 className="text-2xl font-bold mb-2">Payment Integration</h3>
+                  <p className="text-xl opacity-90">Secure donation systems with multiple payment options</p>
+                </div>
+              </div>
+            </motion.div>
+            
+            <motion.div variants={fadeInUp} className="bg-white/10 backdrop-blur-sm p-8 rounded-2xl">
+              <div className="flex items-center gap-4 mb-6">
+                <div className="w-16 h-16 bg-brand-gold rounded-full flex items-center justify-center">
+                  <Zap className="w-8 h-8 text-white" />
+                </div>
+                <div>
+                  <h3 className="text-2xl font-bold mb-2">Performance Focus</h3>
+                  <p className="text-xl opacity-90">Optimized for speed, SEO, and user engagement</p>
+                </div>
+              </div>
             </motion.div>
           </motion.div>
         </div>
       </motion.section>
 
-      {/* Slide 8: Testimonials */}
+      {/* Slide 8: Our Approach - Replacing Testimonials */}
       <motion.section 
         className="min-h-screen flex items-center justify-center px-4 bg-white"
         initial="initial"
@@ -399,30 +436,32 @@ const PitchDeck = () => {
         <div className="max-w-6xl mx-auto">
           <motion.div variants={fadeInUp} className="text-center mb-16">
             <h2 className="text-5xl md:text-6xl font-bold text-brand-green mb-8">
-              Trusted by NGOs
+              Our Mission-Driven Approach
             </h2>
             <p className="text-2xl text-gray-700">
-              What our clients say about us
+              How we ensure your success
             </p>
           </motion.div>
           
           <motion.div variants={staggerChildren} className="grid md:grid-cols-2 gap-8">
             <motion.div variants={fadeInUp} className="bg-brand-cream p-8 rounded-2xl">
-              <div className="text-6xl text-brand-green mb-4">"</div>
-              <p className="text-xl text-gray-700 mb-6">
-                Devoura transformed our online presence, making it easier to connect with donors and volunteers. 
-                Their understanding of NGO needs is exceptional.
+              <div className="w-16 h-16 bg-brand-green rounded-full flex items-center justify-center mb-6">
+                <Heart className="w-8 h-8 text-white" />
+              </div>
+              <h3 className="text-2xl font-bold text-brand-green mb-4">Understanding Your Impact</h3>
+              <p className="text-xl text-gray-700">
+                We dive deep into your mission, values, and goals to create websites that authentically represent your cause and connect with your audience.
               </p>
-              <div className="font-semibold text-brand-green">— Sarah Johnson, Hope Foundation</div>
             </motion.div>
             
             <motion.div variants={fadeInUp} className="bg-brand-green/10 p-8 rounded-2xl">
-              <div className="text-6xl text-brand-green mb-4">"</div>
-              <p className="text-xl text-gray-700 mb-6">
-                Their team was professional and delivered a website that truly reflects our mission. 
-                The donation integration has been a game-changer.
+              <div className="w-16 h-16 bg-brand-green rounded-full flex items-center justify-center mb-6">
+                <TrendingUp className="w-8 h-8 text-white" />
+              </div>
+              <h3 className="text-2xl font-bold text-brand-green mb-4">Results-Focused Strategy</h3>
+              <p className="text-xl text-gray-700">
+                Every design decision and feature we implement is strategically chosen to maximize donations, volunteer sign-ups, and community engagement.
               </p>
-              <div className="font-semibold text-brand-green">— Michael Chen, Green Earth Initiative</div>
             </motion.div>
           </motion.div>
         </div>
@@ -484,7 +523,11 @@ const PitchDeck = () => {
         <div className="max-w-4xl mx-auto text-center">
           <motion.div variants={fadeInUp}>
             <div className="w-32 h-32 bg-white rounded-full flex items-center justify-center mx-auto mb-8">
-              <span className="text-5xl font-bold text-brand-green">D</span>
+              <img 
+                src="/lovable-uploads/1c757405-61a4-40fb-b732-c1c154f7a2c4.png" 
+                alt="Devoura Logo" 
+                className="h-20 w-auto"
+              />
             </div>
             
             <h2 className="text-5xl md:text-6xl font-bold mb-8">
