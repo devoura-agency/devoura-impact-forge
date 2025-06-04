@@ -19,12 +19,15 @@ const GeneralContactForm = () => {
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
 
+  // Helper to check if running on Vercel (prod)
+  const isProd = typeof window !== 'undefined' && window.location.hostname.endsWith('vercel.app');
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      // Save to Firebase
+      // Always save to Firebase
       const contactsRef = collection(db, 'contacts');
       await addDoc(contactsRef, {
         ...formData,
@@ -32,34 +35,40 @@ const GeneralContactForm = () => {
         status: 'pending'
       });
 
-      // Send email notification
-      const response = await fetch('/api/contact', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name: `${formData.firstName} ${formData.lastName}`,
-          email: formData.email,
-          org: formData.organization,
-          message: formData.message
-        }),
-      });
+      // Only send email via API in production (Vercel)
+      if (isProd) {
+        const response = await fetch('/api/contact', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            name: `${formData.firstName} ${formData.lastName}`,
+            email: formData.email,
+            org: formData.organization,
+            message: formData.message
+          }),
+        });
 
-      const data = await response.json();
+        let data = {};
+        try {
+          data = await response.json();
+        } catch (err) {
+          // If response is not JSON, treat as error
+          throw new Error('Unexpected response from server');
+        }
 
-      if (!response.ok) {
-        throw new Error(data.error || 'Failed to send email notification');
+        if (!response.ok) {
+          throw new Error((data as any).error || 'Failed to send email notification');
+        }
       }
 
-      // Show success message
       toast({
         title: 'Success!',
         description: 'Thank you for your message! We will get back to you soon.',
         variant: 'default',
       });
 
-      // Reset form
       setFormData({
         firstName: '',
         lastName: '',

@@ -7,6 +7,11 @@ import { signInWithEmailAndPassword, signOut, onAuthStateChanged, User } from 'f
 import { auth, db } from '@/lib/firebase';
 import { LogOut, Users, Mail, Globe, Upload, Plus } from 'lucide-react';
 import { collection, addDoc, getDocs, query, where } from 'firebase/firestore';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import CallRequests from "../app/admin/components/CallRequests";
+import ContactRequests from "../app/admin/components/ContactRequests";
+import WebsiteTemplates from "../app/admin/components/WebsiteTemplates";
+import BulkEmail from "../app/admin/components/BulkEmail";
 
 // Existing website links data
 const existingWebsites = [
@@ -191,110 +196,31 @@ const AdminPanel = () => {
             </Button>
           </div>
 
-          {/* Stats Cards */}
-          <div className="grid md:grid-cols-4 gap-6 mb-8">
-            <Card>
-              <CardContent className="p-6">
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 bg-brand-green/10 rounded-full flex items-center justify-center">
-                    <Users className="w-6 h-6 text-brand-green" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-600">Call Requests</p>
-                    <p className="text-2xl font-bold text-brand-green">0</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+          {/* Tabs for admin sections */}
+          <Tabs defaultValue="call-requests" className="w-full">
+            <TabsList className="grid w-full grid-cols-4 mb-8">
+              <TabsTrigger value="call-requests">Call Requests</TabsTrigger>
+              <TabsTrigger value="contact-requests">Contact Requests</TabsTrigger>
+              <TabsTrigger value="templates">Website Templates</TabsTrigger>
+              <TabsTrigger value="bulk-email">Bulk Email</TabsTrigger>
+            </TabsList>
 
-            <Card>
-              <CardContent className="p-6">
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 bg-brand-green/10 rounded-full flex items-center justify-center">
-                    <Mail className="w-6 h-6 text-brand-green" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-600">Wizard Submissions</p>
-                    <p className="text-2xl font-bold text-brand-green">0</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+            <TabsContent value="call-requests">
+              <CallRequests />
+            </TabsContent>
 
-            <Card>
-              <CardContent className="p-6">
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 bg-brand-green/10 rounded-full flex items-center justify-center">
-                    <Globe className="w-6 h-6 text-brand-green" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-600">Templates</p>
-                    <p className="text-2xl font-bold text-brand-green">6</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+            <TabsContent value="contact-requests">
+              <ContactRequests />
+            </TabsContent>
 
-            <Card>
-              <CardContent className="p-6">
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 bg-brand-green/10 rounded-full flex items-center justify-center">
-                    <Upload className="w-6 h-6 text-brand-green" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-600">Email Campaigns</p>
-                    <p className="text-2xl font-bold text-brand-green">0</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+            <TabsContent value="templates">
+              <WebsiteTemplates />
+            </TabsContent>
 
-          {/* Main Content */}
-          <div className="grid lg:grid-cols-2 gap-8">
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-brand-green">Recent Call Requests</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-center py-8 text-gray-500">
-                  <Users className="w-12 h-12 mx-auto mb-4 text-gray-300" />
-                  <p>No call requests yet</p>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between">
-                <CardTitle className="text-brand-green">Website Templates</CardTitle>
-                <Button
-                  onClick={saveExistingWebsites}
-                  disabled={isSavingWebsites}
-                  className="bg-brand-green hover:bg-brand-green-light text-white"
-                >
-                  {isSavingWebsites ? (
-                    <>
-                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                      Saving...
-                    </>
-                  ) : (
-                    <>
-                      <Plus className="w-4 h-4 mr-2" />
-                      Add Existing Templates
-                    </>
-                  )}
-                </Button>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="text-center py-4 text-gray-500">
-                    <Globe className="w-12 h-12 mx-auto mb-4 text-gray-300" />
-                    <p>Template management coming soon</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+            <TabsContent value="bulk-email">
+              <BulkEmail />
+            </TabsContent>
+          </Tabs>
         </div>
       </div>
     </div>
