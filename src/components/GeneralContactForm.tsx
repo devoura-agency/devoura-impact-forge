@@ -16,20 +16,24 @@ const GeneralContactForm = () => {
     organization: '',
     message: ''
   });
-  const [submitting, setSubmitting] = useState(false);
-  const { toast } = useToast();
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setError('');
-    setSuccess('');
 
     try {
-      const response = await fetch('https://devoura-impact-forge.vercel.app/api/contact', {
+      // Save to Firebase
+      const contactsRef = collection(db, 'contacts');
+      await addDoc(contactsRef, {
+        ...formData,
+        createdAt: new Date().toISOString(),
+        status: 'pending'
+      });
+
+      // Send email notification
+      const response = await fetch('/api/contact', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -37,13 +41,18 @@ const GeneralContactForm = () => {
         body: JSON.stringify(formData),
       });
 
-      const data = await response.json();
-
       if (!response.ok) {
-        throw new Error(data.error || 'Something went wrong');
+        throw new Error('Failed to send email notification');
       }
 
-      setSuccess('Thank you for your message! We will get back to you soon.');
+      // Show success message
+      toast({
+        title: 'Success!',
+        description: 'Thank you for your message! We will get back to you soon.',
+        variant: 'default',
+      });
+
+      // Reset form
       setFormData({
         firstName: '',
         lastName: '',
@@ -51,8 +60,13 @@ const GeneralContactForm = () => {
         organization: '',
         message: '',
       });
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Something went wrong');
+    } catch (error) {
+      console.error('Error:', error);
+      toast({
+        title: 'Error',
+        description: 'Something went wrong. Please try again.',
+        variant: 'destructive',
+      });
     } finally {
       setLoading(false);
     }
