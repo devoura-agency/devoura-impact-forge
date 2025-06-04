@@ -1,4 +1,3 @@
-
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { ArrowRight, CheckCircle, TrendingUp, Users, Heart, Globe, Phone, Mail, ExternalLink, Code, Palette, Shield, Zap } from 'lucide-react';
@@ -24,17 +23,6 @@ const PitchDeck = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-brand-cream via-white to-brand-gold/10">
-      {/* Navigation */}
-      <div className="fixed top-4 left-4 z-50">
-        <Button 
-          onClick={() => navigate('/')}
-          variant="outline"
-          className="bg-white/90 backdrop-blur-sm border-brand-green text-brand-green hover:bg-brand-green hover:text-white"
-        >
-          ← Go To Home
-        </Button>
-      </div>
-
       {/* Slide 1: Welcome with Logo */}
       <motion.section 
         className="min-h-screen flex items-center justify-center px-4 pt-20"
@@ -323,32 +311,39 @@ const PitchDeck = () => {
         viewport={{ once: true }}
         variants={staggerChildren}
       >
-        <div className="max-w-6xl mx-auto">
-          <motion.div variants={fadeInUp} className="text-center mb-16">
-            <h2 className="text-5xl md:text-6xl font-bold text-brand-green mb-8">
+        <div className="max-w-6xl mx-auto w-full">
+          <motion.div variants={fadeInUp} className="text-center mb-10 md:mb-12">
+            <h2 className="text-4xl md:text-5xl font-bold text-brand-green mb-4 md:mb-6 print:text-3xl">
               Our Proven Process
             </h2>
-            <p className="text-2xl text-gray-700">
+            <p className="text-xl md:text-2xl text-gray-700 print:text-lg">
               How We Bring Your Vision to Life
             </p>
           </motion.div>
-          
-          <motion.div variants={staggerChildren} className="space-y-6">
+          <motion.div
+            variants={staggerChildren}
+            className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 print:grid-cols-2 print:gap-4"
+          >
             {[
               { number: "01", title: "Discovery", description: "Understand your NGO's goals and audience" },
               { number: "02", title: "Design", description: "Create a user-friendly, visually appealing prototype" },
               { number: "03", title: "Development", description: "Build a secure, responsive website with donation features" },
               { number: "04", title: "Launch & Support", description: "Launch your site and provide ongoing support" }
             ].map((step, index) => (
-              <motion.div key={index} variants={fadeInUp} className="flex items-center gap-8 p-8 bg-brand-cream rounded-xl">
-                <div className="w-20 h-20 bg-brand-green rounded-full flex items-center justify-center">
-                  <span className="text-2xl font-bold text-white">{step.number}</span>
+              <motion.div
+                key={index}
+                variants={fadeInUp}
+                className="flex items-start gap-4 p-4 md:p-6 bg-brand-cream rounded-xl border border-brand-green/10 print:p-2 print:gap-2 print:rounded-lg print:text-sm print:bg-white print:border-brand-green/20"
+                style={{ minHeight: 'auto' }}
+              >
+                <div className="w-12 h-12 md:w-16 md:h-16 bg-brand-green rounded-full flex items-center justify-center print:w-8 print:h-8">
+                  <span className="text-lg md:text-2xl font-bold text-white print:text-base">{step.number}</span>
                 </div>
                 <div className="flex-grow">
-                  <h3 className="text-3xl font-bold text-brand-green mb-3">{step.title}</h3>
-                  <p className="text-xl text-gray-700">{step.description}</p>
+                  <h3 className="text-xl md:text-2xl font-bold text-brand-green mb-1 md:mb-2 print:text-base print:mb-1">{step.title}</h3>
+                  <p className="text-gray-700 text-base md:text-lg print:text-xs">{step.description}</p>
                 </div>
-                <CheckCircle className="w-10 h-10 text-brand-green" />
+                <CheckCircle className="w-6 h-6 md:w-8 md:h-8 text-brand-green print:w-4 print:h-4" />
               </motion.div>
             ))}
           </motion.div>

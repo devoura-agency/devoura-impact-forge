@@ -12,7 +12,7 @@ export default function Home() {
   return (
     <div className="min-h-screen">
       <Header />
-      <Hero />
+        <Hero />
       <WhyNGOs />
       <section className="py-20 bg-white">
         <Templates />

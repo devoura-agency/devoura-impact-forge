@@ -13,6 +13,9 @@ const transporter = createTransport({
   },
 });
 
+// Add website URL constant
+const WEBSITE_URL = 'https://devoura.vercel.app';
+
 // Email template logic based on ngoType
 function getEmailTemplate(name, ngoType) {
   const templates = {
@@ -26,6 +29,8 @@ We offer:
 - Student engagement platforms
 - Educational resource management systems
 - Donation and fundraising tools
+
+I've attached our pitch deck which provides more details about our services and approach. You can also visit our website at ${WEBSITE_URL} to learn more about our work with educational NGOs.
 
 Would you be interested in learning more about how we can help your educational NGO make a greater impact?
 
@@ -43,6 +48,8 @@ Our services include:
 - Resource sharing systems
 - Donation and volunteer management tools
 
+I've attached our pitch deck which provides more details about our services and approach. You can also visit our website at ${WEBSITE_URL} to learn more about our work with women empowerment NGOs.
+
 Let's discuss how we can help your organization reach more women and create lasting change.
 
 Best regards,
@@ -58,6 +65,8 @@ We offer:
 - Wildlife tracking and monitoring systems
 - Conservation awareness platforms
 - Donation and volunteer management tools
+
+I've attached our pitch deck which provides more details about our services and approach. You can also visit our website at ${WEBSITE_URL} to learn more about our work with wildlife conservation NGOs.
 
 Would you like to explore how we can help your wildlife conservation efforts?
 
@@ -75,6 +84,8 @@ Our services include:
 - Resource coordination platforms
 - Community engagement tools
 
+I've attached our pitch deck which provides more details about our services and approach. You can also visit our website at ${WEBSITE_URL} to learn more about our work with community service organizations.
+
 Let's discuss how we can support your community service initiatives.
 
 Best regards,
@@ -90,6 +101,8 @@ We offer:
 - Patient/beneficiary management systems
 - Health education platforms
 - Donation and resource management tools
+
+I've attached our pitch deck which provides more details about our services and approach. You can also visit our website at ${WEBSITE_URL} to learn more about our work with health and wellness NGOs.
 
 Would you like to learn more about how we can support your health and wellness initiatives?
 
@@ -107,6 +120,8 @@ Our services include:
 - Volunteer management platforms
 - Donation and aid distribution tools
 
+I've attached our pitch deck which provides more details about our services and approach. You can also visit our website at ${WEBSITE_URL} to learn more about our work with disaster management organizations.
+
 Let's discuss how we can help your disaster management organization be more effective.
 
 Best regards,
@@ -122,6 +137,8 @@ We offer:
 - Digital engagement platforms
 - Resource management systems
 - Donation and volunteer tools
+
+I've attached our pitch deck which provides more details about our services and approach. You can also visit our website at ${WEBSITE_URL} to learn more about our work with NGOs.
 
 Would you be interested in learning more about how we can support your organization's mission?
 
@@ -149,11 +166,19 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Missing required fields' });
     }
 
+    // Add attachments to the email
+    const attachments = [{
+      filename: 'Devoura-Pitch-Deck.pdf',
+      path: './public/pitch-deck.pdf', // Make sure this path is correct
+      contentType: 'application/pdf'
+    }];
+
     await transporter.sendMail({
       from: EMAIL_USER,
       to: email,
       subject: subject || 'Devoura NGO Collaboration',
       text: text || getEmailTemplate(name, ngoType),
+      attachments
     });
 
     res.status(200).json({ message: 'Email sent successfully' });

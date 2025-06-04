@@ -380,6 +380,13 @@ export default function BulkEmail() {
       <div className="bg-gray-50 p-4 rounded-md border text-sm text-gray-700">
         <strong>Email Preview:</strong>
         <pre className="whitespace-pre-wrap mt-2">{getEmailTemplate('Sample NGO', 'education')}</pre>
+        <div className="mt-4 text-xs text-gray-500">
+          Note: Each email will include:
+          <ul className="list-disc list-inside mt-1">
+            <li>Our pitch deck as a PDF attachment</li>
+            <li>A link to our website (https://devoura.vercel.app)</li>
+          </ul>
+        </div>
       </div>
 
       {/* Send Button */}
