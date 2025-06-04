@@ -38,11 +38,18 @@ const GeneralContactForm = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          name: `${formData.firstName} ${formData.lastName}`,
+          email: formData.email,
+          org: formData.organization,
+          message: formData.message
+        }),
       });
 
+      const data = await response.json();
+
       if (!response.ok) {
-        throw new Error('Failed to send email notification');
+        throw new Error(data.error || 'Failed to send email notification');
       }
 
       // Show success message
@@ -64,7 +71,7 @@ const GeneralContactForm = () => {
       console.error('Error:', error);
       toast({
         title: 'Error',
-        description: 'Something went wrong. Please try again.',
+        description: error instanceof Error ? error.message : 'Something went wrong. Please try again.',
         variant: 'destructive',
       });
     } finally {

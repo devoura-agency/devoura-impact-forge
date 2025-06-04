@@ -40,8 +40,10 @@ const CallRequestForm = () => {
         body: JSON.stringify(formData),
       });
 
+      const data = await response.json();
+
       if (!response.ok) {
-        throw new Error('Failed to send email notification');
+        throw new Error(data.error || 'Failed to send email notification');
       }
 
       // Show success message
@@ -63,7 +65,7 @@ const CallRequestForm = () => {
       console.error('Error:', error);
       toast({
         title: 'Error',
-        description: 'Something went wrong. Please try again.',
+        description: error instanceof Error ? error.message : 'Something went wrong. Please try again.',
         variant: 'destructive',
       });
     } finally {
