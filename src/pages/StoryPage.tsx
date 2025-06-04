@@ -1,4 +1,3 @@
-
 import { Button } from '@/components/ui/button';
 import { Heart, Users, Globe, ArrowRight, Home } from 'lucide-react';
 import { motion } from 'framer-motion';
@@ -130,7 +129,7 @@ const StoryPage = () => {
                 <div className="grid md:grid-cols-2 gap-8 items-center">
                   <div className="relative">
                     <img 
-                      src="https://images.unsplash.com/photo-1594736797933-d0b22cfe2015?w=500&h=300&fit=crop" 
+                      src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=500&h=300&fit=crop" 
                       alt="Volunteers working together" 
                       className="rounded-xl shadow-lg w-full"
                     />
@@ -246,7 +245,7 @@ const StoryPage = () => {
                 <div className="bg-white rounded-xl p-6 text-center shadow-lg">
                   <div className="relative mb-4">
                     <img 
-                      src="https://images.unsplash.com/photo-1594736797933-d0b22cfe2015?w=300&h=200&fit=crop" 
+                      src="https://plus.unsplash.com/premium_photo-1682973057207-3c7ceafc7ea5?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" 
                       alt="Women empowerment" 
                       className="w-full h-32 object-cover rounded-lg"
                     />
@@ -260,7 +259,7 @@ const StoryPage = () => {
                 <div className="bg-white rounded-xl p-6 text-center shadow-lg">
                   <div className="relative mb-4">
                     <img 
-                      src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=300&h=200&fit=crop" 
+                      src="https://images.unsplash.com/photo-1465101046530-73398c7f28ca?w=300&h=200&fit=crop" 
                       alt="Community help" 
                       className="w-full h-32 object-cover rounded-lg"
                     />
