@@ -4,16 +4,16 @@ import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { GraduationCap, Heart, Leaf, Users, Shield, Building, ArrowLeft, ArrowRight, ExternalLink, Palette } from 'lucide-react';
 import Header from '@/components/Header';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, getDocs, query, where, orderBy } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 
-const CATEGORY_OPTIONS = [
-  { id: 'education', title: 'Education NGOs' },
-  { id: 'women-empowerment', title: 'Women Empowerment' },
-  { id: 'wildlife', title: 'Wildlife Conservation' },
-  { id: 'community-service', title: 'Community Service' },
-  { id: 'health-and-wellness', title: 'Health & Wellness' },
-  { id: 'disaster-management', title: 'Disaster Management' },
+const NGO_CATEGORIES = [
+  { id: 'education', title: 'Education NGOs', icon: GraduationCap, color: 'bg-blue-500' },
+  { id: 'women-empowerment', title: 'Women Empowerment', icon: Heart, color: 'bg-pink-500' },
+  { id: 'wildlife', title: 'Wildlife Conservation', icon: Leaf, color: 'bg-green-500' },
+  { id: 'community-service', title: 'Community Service', icon: Users, color: 'bg-purple-500' },
+  { id: 'health-and-wellness', title: 'Health & Wellness', icon: Shield, color: 'bg-red-500' },
+  { id: 'disaster-management', title: 'Disaster Management', icon: Building, color: 'bg-orange-500' },
 ];
 
 const packages = [
@@ -48,9 +48,6 @@ const stepInstructions = [
 
 const WebsiteWizard = () => {
   const [step, setStep] = useState(0);
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [templates, setTemplates] = useState<any[]>([]);
-  const [loadingTemplates, setLoadingTemplates] = useState(true);
   const [selectedTemplate, setSelectedTemplate] = useState(null);
   const [selectedDesign, setSelectedDesign] = useState(null);
   const [selectedPackage, setSelectedPackage] = useState(null);
@@ -60,6 +57,7 @@ const WebsiteWizard = () => {
   const [submitted, setSubmitted] = useState(false);
   const [designIndex, setDesignIndex] = useState(0);
   const [error, setError] = useState(null);
+  const [templateLinks, setTemplateLinks] = useState<any[]>([]);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -114,17 +112,6 @@ const WebsiteWizard = () => {
     }
   };
 
-  useEffect(() => {
-    // Fetch templates from Firestore
-    const fetchTemplates = async () => {
-      setLoadingTemplates(true);
-      const snap = await getDocs(collection(db, 'websites'));
-      setTemplates(snap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
-      setLoadingTemplates(false);
-    };
-    fetchTemplates();
-  }, []);
-
   // Restore state if coming back from WebsiteViewer
   useEffect(() => {
     if (location.state && location.state.fromViewer) {
@@ -134,6 +121,20 @@ const WebsiteWizard = () => {
     }
     // eslint-disable-next-line
   }, [location.state]);
+
+  // Fetch templates for selected category
+  useEffect(() => {
+    if (!selectedTemplate) return;
+    const fetchTemplates = async () => {
+      const q = query(collection(db, 'websites'), where('category', '==', selectedTemplate), orderBy('createdAt', 'desc'));
+      const snap = await getDocs(q);
+      setTemplateLinks(snap.docs.map(doc => ({
+        name: doc.data().tag || doc.data().category,
+        url: doc.data().link,
+      })));
+    };
+    fetchTemplates();
+  }, [selectedTemplate]);
 
   return (
     <div>
@@ -188,169 +189,139 @@ const WebsiteWizard = () => {
           </motion.p>
           {step === 0 && (
             <motion.div initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} className="mb-12">
-              <div className="grid md:grid-cols-3 gap-8">
-                {CATEGORY_OPTIONS.map((cat) => (
+              <div className="grid md:grid-cols-2 gap-8">
+                {NGO_CATEGORIES.map((t, idx) => (
                   <motion.div
-                    key={cat.id}
+                    key={t.id}
                     whileHover={{ scale: 1.04, boxShadow: '0 8px 32px rgba(0,0,0,0.10)' }}
-                    className={`rounded-2xl shadow-xl bg-white p-8 flex flex-col items-center cursor-pointer border-4 ${selectedCategory === cat.id ? 'border-brand-gold' : 'border-transparent'}`}
-                    onClick={() => setSelectedCategory(cat.id)}
+                    className={`rounded-2xl shadow-xl bg-white p-8 flex flex-col items-center cursor-pointer border-4 ${selectedTemplate === t.id ? 'border-brand-gold' : 'border-transparent'}`}
+                    onClick={() => setSelectedTemplate(t.id)}
                   >
-                    <h3 className="text-xl font-bold text-brand-green mb-2">{cat.title}</h3>
+                    <div className={`w-16 h-16 ${t.color} rounded-full flex items-center justify-center mb-4`}>
+                      <t.icon className="w-8 h-8 text-white" />
+                    </div>
+                    <h3 className="text-xl font-bold text-brand-green mb-2">{t.title}</h3>
                   </motion.div>
                 ))}
+                
+                {/* Request Custom Template Card */}
+                <motion.div
+                  whileHover={{ scale: 1.04, boxShadow: '0 8px 32px rgba(0,0,0,0.10)' }}
+                  className={`rounded-2xl shadow-xl bg-white p-8 flex flex-col items-center cursor-pointer border-4 ${selectedTemplate === 'custom' ? 'border-brand-gold' : 'border-transparent'}`}
+                  onClick={() => setSelectedTemplate('custom')}
+                >
+                  <div className="w-16 h-16 bg-gradient-to-br from-brand-green to-brand-gold rounded-full flex items-center justify-center mb-4">
+                    <Palette className="w-8 h-8 text-white" />
+                  </div>
+                  <h3 className="text-xl font-bold text-brand-green mb-2">Request Custom Template</h3>
+                  <p className="text-gray-600 text-center text-sm">
+                    Need something unique? We'll create a custom design just for your NGO.
+                  </p>
+                </motion.div>
               </div>
-              {selectedCategory && (
-                <div className="mt-8">
-                  <h4 className="text-lg font-semibold mb-4">Available Templates</h4>
-                  {loadingTemplates ? (
-                    <div>Loading templates...</div>
-                  ) : (
-                    <div className="grid md:grid-cols-2 gap-6">
-                      {templates.filter(t => t.category === selectedCategory).map((t) => (
-                        <div key={t.id} className="bg-white rounded-xl shadow-lg p-4 flex flex-col items-center">
-                          <a href={t.link} target="_blank" rel="noopener noreferrer" className="text-brand-green font-semibold mb-2 hover:underline">{t.link}</a>
-                          <div className="text-sm text-gray-500 mb-2">Tag: {t.tag}</div>
-                          <Button onClick={() => setSelectedTemplate(t.id)} className={selectedTemplate === t.id ? 'bg-brand-gold text-white' : ''}>
-                            {selectedTemplate === t.id ? 'Selected' : 'Choose Template'}
-                          </Button>
-                        </div>
-                      ))}
-                      {templates.filter(t => t.category === selectedCategory).length === 0 && (
-                        <div className="text-gray-500 col-span-2">No templates available for this category.</div>
-                      )}
-                    </div>
-                  )}
-                </div>
-              )}
             </motion.div>
           )}
           {step === 1 && selectedTemplate && (
             <motion.div initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} className="mb-12">
-              {(() => {
-                const template = templates.find(t => t.id === selectedTemplate);
-                if (template && template.examples && template.examples.length > 0) {
-                  const current = template.examples[designIndex];
-                  return (
-                    <div className="flex flex-col items-center">
-                      <div className="flex items-center gap-4 mb-6">
-                        <button
-                          onClick={() => setDesignIndex((designIndex - 1 + template.examples.length) % template.examples.length)}
-                          className="p-2 rounded-full bg-gray-200 hover:bg-gray-300"
-                          aria-label="Previous Design"
-                        >
-                          <ArrowLeft className="w-6 h-6 text-brand-green" />
-                        </button>
-                        <div className="bg-white rounded-2xl shadow-xl p-4 flex flex-col items-center w-[900px] max-w-full">
-                          <div className="w-full rounded-lg overflow-hidden mb-4 border border-gray-200" style={{height: '480px'}}>
-                            <iframe
-                              src={current.url}
-                              title={current.name}
-                              className="w-full h-full border-0 rounded-lg"
-                              sandbox="allow-scripts allow-same-origin allow-popups"
-                              loading="lazy"
-                              style={{minHeight: '480px', maxHeight: '480px'}}
-                            />
-                          </div>
-                          <h4 className="font-semibold text-xl mb-2 text-brand-green">{current.name}</h4>
-                          <div className="flex gap-4 mt-2">
-                            <Button
-                              className={`bg-brand-green hover:bg-brand-green-light text-white px-6 py-2 rounded-lg font-semibold ${selectedDesign === current.url ? 'ring-2 ring-brand-gold' : ''}`}
-                              onClick={() => setSelectedDesign(current.url)}
-                            >
-                              Use This Design
-                            </Button>
-                            <Button
-                              variant="outline"
-                              className="border-brand-green text-brand-green hover:bg-brand-green hover:text-white flex items-center gap-2"
-                              onClick={() => navigate(`/website-viewer?url=${encodeURIComponent(current.url)}&name=${encodeURIComponent(current.name)}`, { state: { fromViewer: true, step, selectedTemplate, designIndex } })}
-                            >
-                              <ExternalLink className="w-4 h-4" /> View Full
-                            </Button>
-                          </div>
-                        </div>
-                        <button
-                          onClick={() => setDesignIndex((designIndex + 1) % template.examples.length)}
-                          className="p-2 rounded-full bg-gray-200 hover:bg-gray-300"
-                          aria-label="Next Design"
-                        >
-                          <ArrowRight className="w-6 h-6 text-brand-green" />
-                        </button>
-                      </div>
-                      {/* Desktop Preview Thumbnails */}
-                      <div className="flex gap-6 overflow-x-auto py-4 mb-6 w-full justify-center">
-                        {template.examples.map((ex, idx) => (
-                          <div
-                            key={ex.url}
-                            className={`cursor-pointer transition-all duration-200 ${designIndex === idx ? 'transform scale-105' : ''}`}
-                            onClick={() => setDesignIndex(idx)}
-                          >
-                            <div className={`relative bg-white rounded-xl shadow-lg border-2 transition-all duration-200 ${designIndex === idx ? 'border-brand-gold ring-2 ring-brand-gold' : 'border-gray-200'}`}
-                                 style={{ width: 240, height: 160 }}>
-                              {/* Desktop mockup frame */}
-                              <div className="absolute inset-2 bg-gray-100 rounded-lg overflow-hidden">
-                                {/* Browser bar */}
-                                <div className="h-6 bg-gray-300 flex items-center px-2 gap-1">
-                                  <div className="flex gap-1">
-                                    <div className="w-2 h-2 bg-red-400 rounded-full"></div>
-                                    <div className="w-2 h-2 bg-yellow-400 rounded-full"></div>
-                                    <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-                                  </div>
-                                  <div className="flex-1 mx-2 h-3 bg-white rounded text-xs"></div>
-                                </div>
-                                {/* Website preview */}
-                                <div className="h-full bg-white relative overflow-hidden">
-                                  <iframe
-                                    src={ex.url}
-                                    title={ex.name}
-                                    className="w-full h-full border-0 transform scale-50 origin-top-left"
-                                    sandbox="allow-scripts allow-same-origin allow-popups"
-                                    loading="lazy"
-                                    style={{ 
-                                      pointerEvents: 'none', 
-                                      width: '200%', 
-                                      height: '200%',
-                                      background: '#f9fafb'
-                                    }}
-                                  />
-                                </div>
-                              </div>
-                              {/* Website name */}
-                              <div className="absolute -bottom-8 left-0 right-0 text-center">
-                                <span className={`text-sm font-medium ${designIndex === idx ? 'text-brand-green' : 'text-gray-600'}`}>
-                                  {ex.name}
-                                </span>
-                              </div>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                      <div className="text-center mt-8">
-                        <Button
-                          variant="outline"
-                          className={`border-brand-green text-brand-green hover:bg-brand-green hover:text-white px-8 py-3 text-lg font-bold rounded-lg ${selectedDesign === 'custom' ? 'ring-2 ring-brand-gold' : ''}`}
-                          onClick={() => setSelectedDesign('custom')}
-                        >
-                          Custom Website
-                        </Button>
-                      </div>
+              {templateLinks.length > 0 ? (
+                <div className="flex flex-col items-center">
+                  {/* Main Preview */}
+                  <div className="bg-white rounded-2xl shadow-xl p-4 flex flex-col items-center w-[900px] max-w-full mb-8">
+                    <div className="w-full rounded-lg overflow-hidden mb-4 border border-gray-200" style={{height: '480px'}}>
+                      <iframe
+                        src={templateLinks[designIndex].url}
+                        title={templateLinks[designIndex].name}
+                        className="w-full h-full border-0 rounded-lg"
+                        sandbox="allow-scripts allow-same-origin allow-popups"
+                        loading="lazy"
+                        style={{minHeight: '480px', maxHeight: '480px'}}
+                      />
                     </div>
-                  );
-                } else {
-                  return (
-                    <div className="text-center">
-                      <p className="text-lg text-gray-700 mb-6">No ready-made designs for this category yet.</p>
+                    <h4 className="font-semibold text-xl mb-2 text-brand-green">{templateLinks[designIndex].name}</h4>
+                    <div className="flex gap-4 mt-2">
+                      <Button
+                        className={`bg-brand-green hover:bg-brand-green-light text-white px-6 py-2 rounded-lg font-semibold ${selectedDesign === templateLinks[designIndex].url ? 'ring-2 ring-brand-gold' : ''}`}
+                        onClick={() => setSelectedDesign(templateLinks[designIndex].url)}
+                      >
+                        Use This Design
+                      </Button>
                       <Button
                         variant="outline"
-                        className={`border-brand-green text-brand-green hover:bg-brand-green hover:text-white px-8 py-3 text-lg font-bold rounded-lg ${selectedDesign === 'custom' ? 'ring-2 ring-brand-gold' : ''}`}
-                        onClick={() => setSelectedDesign('custom')}
+                        className="border-brand-green text-brand-green hover:bg-brand-green hover:text-white flex items-center gap-2"
+                        onClick={() => navigate(`/website-viewer?url=${encodeURIComponent(templateLinks[designIndex].url)}&name=${encodeURIComponent(templateLinks[designIndex].name)}`, { state: { fromViewer: true, step, selectedTemplate, designIndex } })}
                       >
-                        Custom Website
+                        <ExternalLink className="w-4 h-4" /> View Full
                       </Button>
                     </div>
-                  );
-                }
-              })()}
+                  </div>
+                  {/* Thumbnails Row */}
+                  <div className="flex gap-6 overflow-x-auto py-4 mb-6 w-full justify-center">
+                    {templateLinks.map((ex, idx) => (
+                      <div
+                        key={ex.url}
+                        className={`cursor-pointer transition-all duration-200 ${designIndex === idx ? 'transform scale-105 border-4 border-brand-gold' : 'border-2 border-gray-200'} bg-white rounded-xl shadow-lg`}
+                        style={{ width: 240, height: 160 }}
+                        onClick={() => setDesignIndex(idx)}
+                      >
+                        <div className="relative h-full w-full">
+                          {/* Browser bar */}
+                          <div className="h-6 bg-gray-300 flex items-center px-2 gap-1 rounded-t-xl">
+                            <div className="flex gap-1">
+                              <div className="w-2 h-2 bg-red-400 rounded-full"></div>
+                              <div className="w-2 h-2 bg-yellow-400 rounded-full"></div>
+                              <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                            </div>
+                            <div className="flex-1 mx-2 h-3 bg-white rounded text-xs"></div>
+                          </div>
+                          {/* Website preview */}
+                          <div className="h-[120px] bg-white relative overflow-hidden rounded-b-xl">
+                            <iframe
+                              src={ex.url}
+                              title={ex.name}
+                              className="w-full h-full border-0 transform scale-50 origin-top-left"
+                              sandbox="allow-scripts allow-same-origin allow-popups"
+                              loading="lazy"
+                              style={{ 
+                                pointerEvents: 'none', 
+                                width: '200%', 
+                                height: '200%',
+                                background: '#f9fafb'
+                              }}
+                            />
+                          </div>
+                          {/* Website name */}
+                          <div className="absolute -bottom-8 left-0 right-0 text-center">
+                            <span className={`text-sm font-medium ${designIndex === idx ? 'text-brand-green' : 'text-gray-600'}`}>
+                              {ex.name}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  {/* Custom Website Button */}
+                  <div className="text-center mt-8">
+                    <Button
+                      variant="outline"
+                      className={`border-brand-green text-brand-green hover:bg-brand-green hover:text-white px-8 py-3 text-lg font-bold rounded-lg ${selectedDesign === 'custom' ? 'ring-2 ring-brand-gold' : ''}`}
+                      onClick={() => setSelectedDesign('custom')}
+                    >
+                      Custom Website
+                    </Button>
+                  </div>
+                </div>
+              ) : (
+                <div className="text-center">
+                  <p className="text-lg text-gray-700 mb-6">No ready-made designs for this category yet.</p>
+                  <Button
+                    variant="outline"
+                    className={`border-brand-green text-brand-green hover:bg-brand-green hover:text-white px-8 py-3 text-lg font-bold rounded-lg ${selectedDesign === 'custom' ? 'ring-2 ring-brand-gold' : ''}`}
+                    onClick={() => setSelectedDesign('custom')}
+                  >
+                    Custom Website
+                  </Button>
+                </div>
+              )}
             </motion.div>
           )}
           {step === 2 && (

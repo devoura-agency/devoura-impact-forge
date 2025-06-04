@@ -3,19 +3,24 @@ import { ArrowRight, Play } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, getDocs, query, orderBy } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 
 const Hero = () => {
   const navigate = useNavigate();
-  const [templates, setTemplates] = useState<any[]>([]);
   const [currentTemplateIndex, setCurrentTemplateIndex] = useState(0);
+  const [templates, setTemplates] = useState<{ name: string; url: string }[]>([]);
 
   useEffect(() => {
     // Fetch templates from Firestore
     const fetchTemplates = async () => {
-      const snap = await getDocs(collection(db, 'websites'));
-      setTemplates(snap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+      const q = query(collection(db, 'websites'), orderBy('createdAt', 'desc'));
+      const snap = await getDocs(q);
+      const data = snap.docs.map(doc => ({
+        name: doc.data().tag ? `${doc.data().tag} (${doc.data().category})` : doc.data().category,
+        url: doc.data().link,
+      }));
+      setTemplates(data);
     };
     fetchTemplates();
   }, []);
@@ -31,7 +36,7 @@ const Hero = () => {
   const handleTemplateClick = () => {
     if (!templates.length) return;
     const currentTemplate = templates[currentTemplateIndex];
-    navigate(`/website-viewer?url=${encodeURIComponent(currentTemplate.link)}&name=${encodeURIComponent(currentTemplate.link)}`);
+    navigate(`/website-viewer?url=${encodeURIComponent(currentTemplate.url)}&name=${encodeURIComponent(currentTemplate.name)}`);
   };
 
   const scrollToSection = (sectionId: string) => {
@@ -40,6 +45,19 @@ const Hero = () => {
       element.scrollIntoView({ behavior: 'smooth' });
     }
   };
+
+  if (!templates.length) {
+    return (
+      <section className="pt-32 pb-20 bg-gradient-to-br from-brand-cream via-white to-brand-gold/10 overflow-hidden relative">
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="max-w-6xl mx-auto text-center py-24">
+            <div className="text-2xl text-brand-green font-semibold mb-4">Loading templates...</div>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-green mx-auto"></div>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="pt-32 pb-20 bg-gradient-to-br from-brand-cream via-white to-brand-gold/10 overflow-hidden relative">
@@ -159,25 +177,21 @@ const Hero = () => {
                   <div className="w-3 h-3 bg-yellow-400 rounded-full"></div>
                   <div className="w-3 h-3 bg-green-400 rounded-full"></div>
                   <div className="flex-1 bg-gray-100 h-6 rounded ml-4 flex items-center px-3 text-sm text-gray-600">
-                    {templates.length > 0 ? templates[currentTemplateIndex].link : 'No templates available'}
+                    {templates[currentTemplateIndex].name}
                   </div>
                 </div>
                 
                 {/* Live website iframe */}
                 <div className="aspect-video relative overflow-hidden rounded-lg bg-gray-100">
-                  {templates.length > 0 ? (
-                    <iframe
-                      src={templates[currentTemplateIndex].link}
-                      className="w-full h-full border-0 transform scale-75 origin-top-left pointer-events-none"
-                      style={{ 
-                        width: '133.33%', 
-                        height: '133.33%',
-                      }}
-                      title={templates[currentTemplateIndex].link}
-                    />
-                  ) : (
-                    <div className="flex items-center justify-center h-full text-gray-400">No templates to show</div>
-                  )}
+                  <iframe
+                    src={templates[currentTemplateIndex].url}
+                    className="w-full h-full border-0 transform scale-75 origin-top-left pointer-events-none"
+                    style={{ 
+                      width: '133.33%', 
+                      height: '133.33%',
+                    }}
+                    title={templates[currentTemplateIndex].name}
+                  />
                   {/* Click overlay */}
                   <div className="absolute inset-0 bg-transparent hover:bg-brand-green/10 transition-colors flex items-center justify-center">
                     <div className="bg-brand-green/80 text-white px-4 py-2 rounded-full opacity-0 hover:opacity-100 transition-opacity">

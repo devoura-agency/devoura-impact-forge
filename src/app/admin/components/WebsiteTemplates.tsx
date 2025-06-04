@@ -15,15 +15,6 @@ import { useToast } from "@/hooks/use-toast";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
-const CATEGORY_OPTIONS = [
-  'education',
-  'women-empowerment',
-  'wildlife',
-  'community-service',
-  'health-and-wellness',
-  'disaster-management',
-];
-
 interface Template {
   id: string;
   category: string;
@@ -31,6 +22,15 @@ interface Template {
   tag: string;
   createdAt: string;
 }
+
+const NGO_CATEGORIES = [
+  'education',
+  'women-empowerment',
+  'wildlife',
+  'community-service',
+  'health-and-wellness',
+  'disaster-management',
+];
 
 export default function WebsiteTemplates() {
   const [templates, setTemplates] = useState<Template[]>([]);
@@ -129,7 +129,7 @@ export default function WebsiteTemplates() {
                     <SelectValue placeholder="Select category" />
                   </SelectTrigger>
                   <SelectContent>
-                    {CATEGORY_OPTIONS.map((cat) => (
+                    {NGO_CATEGORIES.map((cat) => (
                       <SelectItem key={cat} value={cat}>
                         {cat.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
                       </SelectItem>
