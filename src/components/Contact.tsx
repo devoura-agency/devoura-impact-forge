@@ -24,13 +24,13 @@ const Contact = () => {
 
           {/* Form Selection Buttons */}
           <div className="flex flex-wrap justify-center gap-4 mb-12">
-            <Button
+            {/* <Button
               onClick={() => navigate('/general-contact')}
               className="bg-brand-green text-white hover:bg-brand-green-light"
             >
               <Mail className="w-4 h-4 mr-2" />
               General Contact
-            </Button>
+            </Button> */}
             <Button
               onClick={() => navigate('/request-call')}
               variant="outline"

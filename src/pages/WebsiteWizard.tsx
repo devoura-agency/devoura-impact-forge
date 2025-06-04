@@ -4,26 +4,16 @@ import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { GraduationCap, Heart, Leaf, Users, Shield, Building, ArrowLeft, ArrowRight, ExternalLink, Palette } from 'lucide-react';
 import Header from '@/components/Header';
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
 
-const templates = [
-  { id: 'education', title: 'Education NGOs', icon: GraduationCap, color: 'bg-blue-500', examples: [
-    { name: 'EduCare Foundation', url: 'https://educare-foundation-ngo.vercel.app/' },
-    { name: 'Future Bright Girls', url: 'https://future-bright-girls-ngo.vercel.app/' },
-    { name: 'Education NGO', url: 'https://edu-ngo.vercel.app/' }
-  ] },
-  { id: 'women-empowerment', title: 'Women Empowerment', icon: Heart, color: 'bg-pink-500', examples: [
-    { name: 'Empowering Women NGO', url: 'https://empowering-women-ngo.vercel.app/' }
-  ] },
-  { id: 'wildlife', title: 'Wildlife Conservation', icon: Leaf, color: 'bg-green-500', examples: [
-    { name: 'Wildlife Hope', url: 'https://wildlife-hope-ngo.vercel.app/' },
-    { name: 'Wildlife Legacy', url: 'https://wildlife-legacy-ngo.vercel.app/' }
-  ] },
-  { id: 'social-welfare', title: 'Social Welfare', icon: Users, color: 'bg-purple-500', examples: [
-    { name: 'Seva Bharat', url: 'https://seva-bharat-ngo.vercel.app/' },
-    { name: 'Jeevan Safar Sangam', url: 'https://jeevan-safar-sangam-ngo.vercel.app/' }
-  ] },
-  { id: 'healthcare', title: 'Healthcare', icon: Shield, color: 'bg-red-500', examples: [] },
-  { id: 'disaster-relief', title: 'Disaster Relief', icon: Building, color: 'bg-orange-500', examples: [] },
+const CATEGORY_OPTIONS = [
+  { id: 'education', title: 'Education NGOs' },
+  { id: 'women-empowerment', title: 'Women Empowerment' },
+  { id: 'wildlife', title: 'Wildlife Conservation' },
+  { id: 'community-service', title: 'Community Service' },
+  { id: 'health-and-wellness', title: 'Health & Wellness' },
+  { id: 'disaster-management', title: 'Disaster Management' },
 ];
 
 const packages = [
@@ -58,6 +48,9 @@ const stepInstructions = [
 
 const WebsiteWizard = () => {
   const [step, setStep] = useState(0);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [templates, setTemplates] = useState<any[]>([]);
+  const [loadingTemplates, setLoadingTemplates] = useState(true);
   const [selectedTemplate, setSelectedTemplate] = useState(null);
   const [selectedDesign, setSelectedDesign] = useState(null);
   const [selectedPackage, setSelectedPackage] = useState(null);
@@ -120,6 +113,17 @@ const WebsiteWizard = () => {
       }
     }
   };
+
+  useEffect(() => {
+    // Fetch templates from Firestore
+    const fetchTemplates = async () => {
+      setLoadingTemplates(true);
+      const snap = await getDocs(collection(db, 'websites'));
+      setTemplates(snap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+      setLoadingTemplates(false);
+    };
+    fetchTemplates();
+  }, []);
 
   // Restore state if coming back from WebsiteViewer
   useEffect(() => {
@@ -184,36 +188,41 @@ const WebsiteWizard = () => {
           </motion.p>
           {step === 0 && (
             <motion.div initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} className="mb-12">
-              <div className="grid md:grid-cols-2 gap-8">
-                {templates.map((t, idx) => (
+              <div className="grid md:grid-cols-3 gap-8">
+                {CATEGORY_OPTIONS.map((cat) => (
                   <motion.div
-                    key={t.id}
+                    key={cat.id}
                     whileHover={{ scale: 1.04, boxShadow: '0 8px 32px rgba(0,0,0,0.10)' }}
-                    className={`rounded-2xl shadow-xl bg-white p-8 flex flex-col items-center cursor-pointer border-4 ${selectedTemplate === t.id ? 'border-brand-gold' : 'border-transparent'}`}
-                    onClick={() => setSelectedTemplate(t.id)}
+                    className={`rounded-2xl shadow-xl bg-white p-8 flex flex-col items-center cursor-pointer border-4 ${selectedCategory === cat.id ? 'border-brand-gold' : 'border-transparent'}`}
+                    onClick={() => setSelectedCategory(cat.id)}
                   >
-                    <div className={`w-16 h-16 ${t.color} rounded-full flex items-center justify-center mb-4`}>
-                      <t.icon className="w-8 h-8 text-white" />
-                    </div>
-                    <h3 className="text-xl font-bold text-brand-green mb-2">{t.title}</h3>
+                    <h3 className="text-xl font-bold text-brand-green mb-2">{cat.title}</h3>
                   </motion.div>
                 ))}
-                
-                {/* Request Custom Template Card */}
-                <motion.div
-                  whileHover={{ scale: 1.04, boxShadow: '0 8px 32px rgba(0,0,0,0.10)' }}
-                  className={`rounded-2xl shadow-xl bg-white p-8 flex flex-col items-center cursor-pointer border-4 ${selectedTemplate === 'custom' ? 'border-brand-gold' : 'border-transparent'}`}
-                  onClick={() => setSelectedTemplate('custom')}
-                >
-                  <div className="w-16 h-16 bg-gradient-to-br from-brand-green to-brand-gold rounded-full flex items-center justify-center mb-4">
-                    <Palette className="w-8 h-8 text-white" />
-                  </div>
-                  <h3 className="text-xl font-bold text-brand-green mb-2">Request Custom Template</h3>
-                  <p className="text-gray-600 text-center text-sm">
-                    Need something unique? We'll create a custom design just for your NGO.
-                  </p>
-                </motion.div>
               </div>
+              {selectedCategory && (
+                <div className="mt-8">
+                  <h4 className="text-lg font-semibold mb-4">Available Templates</h4>
+                  {loadingTemplates ? (
+                    <div>Loading templates...</div>
+                  ) : (
+                    <div className="grid md:grid-cols-2 gap-6">
+                      {templates.filter(t => t.category === selectedCategory).map((t) => (
+                        <div key={t.id} className="bg-white rounded-xl shadow-lg p-4 flex flex-col items-center">
+                          <a href={t.link} target="_blank" rel="noopener noreferrer" className="text-brand-green font-semibold mb-2 hover:underline">{t.link}</a>
+                          <div className="text-sm text-gray-500 mb-2">Tag: {t.tag}</div>
+                          <Button onClick={() => setSelectedTemplate(t.id)} className={selectedTemplate === t.id ? 'bg-brand-gold text-white' : ''}>
+                            {selectedTemplate === t.id ? 'Selected' : 'Choose Template'}
+                          </Button>
+                        </div>
+                      ))}
+                      {templates.filter(t => t.category === selectedCategory).length === 0 && (
+                        <div className="text-gray-500 col-span-2">No templates available for this category.</div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              )}
             </motion.div>
           )}
           {step === 1 && selectedTemplate && (

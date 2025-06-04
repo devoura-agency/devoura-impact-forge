@@ -1,33 +1,37 @@
-
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Play } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
 
 const Hero = () => {
   const navigate = useNavigate();
+  const [templates, setTemplates] = useState<any[]>([]);
   const [currentTemplateIndex, setCurrentTemplateIndex] = useState(0);
 
-  const templates = [
-    { name: 'EduCare Foundation', url: 'https://educare-foundation-ngo.vercel.app/' },
-    { name: 'Empowering Women', url: 'https://empowering-women-ngo.vercel.app/' },
-    { name: 'Wildlife Hope', url: 'https://wildlife-hope-ngo.vercel.app/' },
-    { name: 'Future Bright Girls', url: 'https://future-bright-girls-ngo.vercel.app/' },
-    { name: 'Seva Bharat', url: 'https://seva-bharat-ngo.vercel.app/' },
-    { name: 'Jeevan Safar Sangam', url: 'https://jeevan-safar-sangam-ngo.vercel.app/' }
-  ];
+  useEffect(() => {
+    // Fetch templates from Firestore
+    const fetchTemplates = async () => {
+      const snap = await getDocs(collection(db, 'websites'));
+      setTemplates(snap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+    };
+    fetchTemplates();
+  }, []);
 
   useEffect(() => {
+    if (templates.length === 0) return;
     const interval = setInterval(() => {
       setCurrentTemplateIndex((prev) => (prev + 1) % templates.length);
     }, 3000);
     return () => clearInterval(interval);
-  }, []);
+  }, [templates]);
 
   const handleTemplateClick = () => {
+    if (!templates.length) return;
     const currentTemplate = templates[currentTemplateIndex];
-    navigate(`/website-viewer?url=${encodeURIComponent(currentTemplate.url)}&name=${encodeURIComponent(currentTemplate.name)}`);
+    navigate(`/website-viewer?url=${encodeURIComponent(currentTemplate.link)}&name=${encodeURIComponent(currentTemplate.link)}`);
   };
 
   const scrollToSection = (sectionId: string) => {
@@ -155,21 +159,25 @@ const Hero = () => {
                   <div className="w-3 h-3 bg-yellow-400 rounded-full"></div>
                   <div className="w-3 h-3 bg-green-400 rounded-full"></div>
                   <div className="flex-1 bg-gray-100 h-6 rounded ml-4 flex items-center px-3 text-sm text-gray-600">
-                    {templates[currentTemplateIndex].name}
+                    {templates.length > 0 ? templates[currentTemplateIndex].link : 'No templates available'}
                   </div>
                 </div>
                 
                 {/* Live website iframe */}
                 <div className="aspect-video relative overflow-hidden rounded-lg bg-gray-100">
-                  <iframe
-                    src={templates[currentTemplateIndex].url}
-                    className="w-full h-full border-0 transform scale-75 origin-top-left pointer-events-none"
-                    style={{ 
-                      width: '133.33%', 
-                      height: '133.33%',
-                    }}
-                    title={templates[currentTemplateIndex].name}
-                  />
+                  {templates.length > 0 ? (
+                    <iframe
+                      src={templates[currentTemplateIndex].link}
+                      className="w-full h-full border-0 transform scale-75 origin-top-left pointer-events-none"
+                      style={{ 
+                        width: '133.33%', 
+                        height: '133.33%',
+                      }}
+                      title={templates[currentTemplateIndex].link}
+                    />
+                  ) : (
+                    <div className="flex items-center justify-center h-full text-gray-400">No templates to show</div>
+                  )}
                   {/* Click overlay */}
                   <div className="absolute inset-0 bg-transparent hover:bg-brand-green/10 transition-colors flex items-center justify-center">
                     <div className="bg-brand-green/80 text-white px-4 py-2 rounded-full opacity-0 hover:opacity-100 transition-opacity">

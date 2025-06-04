@@ -13,6 +13,16 @@ import {
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+
+const CATEGORY_OPTIONS = [
+  'education',
+  'women-empowerment',
+  'wildlife',
+  'community-service',
+  'health-and-wellness',
+  'disaster-management',
+];
 
 interface Template {
   id: string;
@@ -111,11 +121,21 @@ export default function WebsiteTemplates() {
             <div className="space-y-4 py-4">
               <div>
                 <label className="text-sm font-medium">Category</label>
-                <Input
+                <Select
                   value={newTemplate.category}
-                  onChange={(e) => setNewTemplate({ ...newTemplate, category: e.target.value })}
-                  placeholder="e.g., NGO, Business"
-                />
+                  onValueChange={(value) => setNewTemplate({ ...newTemplate, category: value })}
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select category" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {CATEGORY_OPTIONS.map((cat) => (
+                      <SelectItem key={cat} value={cat}>
+                        {cat.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
               <div>
                 <label className="text-sm font-medium">Link</label>
