@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -19,43 +18,43 @@ const GeneralContactForm = () => {
   });
   const [submitting, setSubmitting] = useState(false);
   const { toast } = useToast();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitting(true);
-    
-    try {
-      // Save to Firebase
-      await addDoc(collection(db, 'general-contact'), {
-        ...formData,
-        timestamp: new Date().toISOString(),
-        status: 'pending'
-      });
+    setLoading(true);
+    setError('');
+    setSuccess('');
 
-      // Send email
-      const response = await fetch('/api/general-contact', {
+    try {
+      const response = await fetch('https://devoura-impact-forge.vercel.app/api/contact', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify(formData),
       });
 
-      if (response.ok) {
-        toast({
-          title: "Message Sent Successfully",
-          description: "Thank you for contacting us. We'll get back to you within 24 hours.",
-        });
-        setFormData({ firstName: '', lastName: '', email: '', organization: '', message: '' });
-      } else {
-        throw new Error('Failed to send message');
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Something went wrong');
       }
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "There was a problem sending your message. Please try again.",
-        variant: "destructive",
+
+      setSuccess('Thank you for your message! We will get back to you soon.');
+      setFormData({
+        firstName: '',
+        lastName: '',
+        email: '',
+        organization: '',
+        message: '',
       });
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Something went wrong');
     } finally {
-      setSubmitting(false);
+      setLoading(false);
     }
   };
 
@@ -120,10 +119,10 @@ const GeneralContactForm = () => {
           </div>
           <Button 
             type="submit"
-            disabled={submitting}
+            disabled={loading}
             className="w-full bg-brand-green hover:bg-brand-green-light text-white py-3"
           >
-            {submitting ? 'Sending...' : 'Send Message'}
+            {loading ? 'Sending...' : 'Send Message'}
           </Button>
         </form>
       </CardContent>

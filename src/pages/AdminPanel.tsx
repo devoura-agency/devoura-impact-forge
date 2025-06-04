@@ -1,18 +1,53 @@
-
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { motion } from 'framer-motion';
-import { signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'firebase/auth';
-import { auth } from '@/lib/firebase';
-import { LogOut, Users, Mail, Globe, Upload } from 'lucide-react';
+import { signInWithEmailAndPassword, signOut, onAuthStateChanged, User } from 'firebase/auth';
+import { auth, db } from '@/lib/firebase';
+import { LogOut, Users, Mail, Globe, Upload, Plus } from 'lucide-react';
+import { collection, addDoc, getDocs, query, where } from 'firebase/firestore';
+
+// Existing website links data
+const existingWebsites = [
+  {
+    link: "https://devoura-impact-forge.vercel.app/templates/ngo1",
+    category: "NGO",
+    tag: "starter"
+  },
+  {
+    link: "https://devoura-impact-forge.vercel.app/templates/ngo2",
+    category: "NGO",
+    tag: "starter"
+  },
+  {
+    link: "https://devoura-impact-forge.vercel.app/templates/ngo3",
+    category: "NGO",
+    tag: "starter"
+  },
+  {
+    link: "https://devoura-impact-forge.vercel.app/templates/ngo4",
+    category: "NGO",
+    tag: "starter"
+  },
+  {
+    link: "https://devoura-impact-forge.vercel.app/templates/ngo5",
+    category: "NGO",
+    tag: "starter"
+  },
+  {
+    link: "https://devoura-impact-forge.vercel.app/templates/ngo6",
+    category: "NGO",
+    tag: "starter"
+  }
+];
 
 const AdminPanel = () => {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [loginForm, setLoginForm] = useState({ email: '', password: '' });
   const [loginError, setLoginError] = useState('');
+  const [isSavingWebsites, setIsSavingWebsites] = useState(false);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -39,6 +74,37 @@ const AdminPanel = () => {
       await signOut(auth);
     } catch (error) {
       console.error('Error signing out:', error);
+    }
+  };
+
+  const saveExistingWebsites = async () => {
+    setIsSavingWebsites(true);
+    try {
+      const websitesRef = collection(db, 'websites');
+      
+      // Check if websites already exist
+      const q = query(websitesRef, where('tag', '==', 'starter'));
+      const querySnapshot = await getDocs(q);
+      
+      if (!querySnapshot.empty) {
+        alert('Websites already exist in the database!');
+        return;
+      }
+
+      // Add each website to Firestore
+      for (const website of existingWebsites) {
+        await addDoc(websitesRef, {
+          ...website,
+          createdAt: new Date().toISOString()
+        });
+      }
+      
+      alert('Successfully saved all website templates!');
+    } catch (error) {
+      console.error('Error saving websites:', error);
+      alert('Error saving websites. Please try again.');
+    } finally {
+      setIsSavingWebsites(false);
     }
   };
 
@@ -199,8 +265,25 @@ const AdminPanel = () => {
             </Card>
 
             <Card>
-              <CardHeader>
+              <CardHeader className="flex flex-row items-center justify-between">
                 <CardTitle className="text-brand-green">Website Templates</CardTitle>
+                <Button
+                  onClick={saveExistingWebsites}
+                  disabled={isSavingWebsites}
+                  className="bg-brand-green hover:bg-brand-green-light text-white"
+                >
+                  {isSavingWebsites ? (
+                    <>
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                      Saving...
+                    </>
+                  ) : (
+                    <>
+                      <Plus className="w-4 h-4 mr-2" />
+                      Add Existing Templates
+                    </>
+                  )}
+                </Button>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">

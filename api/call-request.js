@@ -1,12 +1,32 @@
 import express from 'express';
 import { createTransport } from 'nodemailer';
 import dotenv from 'dotenv';
+import { initializeApp } from 'firebase/app';
+import { getFirestore, collection, addDoc } from 'firebase/firestore';
+import cors from 'cors';
 
 dotenv.config();
 const app = express();
+
+// Middleware
+app.use(cors());
 app.use(express.json());
 
 const { EMAIL_USER, EMAIL_PASS } = process.env;
+
+// Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyCqy-_3SgNgrEQZZUsvWGMDgmYiXG3wbmQ",
+  authDomain: "devoura-b217f.firebaseapp.com",
+  projectId: "devoura-b217f",
+  storageBucket: "devoura-b217f.firebasestorage.app",
+  messagingSenderId: "1098617752715",
+  appId: "1:1098617752715:web:3cbc501b389f1c143cd88e"
+};
+
+// Initialize Firebase
+const firebaseApp = initializeApp(firebaseConfig);
+const db = getFirestore(firebaseApp);
 
 const transporter = createTransport({
   service: 'gmail',
@@ -152,12 +172,44 @@ function callRequestEmail({ number, time, language, name }, isAdmin = false) {
 
 // Call request endpoint
 export default async function handler(req, res) {
+  // Set CORS headers
+  res.setHeader('Access-Control-Allow-Credentials', true);
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
+  res.setHeader(
+    'Access-Control-Allow-Headers',
+    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
+  );
+
+  // Handle preflight request
+  if (req.method === 'OPTIONS') {
+    res.status(200).end();
+    return;
+  }
+
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
   try {
     const { number, time, language, name, email } = req.body;
+
+    // Validate required fields
+    if (!number || !time || !language) {
+      return res.status(400).json({ error: 'Missing required fields' });
+    }
+    
+    // Save to Firestore
+    const callRequestsRef = collection(db, 'request-call');
+    const docRef = await addDoc(callRequestsRef, {
+      number,
+      time,
+      language,
+      name: name || '',
+      email: email || '',
+      status: 'pending',
+      createdAt: new Date().toISOString()
+    });
     
     // Send email to admin
     await transporter.sendMail({
@@ -177,9 +229,15 @@ export default async function handler(req, res) {
       });
     }
 
-    res.status(200).json({ message: 'Emails sent successfully' });
+    res.status(200).json({ 
+      message: 'Request saved and emails sent successfully',
+      requestId: docRef.id 
+    });
   } catch (error) {
-    console.error('Error sending emails:', error);
-    res.status(500).json({ error: 'Failed to send emails' });
+    console.error('Error processing request:', error);
+    res.status(500).json({ 
+      error: 'Failed to process request',
+      details: error.message 
+    });
   }
 } 

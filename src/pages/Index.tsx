@@ -1,4 +1,3 @@
-
 import Header from '@/components/Header';
 import Hero from '@/components/Hero';
 import WhyNGOs from '@/components/WhyNGOs';
@@ -10,21 +9,27 @@ import Process from '@/components/Process';
 import Contact from '@/components/Contact';
 import Footer from '@/components/Footer';
 
-const Index = () => {
+export default function Home() {
   return (
     <div className="min-h-screen">
       <Header />
-      <Hero />
+      <section className="relative h-screen flex items-center justify-center bg-gradient-to-br from-brand-cream to-white overflow-hidden">
+        <Hero />
+      </section>
       <WhyNGOs />
-      <Templates />
+      <section className="py-20 bg-white">
+        <Templates />
+      </section>
       <About />
       <Services />
       <Portfolio />
-      <Process />
-      <Contact />
+      <section className="py-20 bg-gradient-to-br from-brand-cream to-white">
+        <Process />
+      </section>
+      <section className="py-20 bg-white">
+        <Contact />
+      </section>
       <Footer />
     </div>
   );
-};
-
-export default Index;
+}

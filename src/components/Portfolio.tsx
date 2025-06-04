@@ -1,4 +1,3 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ExternalLink, GraduationCap, Leaf } from 'lucide-react';
@@ -15,10 +14,6 @@ const Portfolio = () => {
     <section id="portfolio" className="py-20 bg-gradient-to-br from-brand-cream to-white">
       <div className="container mx-auto px-4">
         <div className="max-w-6xl mx-auto">
-          {/* 
-          Commented out for now since we haven't created websites for clients yet
-          Will be enabled in the future
-          
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold text-brand-green mb-6">
               Stories of Impact
@@ -86,22 +81,6 @@ const Portfolio = () => {
                 </Button>
               </CardContent>
             </Card>
-          </div>
-          */}
-
-          <div className="text-center bg-white p-12 rounded-xl shadow-lg">
-            <h3 className="text-3xl font-bold text-brand-green mb-6">Your NGO's Story</h3>
-            <p className="text-xl text-gray-700 mb-8 max-w-2xl mx-auto">
-              Ready to create your own success story? Let's build a website that amplifies your impact 
-              and connects you with supporters worldwide.
-            </p>
-            <Button 
-              onClick={() => scrollToSection('contact')}
-              size="lg"
-              className="bg-brand-green hover:bg-brand-green-light text-white px-8 py-4"
-            >
-              Get Started Today
-            </Button>
           </div>
         </div>
       </div>
