@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Menu, X } from 'lucide-react';
@@ -10,9 +9,9 @@ const navLinks = [
   { name: 'Why NGOs', path: '/why-ngos' },
   { name: 'Services', section: 'services' },
   { name: 'Portfolio', path: '/portfolio' },
-  { name: 'Team', section: 'team' },
+  // { name: 'Team', section: 'team' },
   { name: 'Contact', section: 'contact' },
-  { name: 'Pricing', path: '/pricing' },
+  { name: 'Plans', path: '/pricing' },
 ];
 
 const Header = () => {

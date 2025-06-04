@@ -62,7 +62,7 @@ const Process = () => {
             ))}
           </div>
 
-          <div className="text-center mt-16">
+          {/* <div className="text-center mt-16">
             <div className="bg-gradient-to-r from-brand-green to-brand-green-light p-8 rounded-xl text-white">
               <h3 className="text-2xl font-bold mb-4">Ready to Start Your Journey?</h3>
               <p className="text-lg mb-6">
@@ -77,7 +77,7 @@ const Process = () => {
                 </button>
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </section>

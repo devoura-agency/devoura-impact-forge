@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -44,75 +43,78 @@ const Contact = () => {
 
           <div className="grid lg:grid-cols-1 gap-12 mb-16">
             {/* Contact Information */}
-            <div className="space-y-6 max-w-2xl mx-auto">
-              <Card className="bg-white hover:shadow-lg transition-shadow">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-3 text-brand-green">
-                    <Mail className="w-6 h-6" />
-                    Email Us Directly
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-700 mb-4">
-                    Prefer email? Drop us a line and we'll get back to you within 24 hours.
-                  </p>
-                  <Button
-                    onClick={() => window.location.href = 'mailto:devoura.agency@gmail.com'}
-                    className="bg-brand-green hover:bg-brand-green-light text-white"
-                  >
-                    Send Email
-                  </Button>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-white hover:shadow-lg transition-shadow">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-3 text-brand-green">
-                    <Linkedin className="w-6 h-6" />
-                    Connect on LinkedIn
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-700 mb-4">Connect with us for professional updates and insights.</p>
-                  <a 
-                    href="#" // TODO: Replace with actual LinkedIn handle
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-brand-green hover:text-brand-green-light font-semibold"
-                  >
-                    LinkedIn
-                  </a>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-white hover:shadow-lg transition-shadow">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-3 text-brand-green">
-                    <Instagram className="w-6 h-6" />
-                    Follow on Instagram
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-700 mb-4">See our latest projects and stories on Instagram.</p>
-                  <a 
-                    href="#" // TODO: Replace with actual Instagram handle
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-brand-green hover:text-brand-green-light font-semibold"
-                  >
-                    Instagram
-                  </a>
-                </CardContent>
-              </Card>
-
-              <div className="bg-brand-green p-6 rounded-xl text-white">
-                <h3 className="text-xl font-bold mb-2">Why Choose Devoura?</h3>
-                <ul className="space-y-2 text-sm">
-                  <li>• Specialized in NGO websites</li>
-                  <li>• AI-powered engagement tools</li>
-                  <li>• Proven donation increase results</li>
-                  <li>• Ongoing support & maintenance</li>
-                </ul>
+            <div className="grid md:grid-cols-2 gap-6 max-w-2xl mx-auto">
+              {/* Email & LinkedIn side by side */}
+              <div className="flex flex-col gap-6">
+                <Card className="bg-white hover:shadow-lg transition-shadow">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-3 text-brand-green">
+                      <Mail className="w-6 h-6" />
+                      Email Us Directly
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-gray-700 mb-4">
+                      Prefer email? Drop us a line and we'll get back to you within 24 hours.
+                    </p>
+                    <Button
+                      onClick={() => window.location.href = 'mailto:devoura.agency@gmail.com'}
+                      className="bg-brand-green hover:bg-brand-green-light text-white"
+                    >
+                      Send Email
+                    </Button>
+                  </CardContent>
+                </Card>
+                <Card className="bg-white hover:shadow-lg transition-shadow">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-3 text-brand-green">
+                      <Linkedin className="w-6 h-6" />
+                      Connect on LinkedIn
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-gray-700 mb-4">Connect with us for professional updates and insights.</p>
+                    <a 
+                      href="#" // TODO: Replace with actual LinkedIn handle
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-brand-green hover:text-brand-green-light font-semibold"
+                    >
+                      LinkedIn
+                    </a>
+                  </CardContent>
+                </Card>
+              </div>
+              {/* Instagram & Why Choose Devoura side by side */}
+              <div className="flex flex-col gap-6">
+                <Card className="bg-white hover:shadow-lg transition-shadow">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-3 text-brand-green">
+                      <Instagram className="w-6 h-6" />
+                      Follow on Instagram
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-gray-700 mb-4">See our latest projects and stories on Instagram.</p>
+                    <a 
+                      href="#" // TODO: Replace with actual Instagram handle
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-brand-green hover:text-brand-green-light font-semibold"
+                    >
+                      Instagram
+                    </a>
+                  </CardContent>
+                </Card>
+                <div className="bg-brand-green p-6 rounded-xl text-white">
+                  <h3 className="text-xl font-bold mb-2">Why Choose Devoura?</h3>
+                  <ul className="space-y-2 text-sm">
+                    <li>• Specialized in NGO websites</li>
+                    <li>• AI-powered engagement tools</li>
+                    <li>• Proven donation increase results</li>
+                    <li>• Ongoing support & maintenance</li>
+                  </ul>
+                </div>
               </div>
             </div>
           </div>

@@ -158,11 +158,11 @@ const WebsiteWizard = () => {
 
         {/* Progress Bar */}
         <div className="w-full max-w-3xl mx-auto mb-10">
-          <div className="flex items-center justify-between mb-2">
+          <div className="flex items-center justify-center gap-4 mb-2">
             {steps.map((s, i) => (
-              <div key={s} className="flex-1 flex flex-col items-center">
+              <div key={s} className="flex flex-col items-center min-w-[80px]">
                 <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-white ${i <= step ? 'bg-brand-green' : 'bg-gray-300'}`}>{i + 1}</div>
-                <span className={`text-xs mt-2 ${i === step ? 'text-brand-green font-bold' : 'text-gray-500'}`}>{s}</span>
+                <span className={`text-xs mt-2 text-center ${i === step ? 'text-brand-green font-bold' : 'text-gray-500'}`}>{s}</span>
               </div>
             ))}
           </div>
