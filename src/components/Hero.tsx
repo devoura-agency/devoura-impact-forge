@@ -1,263 +1,210 @@
 
 import { Button } from '@/components/ui/button';
-import { ArrowRight, Users, Globe, Award } from 'lucide-react';
+import { ArrowRight, Play } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { useState, useEffect } from 'react';
-
-const websites = [
-  {
-    title: "EduCare Foundation",
-    category: "Education NGO",
-    url: "https://educare-foundation-ngo.vercel.app/",
-    image: "/placeholder.svg"
-  },
-  {
-    title: "Empowering Women",
-    category: "Women's Rights",
-    url: "https://empowering-women-ngo.vercel.app/",
-    image: "/placeholder.svg"
-  },
-  {
-    title: "Wildlife Hope",
-    category: "Wildlife Conservation",
-    url: "https://wildlife-hope-ngo.vercel.app/",
-    image: "/placeholder.svg"
-  },
-  {
-    title: "Future Bright Girls",
-    category: "Girl Child Education",
-    url: "https://future-bright-girls-ngo.vercel.app/",
-    image: "/placeholder.svg"
-  },
-  {
-    title: "Seva Bharat",
-    category: "Community Service",
-    url: "https://seva-bharat-ngo.vercel.app/",
-    image: "/placeholder.svg"
-  },
-  {
-    title: "Jeevan Safar Sangam",
-    category: "Health & Wellness",
-    url: "https://jeevan-safar-sangam-ngo.vercel.app/",
-    image: "/placeholder.svg"
-  }
-];
 
 const Hero = () => {
   const navigate = useNavigate();
-  const [isManualScroll, setIsManualScroll] = useState(false);
-  const [scrollY, setScrollY] = useState(0);
 
-  const scrollToContact = () => {
-    const contactSection = document.getElementById('contact');
-    if (contactSection) {
-      contactSection.scrollIntoView({ behavior: 'smooth' });
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
     }
   };
-
-  const handleWebsiteClick = (website: typeof websites[0]) => {
-    navigate(`/website-viewer?url=${encodeURIComponent(website.url)}&name=${encodeURIComponent(website.title)}`);
-  };
-
-  const handleStartProject = () => {
-    navigate('/wizard');
-  };
-
-  const handleExploreWork = () => {
-    navigate('/portfolio');
-  };
-
-  const handleManualScroll = (e: React.WheelEvent) => {
-    setIsManualScroll(true);
-    setScrollY(prev => {
-      const newY = prev + e.deltaY * 0.5;
-      return Math.max(-200, Math.min(200, newY));
-    });
-    
-    // Reset auto-scroll after 3 seconds of no manual scrolling
-    setTimeout(() => {
-      setIsManualScroll(false);
-    }, 3000);
-  };
-
-  useEffect(() => {
-    if (!isManualScroll) {
-      setScrollY(0);
-    }
-  }, [isManualScroll]);
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-brand-cream to-white">
-      {/* Professional Pattern Background */}
-      <div className="absolute inset-0 opacity-5">
-        <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <pattern id="grid" width="60" height="60" patternUnits="userSpaceOnUse">
-              <path d="M 60 0 L 0 0 0 60" fill="none" stroke="#4A6741" strokeWidth="1"/>
-            </pattern>
-            <pattern id="dots" width="40" height="40" patternUnits="userSpaceOnUse">
-              <circle cx="20" cy="20" r="2" fill="#4A6741"/>
-            </pattern>
-          </defs>
-          <rect width="100%" height="100%" fill="url(#grid)" />
-          <rect width="100%" height="100%" fill="url(#dots)" />
-        </svg>
-      </div>
-
-      {/* Floating geometric shapes */}
-      <div className="absolute inset-0 overflow-hidden">
-        <motion.div
-          className="absolute top-20 left-10 w-20 h-20 bg-brand-green/10 rounded-full"
-          animate={{ y: [0, -20, 0], rotate: [0, 180, 360] }}
-          transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-        />
-        <motion.div
-          className="absolute top-40 right-20 w-16 h-16 bg-brand-gold/10 rotate-45"
-          animate={{ y: [0, 20, 0], rotate: [45, 225, 405] }}
-          transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
-        />
-        <motion.div
-          className="absolute bottom-40 left-20 w-12 h-12 bg-brand-green/10 rounded-full"
-          animate={{ y: [0, -15, 0], x: [0, 10, 0] }}
-          transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
-        />
-      </div>
-
+    <section className="pt-32 pb-20 bg-gradient-to-br from-brand-cream via-white to-brand-gold/10 overflow-hidden relative">
+      {/* Background decorative elements */}
+      <div className="absolute inset-0 bg-gradient-to-r from-brand-green/5 to-transparent"></div>
+      <div className="absolute top-20 right-10 w-72 h-72 bg-brand-gold/10 rounded-full blur-3xl"></div>
+      <div className="absolute bottom-20 left-10 w-96 h-96 bg-brand-green/5 rounded-full blur-3xl"></div>
+      
       <div className="container mx-auto px-4 relative z-10">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
-          {/* Left Content */}
-          <motion.div 
-            className="text-center lg:text-left"
-            initial={{ opacity: 0, x: -50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
-          >
-            <h1 className="text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">
-              Empowering
-              <span className="text-brand-green block">NGOs</span>
-              <span className="text-brand-gold">Digitally</span>
-            </h1>
-            <p className="text-xl text-gray-600 mb-8 leading-relaxed">
-              We create powerful, professional websites that help NGOs amplify their impact, 
-              reach more supporters, and drive meaningful change in communities worldwide.
-            </p>
+        <div className="max-w-6xl mx-auto">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
             
-            {/* Key Metrics */}
-            <div className="mb-4">
-              <h3 className="text-lg font-semibold text-brand-green mb-4">Our Goal</h3>
-              <div className="flex flex-wrap justify-center lg:justify-start gap-6 mb-8">
-                <div className="flex items-center gap-2 bg-white/70 backdrop-blur-sm rounded-full px-4 py-2 shadow-lg">
-                  <Users className="w-5 h-5 text-brand-green" />
-                  <span className="font-semibold text-gray-800">500+ NGOs</span>
-                </div>
-                <div className="flex items-center gap-2 bg-white/70 backdrop-blur-sm rounded-full px-4 py-2 shadow-lg">
-                  <Globe className="w-5 h-5 text-brand-green" />
-                  <span className="font-semibold text-gray-800">50+ Countries</span>
-                </div>
-                <div className="flex items-center gap-2 bg-white/70 backdrop-blur-sm rounded-full px-4 py-2 shadow-lg">
-                  <Award className="w-5 h-5 text-brand-green" />
-                  <span className="font-semibold text-gray-800">99% Success</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-              <Button 
-                size="lg"
-                onClick={handleStartProject}
-                className="bg-brand-green hover:bg-brand-green-light text-white px-8 py-4 text-lg group"
-              >
-                Start Your Project
-                <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-              </Button>
-              <Button 
-                size="lg" 
-                variant="outline"
-                onClick={handleExploreWork}
-                className="border-brand-green text-brand-green hover:bg-brand-green hover:text-white px-8 py-4 text-lg"
-              >
-                View Our Work
-              </Button>
-            </div>
-          </motion.div>
-
-          {/* Right Content - Website Showcase */}
-          <motion.div 
-            className="relative"
-            initial={{ opacity: 0, x: 50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-          >
-            <div className="relative h-[600px] overflow-hidden rounded-2xl bg-gradient-to-br from-brand-green/5 to-brand-gold/5 p-8">
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent transform -skew-x-12"></div>
-              
-              {/* Scrolling Website Cards */}
-              <div 
-                className="relative h-full cursor-pointer"
-                onWheel={handleManualScroll}
-                title="Scroll to control manually or let it auto-scroll"
-              >
+            {/* Left Content */}
+            <motion.div 
+              initial={{ opacity: 0, x: -50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8 }}
+              className="space-y-8"
+            >
+              <div className="space-y-6">
                 <motion.div
-                  className="absolute inset-0 flex flex-col gap-4"
-                  animate={!isManualScroll ? { y: [0, -100, 0] } : { y: scrollY }}
-                  transition={!isManualScroll ? { duration: 15, repeat: Infinity, ease: "linear" } : { duration: 0.1 }}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2 }}
+                  className="inline-flex items-center bg-brand-green/10 text-brand-green px-4 py-2 rounded-full text-sm font-medium"
                 >
-                  {[...websites, ...websites].map((website, index) => (
-                    <motion.div
-                      key={index}
-                      className="group block cursor-pointer"
-                      onClick={() => handleWebsiteClick(website)}
-                      whileHover={{ scale: 1.05, rotate: 2 }}
-                      transition={{ type: "spring", stiffness: 300 }}
-                    >
-                      <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-100 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-                        <div className="flex items-center gap-4">
-                          <div className="w-16 h-16 bg-gradient-to-br from-brand-green to-brand-green-light rounded-lg flex items-center justify-center">
-                            <Globe className="w-8 h-8 text-white" />
-                          </div>
-                          <div>
-                            <h3 className="font-semibold text-gray-900 group-hover:text-brand-green transition-colors">
-                              {website.title}
-                            </h3>
-                            <p className="text-sm text-gray-600">{website.category}</p>
-                            <div className="mt-2 text-xs text-brand-green font-medium opacity-0 group-hover:opacity-100 transition-opacity">
-                              Click to explore →
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </motion.div>
-                  ))}
+                  ✨ Empowering NGOs Digitally
+                </motion.div>
+                
+                <motion.h1 
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3 }}
+                  className="text-4xl md:text-6xl lg:text-7xl font-bold text-gray-900 leading-tight"
+                >
+                  Your Mission
+                  <span className="text-brand-green block">Deserves a</span>
+                  <span className="text-brand-gold">Digital Voice</span>
+                </motion.h1>
+                
+                <motion.p 
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.4 }}
+                  className="text-xl text-gray-700 leading-relaxed max-w-2xl"
+                >
+                  We create powerful, professional websites that help NGOs amplify their impact, reach more supporters, and drive meaningful change in communities worldwide.
+                </motion.p>
+              </div>
+
+              <motion.div 
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 }}
+                className="flex flex-col sm:flex-row gap-4"
+              >
+                <Button 
+                  onClick={() => navigate('/wizard')}
+                  size="lg"
+                  className="bg-brand-green hover:bg-brand-green-light text-white px-8 py-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300"
+                >
+                  Start Building Your Website
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </Button>
+                
+                <Button 
+                  onClick={() => navigate('/portfolio')}
+                  variant="outline" 
+                  size="lg"
+                  className="border-brand-green text-brand-green hover:bg-brand-green hover:text-white px-8 py-4 rounded-full transition-all duration-300"
+                >
+                  <Play className="mr-2 h-5 w-5" />
+                  View Our Work
+                </Button>
+              </motion.div>
+
+              {/* Trust indicators */}
+              <motion.div 
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.6 }}
+                className="flex items-center gap-8 pt-8"
+              >
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-brand-green">Our Goal</div>
+                  <div className="text-sm text-gray-600">Aspiring to serve</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-brand-green">500+</div>
+                  <div className="text-sm text-gray-600">NGOs</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-brand-green">50+</div>
+                  <div className="text-sm text-gray-600">Countries</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-brand-green">99%</div>
+                  <div className="text-sm text-gray-600">Success</div>
+                </div>
+              </motion.div>
+            </motion.div>
+
+            {/* Right Content - Interactive Visual */}
+            <motion.div 
+              initial={{ opacity: 0, x: 50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="relative"
+            >
+              <div className="relative bg-white rounded-2xl shadow-2xl p-8 border border-brand-cream">
+                {/* Mock website preview */}
+                <div className="space-y-6">
+                  <div className="flex items-center gap-3">
+                    <div className="w-3 h-3 bg-red-400 rounded-full"></div>
+                    <div className="w-3 h-3 bg-yellow-400 rounded-full"></div>
+                    <div className="w-3 h-3 bg-green-400 rounded-full"></div>
+                    <div className="flex-1 bg-gray-100 h-8 rounded ml-4"></div>
+                  </div>
+                  
+                  <div className="space-y-4">
+                    <div className="h-4 bg-brand-green/20 rounded w-3/4"></div>
+                    <div className="h-12 bg-brand-gold/20 rounded"></div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="h-20 bg-brand-green/10 rounded"></div>
+                      <div className="h-20 bg-brand-cream rounded"></div>
+                    </div>
+                    <div className="h-6 bg-brand-green/30 rounded w-1/2"></div>
+                  </div>
+                </div>
+
+                {/* Floating elements */}
+                <motion.div 
+                  animate={{ y: [-10, 10, -10] }}
+                  transition={{ duration: 3, repeat: Infinity }}
+                  className="absolute -top-4 -right-4 bg-brand-green text-white p-3 rounded-full shadow-lg"
+                >
+                  ❤️
+                </motion.div>
+                
+                <motion.div 
+                  animate={{ y: [10, -10, 10] }}
+                  transition={{ duration: 4, repeat: Infinity }}
+                  className="absolute -bottom-4 -left-4 bg-brand-gold text-white p-3 rounded-full shadow-lg"
+                >
+                  🌟
                 </motion.div>
               </div>
 
-              {/* Gradient overlays for smooth effect */}
-              <div className="absolute top-0 left-0 right-0 h-20 bg-gradient-to-b from-white/80 to-transparent pointer-events-none"></div>
-              <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-white/80 to-transparent pointer-events-none"></div>
-            </div>
+              {/* Additional floating stats */}
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 1, duration: 0.5 }}
+                className="absolute top-10 -left-10 bg-white rounded-lg shadow-lg p-4 border border-brand-cream"
+              >
+                <div className="text-xs text-gray-600">Donations Increased</div>
+                <div className="text-lg font-bold text-brand-green">+156%</div>
+              </motion.div>
 
-            {/* Call to action overlay */}
-            <div className="absolute top-4 right-4 bg-brand-gold text-white px-4 py-2 rounded-full text-sm font-semibold shadow-lg">
-              ✨ Click to explore
-            </div>
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 1.2, duration: 0.5 }}
+                className="absolute bottom-10 -right-10 bg-white rounded-lg shadow-lg p-4 border border-brand-cream"
+              >
+                <div className="text-xs text-gray-600">Volunteer Sign-ups</div>
+                <div className="text-lg font-bold text-brand-green">+89%</div>
+              </motion.div>
+            </motion.div>
+          </div>
+
+          {/* Bottom CTA */}
+          <motion.div 
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.8 }}
+            className="text-center mt-20"
+          >
+            <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
+              <span className="text-brand-green font-medium">Ready to amplify your impact?</span> 
+              <br />Join hundreds of NGOs worldwide who trust us to tell their story online.
+            </p>
             
-            {/* Manual scroll hint */}
-            <div className="absolute bottom-4 left-4 bg-white/90 backdrop-blur-sm text-brand-green px-3 py-1 rounded-full text-xs font-medium shadow-lg">
-              💡 Scroll to control manually
+            <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
+              <span className="text-sm text-gray-500">👇 No hassle, just results</span>
+              <div className="flex items-center gap-2 text-sm text-gray-500">
+                <span>✅ Quick Setup</span>
+                <span>✅ Professional Design</span>
+                <span>✅ Ongoing Support</span>
+              </div>
             </div>
           </motion.div>
-        </div>
-      </div>
-
-      {/* Bottom scroll indicator */}
-      <motion.div 
-        className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
-        animate={{ y: [0, 10, 0] }}
-        transition={{ duration: 2, repeat: Infinity }}
-      >
-        <div className="w-6 h-10 border-2 border-brand-green rounded-full flex justify-center">
-          <div className="w-1 h-3 bg-brand-green rounded-full mt-2"></div>
         </div>
       </div>
     </section>
