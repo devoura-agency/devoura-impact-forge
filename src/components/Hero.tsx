@@ -3,9 +3,32 @@ import { Button } from '@/components/ui/button';
 import { ArrowRight, Play } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 
 const Hero = () => {
   const navigate = useNavigate();
+  const [currentTemplateIndex, setCurrentTemplateIndex] = useState(0);
+
+  const templates = [
+    { name: 'EduCare Foundation', url: 'https://educare-foundation-ngo.vercel.app/' },
+    { name: 'Empowering Women', url: 'https://empowering-women-ngo.vercel.app/' },
+    { name: 'Wildlife Hope', url: 'https://wildlife-hope-ngo.vercel.app/' },
+    { name: 'Future Bright Girls', url: 'https://future-bright-girls-ngo.vercel.app/' },
+    { name: 'Seva Bharat', url: 'https://seva-bharat-ngo.vercel.app/' },
+    { name: 'Jeevan Safar Sangam', url: 'https://jeevan-safar-sangam-ngo.vercel.app/' }
+  ];
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentTemplateIndex((prev) => (prev + 1) % templates.length);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const handleTemplateClick = () => {
+    const currentTemplate = templates[currentTemplateIndex];
+    navigate(`/website-viewer?url=${encodeURIComponent(currentTemplate.url)}&name=${encodeURIComponent(currentTemplate.name)}`);
+  };
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
@@ -115,32 +138,56 @@ const Hero = () => {
               </motion.div>
             </motion.div>
 
-            {/* Right Content - Interactive Visual */}
+            {/* Right Content - Interactive Monitor with Live Templates */}
             <motion.div 
               initial={{ opacity: 0, x: 50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
               className="relative"
             >
-              <div className="relative bg-white rounded-2xl shadow-2xl p-8 border border-brand-cream">
-                {/* Mock website preview */}
-                <div className="space-y-6">
-                  <div className="flex items-center gap-3">
-                    <div className="w-3 h-3 bg-red-400 rounded-full"></div>
-                    <div className="w-3 h-3 bg-yellow-400 rounded-full"></div>
-                    <div className="w-3 h-3 bg-green-400 rounded-full"></div>
-                    <div className="flex-1 bg-gray-100 h-8 rounded ml-4"></div>
+              <div 
+                className="relative bg-white rounded-2xl shadow-2xl p-6 border border-brand-cream cursor-pointer hover:shadow-3xl transition-shadow"
+                onClick={handleTemplateClick}
+              >
+                {/* Monitor-style header */}
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-3 h-3 bg-red-400 rounded-full"></div>
+                  <div className="w-3 h-3 bg-yellow-400 rounded-full"></div>
+                  <div className="w-3 h-3 bg-green-400 rounded-full"></div>
+                  <div className="flex-1 bg-gray-100 h-6 rounded ml-4 flex items-center px-3 text-sm text-gray-600">
+                    {templates[currentTemplateIndex].name}
                   </div>
-                  
-                  <div className="space-y-4">
-                    <div className="h-4 bg-brand-green/20 rounded w-3/4"></div>
-                    <div className="h-12 bg-brand-gold/20 rounded"></div>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="h-20 bg-brand-green/10 rounded"></div>
-                      <div className="h-20 bg-brand-cream rounded"></div>
+                </div>
+                
+                {/* Live website iframe */}
+                <div className="aspect-video relative overflow-hidden rounded-lg bg-gray-100">
+                  <iframe
+                    src={templates[currentTemplateIndex].url}
+                    className="w-full h-full border-0 transform scale-75 origin-top-left pointer-events-none"
+                    style={{ 
+                      width: '133.33%', 
+                      height: '133.33%',
+                    }}
+                    title={templates[currentTemplateIndex].name}
+                  />
+                  {/* Click overlay */}
+                  <div className="absolute inset-0 bg-transparent hover:bg-brand-green/10 transition-colors flex items-center justify-center">
+                    <div className="bg-brand-green/80 text-white px-4 py-2 rounded-full opacity-0 hover:opacity-100 transition-opacity">
+                      Click to view full site
                     </div>
-                    <div className="h-6 bg-brand-green/30 rounded w-1/2"></div>
                   </div>
+                </div>
+
+                {/* Template indicator dots */}
+                <div className="flex justify-center gap-2 mt-4">
+                  {templates.map((_, index) => (
+                    <div
+                      key={index}
+                      className={`w-2 h-2 rounded-full transition-colors ${
+                        index === currentTemplateIndex ? 'bg-brand-green' : 'bg-gray-300'
+                      }`}
+                    />
+                  ))}
                 </div>
 
                 {/* Floating elements */}

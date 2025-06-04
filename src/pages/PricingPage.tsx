@@ -1,4 +1,10 @@
+
 import { motion } from 'framer-motion';
+import { Button } from '@/components/ui/button';
+import { Home } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
 
 const plans = [
   {
@@ -79,71 +85,113 @@ const maintenance = [
   },
 ];
 
-const PricingPage = () => (
-  <motion.main
-    initial={{ opacity: 0 }}
-    animate={{ opacity: 1 }}
-    exit={{ opacity: 0 }}
-    className="min-h-screen bg-gradient-to-br from-brand-cream to-white flex flex-col items-center justify-start pt-24 pb-16"
-  >
-    <div className="w-full max-w-7xl px-6">
-      <h1 className="text-4xl md:text-5xl font-bold text-brand-green mb-8 text-center">
-        Website Development Packages
-      </h1>
-      <p className="text-lg text-gray-700 mb-12 text-center max-w-2xl mx-auto">
-        Choose the plan that fits your mission and scale. All packages are crafted for NGOs and social impact organizations.
-      </p>
-      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-10 mb-20">
-        {plans.map((plan, idx) => (
-          <motion.div
-            key={plan.name}
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: idx * 0.1, type: 'spring' }}
-            className={`rounded-2xl shadow-xl bg-gradient-to-br ${plan.color} text-white p-8 flex flex-col items-center`}
-          >
-            <h2 className="text-2xl font-bold mb-2">{plan.name}</h2>
-            <div className="text-3xl font-extrabold mb-4">{plan.price}</div>
-            <ul className="mb-6 space-y-2 text-base">
-              {plan.features.map((f, i) => (
-                <li key={i} className="flex items-center gap-2">
-                  <span className="text-lg">•</span> {f}
-                </li>
+const PricingPage = () => {
+  const navigate = useNavigate();
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-brand-cream to-white">
+      <Header />
+      
+      <motion.main
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="pt-24 pb-16"
+      >
+        <div className="container mx-auto px-4">
+          <div className="max-w-7xl mx-auto">
+            
+            {/* Go To Home Button */}
+            <div className="mb-6">
+              <Button
+                onClick={() => navigate('/')}
+                variant="outline"
+                className="border-brand-green text-brand-green hover:bg-brand-green hover:text-white"
+              >
+                <Home className="w-4 h-4 mr-2" />
+                Go To Home
+              </Button>
+            </div>
+
+            <h1 className="text-4xl md:text-5xl font-bold text-brand-green mb-8 text-center">
+              Website Development Packages
+            </h1>
+            <p className="text-lg text-gray-700 mb-12 text-center max-w-2xl mx-auto">
+              Choose the plan that fits your mission and scale. All packages are crafted for NGOs and social impact organizations.
+            </p>
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-10 mb-20">
+              {plans.map((plan, idx) => (
+                <motion.div
+                  key={plan.name}
+                  initial={{ opacity: 0, y: 40 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: idx * 0.1, type: 'spring' }}
+                  className={`rounded-2xl shadow-xl bg-gradient-to-br ${plan.color} text-white p-8 flex flex-col items-center`}
+                >
+                  <h2 className="text-2xl font-bold mb-2">{plan.name}</h2>
+                  <div className="text-3xl font-extrabold mb-4">{plan.price}</div>
+                  <ul className="mb-6 space-y-2 text-base">
+                    {plan.features.map((f, i) => (
+                      <li key={i} className="flex items-center gap-2">
+                        <span className="text-lg">•</span> {f}
+                      </li>
+                    ))}
+                  </ul>
+                </motion.div>
               ))}
-            </ul>
-            <button className="mt-auto bg-white text-brand-green font-semibold px-6 py-2 rounded-lg shadow hover:bg-brand-green hover:text-white transition">
-              Get Started
-            </button>
-          </motion.div>
-        ))}
-      </div>
-      <h2 className="text-3xl font-bold text-brand-green mb-8 text-center">Website Maintenance Plans</h2>
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
-        {maintenance.map((plan, idx) => (
-          <motion.div
-            key={plan.name}
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: idx * 0.1, type: 'spring' }}
-            className={`rounded-2xl shadow-xl bg-gradient-to-br ${plan.color} text-brand-green-dark p-8 flex flex-col items-center`}
-          >
-            <h3 className="text-xl font-bold mb-2">{plan.name}</h3>
-            <div className="text-2xl font-extrabold mb-4">{plan.price}</div>
-            <ul className="mb-6 space-y-2 text-base">
-              {plan.features.map((f, i) => (
-                <li key={i} className="flex items-center gap-2">
-                  <span className="text-lg">•</span> {f}
-                </li>
+            </div>
+            <h2 className="text-3xl font-bold text-brand-green mb-8 text-center">Website Maintenance Plans</h2>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10 mb-16">
+              {maintenance.map((plan, idx) => (
+                <motion.div
+                  key={plan.name}
+                  initial={{ opacity: 0, y: 40 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: idx * 0.1, type: 'spring' }}
+                  className={`rounded-2xl shadow-xl bg-gradient-to-br ${plan.color} text-brand-green-dark p-8 flex flex-col items-center`}
+                >
+                  <h3 className="text-xl font-bold mb-2">{plan.name}</h3>
+                  <div className="text-2xl font-extrabold mb-4">{plan.price}</div>
+                  <ul className="mb-6 space-y-2 text-base">
+                    {plan.features.map((f, i) => (
+                      <li key={i} className="flex items-center gap-2">
+                        <span className="text-lg">•</span> {f}
+                      </li>
+                    ))}
+                  </ul>
+                </motion.div>
               ))}
-            </ul>
-            <button className="mt-auto bg-brand-green text-white font-semibold px-6 py-2 rounded-lg shadow hover:bg-white hover:text-brand-green transition">
-              Choose Plan
-            </button>
-          </motion.div>
-        ))}
-      </div>
+            </div>
+
+            {/* Single CTA Button */}
+            <div className="text-center">
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 }}
+                className="bg-brand-green p-12 rounded-xl text-white"
+              >
+                <h3 className="text-3xl font-bold mb-6">Ready to Get Started?</h3>
+                <p className="text-xl mb-8 max-w-2xl mx-auto">
+                  Let's discuss your NGO's needs and find the perfect package for your mission. 
+                  Our team will guide you through the entire process.
+                </p>
+                <Button 
+                  onClick={() => navigate('/wizard')}
+                  size="lg"
+                  className="bg-white text-brand-green hover:bg-gray-100 px-12 py-4 text-lg font-bold"
+                >
+                  Start Your Project
+                </Button>
+              </motion.div>
+            </div>
+          </div>
+        </div>
+      </motion.main>
+
+      <Footer />
     </div>
-  </motion.main>
-);
+  );
+};
 
 export default PricingPage; 

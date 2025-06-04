@@ -12,6 +12,7 @@ import SelectPlanPage from './pages/SelectPlanPage';
 import WebsiteWizard from './pages/WebsiteWizard';
 import WebsiteViewer from './pages/WebsiteViewer';
 import RequestCall from './pages/RequestCall';
+import GeneralContactPage from './pages/GeneralContactPage';
 import PortfolioPage from './pages/PortfolioPage';
 import StoryPage from './pages/StoryPage';
 import BlogPage from './pages/BlogPage';
@@ -41,6 +42,7 @@ const App = () => (
           <Route path="/wizard" element={<WebsiteWizard />} />
           <Route path="/website-viewer" element={<WebsiteViewer />} />
           <Route path="/request-call" element={<RequestCall />} />
+          <Route path="/general-contact" element={<GeneralContactPage />} />
           <Route path="/portfolio" element={<PortfolioPage />} />
           <Route path="/story" element={<StoryPage />} />
           <Route path="/why-ngos" element={<BlogPage />} />

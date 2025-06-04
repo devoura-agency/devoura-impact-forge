@@ -3,12 +3,10 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Mail, Calendar, Phone, Rocket, Sparkles, Linkedin, Instagram } from 'lucide-react';
-import GeneralContactForm from './GeneralContactForm';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 
 const Contact = () => {
-  const [activeForm, setActiveForm] = useState('contact');
   const navigate = useNavigate();
 
   return (
@@ -25,12 +23,11 @@ const Contact = () => {
             </p>
           </div>
 
-          {/* Form Selection Tabs */}
+          {/* Form Selection Buttons */}
           <div className="flex flex-wrap justify-center gap-4 mb-12">
             <Button
-              onClick={() => setActiveForm('contact')}
-              variant={activeForm === 'contact' ? 'default' : 'outline'}
-              className={activeForm === 'contact' ? 'bg-brand-green text-white' : 'border-brand-green text-brand-green hover:bg-brand-green hover:text-white'}
+              onClick={() => navigate('/general-contact')}
+              className="bg-brand-green text-white hover:bg-brand-green-light"
             >
               <Mail className="w-4 h-4 mr-2" />
               General Contact
@@ -45,14 +42,9 @@ const Contact = () => {
             </Button>
           </div>
 
-          <div className="grid lg:grid-cols-2 gap-12 mb-16">
-            {/* Contact Form */}
-            <div>
-              <GeneralContactForm />
-            </div>
-
+          <div className="grid lg:grid-cols-1 gap-12 mb-16">
             {/* Contact Information */}
-            <div className="space-y-6">
+            <div className="space-y-6 max-w-2xl mx-auto">
               <Card className="bg-white hover:shadow-lg transition-shadow">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-3 text-brand-green">
@@ -164,7 +156,7 @@ const Contact = () => {
                     whileHover={{ scale: 1.08 }}
                     whileTap={{ scale: 0.97 }}
                     className="bg-transparent border-2 border-white text-white font-bold px-8 py-4 rounded-lg shadow-lg hover:bg-white hover:text-brand-green transition text-lg"
-                    onClick={() => setActiveForm('contact')}
+                    onClick={() => navigate('/general-contact')}
                   >
                     General Contact
                   </motion.button>

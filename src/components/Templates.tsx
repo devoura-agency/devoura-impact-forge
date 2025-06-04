@@ -223,7 +223,7 @@ const Templates = ({ showPageMode = false }: TemplatesProps) => {
               className="text-center mb-16"
             >
               <h2 className="text-4xl md:text-5xl font-bold text-brand-green mb-6">
-                Choose Your NGO Template
+                Websites That Empower NGOs
               </h2>
               <p className="text-xl text-gray-700 max-w-3xl mx-auto">
                 Explore our professionally designed templates tailored for different NGO types. 
@@ -280,13 +280,23 @@ const Templates = ({ showPageMode = false }: TemplatesProps) => {
             animate={{ opacity: 1, y: 0 }}
             className="text-center mt-8"
           >
-            <Button
-              size="lg"
-              className="bg-brand-green hover:bg-brand-green-light text-white px-10 py-5 text-xl font-bold rounded-xl shadow-lg"
-              onClick={() => navigate('/wizard')}
-            >
-              Start Your Project
-            </Button>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button
+                size="lg"
+                className="bg-brand-green hover:bg-brand-green-light text-white px-10 py-5 text-xl font-bold rounded-xl shadow-lg"
+                onClick={() => navigate('/pricing')}
+              >
+                Explore Our Packages
+              </Button>
+              <Button
+                variant="outline"
+                size="lg"
+                className="border-brand-green text-brand-green hover:bg-brand-green hover:text-white px-10 py-5 text-xl font-bold rounded-xl"
+                onClick={() => scrollToSection('contact')}
+              >
+                Contact for Custom Quote
+              </Button>
+            </div>
           </motion.div>
 
           <motion.div
@@ -295,16 +305,16 @@ const Templates = ({ showPageMode = false }: TemplatesProps) => {
             className="text-center mt-8"
           >
             <div className="bg-brand-green p-8 rounded-xl text-white">
-              <h3 className="text-2xl font-bold mb-4">Can't Find Your NGO Type?</h3>
+              <h3 className="text-2xl font-bold mb-4">Your NGO's Story</h3>
               <p className="text-lg mb-6">
-                We create custom templates for any cause. Let's discuss your specific needs.
+                Every NGO has a unique story of impact and change. Let us help you tell yours in the most compelling way possible.
               </p>
               <Button 
                 onClick={() => navigate('/wizard')}
                 variant="outline"
-                className="border-white text-brand-green hover:bg-white hover:text-brand-green"
+                className="border-white text-white hover:bg-white hover:text-brand-green"
               >
-                Request Custom Template
+                Get Started Today
               </Button>
             </div>
           </motion.div>
