@@ -235,6 +235,8 @@ export default function BulkEmail() {
     setSending(true);
     let success = 0;
     let fail = 0;
+    let noAttachments = 0;
+
     for (const r of recipients) {
       try {
         const res = await fetch('/api/bulk-email', {
@@ -248,29 +250,62 @@ export default function BulkEmail() {
             text: getEmailTemplate(r.name, r.ngoType),
           })
         });
-        if (res.ok) success++;
-        else fail++;
+        
+        if (res.ok) {
+          const data = await res.json();
+          success++;
+          if (!data.attachmentsIncluded) {
+            noAttachments++;
+          }
+        } else {
+          fail++;
+        }
       } catch {
         fail++;
       }
     }
+
     // Save batch to Firestore
     try {
       await addDoc(collection(db, 'bulkEmailBatches'), {
         sentAt: new Date().toISOString(),
         recipients,
         status: 'completed',
+        stats: {
+          success,
+          fail,
+          noAttachments
+        }
       });
     } catch (err) {
       toast({ title: 'Warning', description: 'Emails sent but failed to save batch to database', variant: 'destructive' });
     }
+
     setSending(false);
-    toast({
-      title: 'Bulk Email Result',
-      description: `Sent: ${success}, Failed: ${fail}`,
-      variant: fail === 0 ? 'default' : 'destructive',
-    });
-    if (fail === 0) setRecipients([]);
+    
+    // Show appropriate toast message
+    if (fail === 0) {
+      if (noAttachments > 0) {
+        toast({
+          title: 'Emails Sent (Without Pitch Deck)',
+          description: `Successfully sent ${success} emails, but pitch deck was not attached. Please ensure the PDF is in the correct location.`,
+          variant: 'default'
+        });
+      } else {
+        toast({
+          title: 'Success',
+          description: `Successfully sent ${success} emails with pitch deck attached.`,
+          variant: 'default'
+        });
+      }
+      setRecipients([]);
+    } else {
+      toast({
+        title: 'Partial Success',
+        description: `Sent: ${success}, Failed: ${fail}${noAttachments > 0 ? ', No Pitch Deck: ' + noAttachments : ''}`,
+        variant: 'destructive'
+      });
+    }
   };
 
   return (
@@ -383,9 +418,12 @@ export default function BulkEmail() {
         <div className="mt-4 text-xs text-gray-500">
           Note: Each email will include:
           <ul className="list-disc list-inside mt-1">
-            <li>Our pitch deck as a PDF attachment</li>
+            <li>Our pitch deck as a PDF attachment (if available)</li>
             <li>A link to our website (https://devoura.vercel.app)</li>
           </ul>
+          <p className="mt-2 text-amber-600">
+            Make sure the pitch deck PDF is placed in the public/pitch-deck.pdf location
+          </p>
         </div>
       </div>
 

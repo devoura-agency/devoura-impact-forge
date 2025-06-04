@@ -1,5 +1,7 @@
 import { createTransport } from 'nodemailer';
 import dotenv from 'dotenv';
+import path from 'path';
+import fs from 'fs';
 
 dotenv.config();
 
@@ -15,6 +17,25 @@ const transporter = createTransport({
 
 // Add website URL constant
 const WEBSITE_URL = 'https://devoura.vercel.app';
+
+// Function to check if pitch deck exists
+const getPitchDeckAttachment = () => {
+  try {
+    const pitchDeckPath = path.join(process.cwd(), 'public', 'pitch-deck.pdf');
+    if (fs.existsSync(pitchDeckPath)) {
+      return [{
+        filename: 'Devoura-Pitch-Deck.pdf',
+        path: pitchDeckPath,
+        contentType: 'application/pdf'
+      }];
+    }
+    console.warn('Pitch deck PDF not found at:', pitchDeckPath);
+    return [];
+  } catch (error) {
+    console.error('Error checking pitch deck:', error);
+    return [];
+  }
+};
 
 // Email template logic based on ngoType
 function getEmailTemplate(name, ngoType) {
@@ -166,12 +187,8 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Missing required fields' });
     }
 
-    // Add attachments to the email
-    const attachments = [{
-      filename: 'Devoura-Pitch-Deck.pdf',
-      path: './public/pitch-deck.pdf', // Make sure this path is correct
-      contentType: 'application/pdf'
-    }];
+    // Get attachments if pitch deck exists
+    const attachments = getPitchDeckAttachment();
 
     await transporter.sendMail({
       from: EMAIL_USER,
@@ -181,9 +198,16 @@ export default async function handler(req, res) {
       attachments
     });
 
-    res.status(200).json({ message: 'Email sent successfully' });
+    res.status(200).json({ 
+      message: 'Email sent successfully',
+      attachmentsIncluded: attachments.length > 0
+    });
   } catch (error) {
     console.error('Bulk email error:', error);
-    res.status(500).json({ error: 'Failed to send email', details: error.message });
+    res.status(500).json({ 
+      error: 'Failed to send email', 
+      details: error.message,
+      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+    });
   }
 }
