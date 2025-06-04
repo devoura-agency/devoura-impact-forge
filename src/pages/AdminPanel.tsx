@@ -12,6 +12,7 @@ import CallRequests from "../app/admin/components/CallRequests";
 import ContactRequests from "../app/admin/components/ContactRequests";
 import WebsiteTemplates from "../app/admin/components/WebsiteTemplates";
 import BulkEmail from "../app/admin/components/BulkEmail";
+import EmailsSent from "../app/admin/components/EmailsSent";
 
 // Existing website links data
 const existingWebsites = [
@@ -198,11 +199,12 @@ const AdminPanel = () => {
 
           {/* Tabs for admin sections */}
           <Tabs defaultValue="call-requests" className="w-full">
-            <TabsList className="grid w-full grid-cols-4 mb-8">
+            <TabsList className="grid grid-cols-5 w-full">
               <TabsTrigger value="call-requests">Call Requests</TabsTrigger>
               <TabsTrigger value="contact-requests">Contact Requests</TabsTrigger>
-              <TabsTrigger value="templates">Website Templates</TabsTrigger>
+              <TabsTrigger value="website-templates">Website Templates</TabsTrigger>
               <TabsTrigger value="bulk-email">Bulk Email</TabsTrigger>
+              <TabsTrigger value="emails-sent">Emails Sent</TabsTrigger>
             </TabsList>
 
             <TabsContent value="call-requests">
@@ -213,12 +215,16 @@ const AdminPanel = () => {
               <ContactRequests />
             </TabsContent>
 
-            <TabsContent value="templates">
+            <TabsContent value="website-templates">
               <WebsiteTemplates />
             </TabsContent>
 
             <TabsContent value="bulk-email">
               <BulkEmail />
+            </TabsContent>
+
+            <TabsContent value="emails-sent">
+              <EmailsSent />
             </TabsContent>
           </Tabs>
         </div>

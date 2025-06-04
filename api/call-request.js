@@ -230,7 +230,7 @@ export default async function handler(req, res) {
     }
 
     res.status(200).json({ 
-      message: 'Request saved and emails sent successfully',
+      message: 'Emails sent successfully',
       requestId: docRef.id 
     });
   } catch (error) {

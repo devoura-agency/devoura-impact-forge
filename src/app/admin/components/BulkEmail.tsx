@@ -6,6 +6,8 @@ import { useToast } from '@/hooks/use-toast';
 import Papa from 'papaparse';
 import * as XLSX from 'xlsx';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { collection, addDoc } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
 
 interface Recipient {
   name: string;
@@ -251,6 +253,16 @@ export default function BulkEmail() {
       } catch {
         fail++;
       }
+    }
+    // Save batch to Firestore
+    try {
+      await addDoc(collection(db, 'bulkEmailBatches'), {
+        sentAt: new Date().toISOString(),
+        recipients,
+        status: 'completed',
+      });
+    } catch (err) {
+      toast({ title: 'Warning', description: 'Emails sent but failed to save batch to database', variant: 'destructive' });
     }
     setSending(false);
     toast({

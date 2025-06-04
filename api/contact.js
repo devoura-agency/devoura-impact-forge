@@ -261,7 +261,7 @@ export default async function handler(req, res) {
     });
 
     res.status(200).json({ 
-      message: 'Submission saved and emails sent successfully',
+      message: 'Emails sent successfully',
       submissionId: docRef.id 
     });
   } catch (error) {

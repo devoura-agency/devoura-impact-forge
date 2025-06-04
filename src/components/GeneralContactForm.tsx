@@ -37,15 +37,15 @@ const GeneralContactForm = () => {
 
       // Only send email via API in production (Vercel)
       if (isProd) {
-        const response = await fetch('/api/contact', {
+        const response = await fetch('/api/general-contact', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            name: `${formData.firstName} ${formData.lastName}`,
+            name: `${formData.firstName} ${formData.lastName}`.trim(),
             email: formData.email,
-            org: formData.organization,
+            organization: formData.organization,
             message: formData.message
           }),
         });
@@ -54,11 +54,10 @@ const GeneralContactForm = () => {
         try {
           data = await response.json();
         } catch (err) {
-          // If response is not JSON, treat as error
           throw new Error('Unexpected response from server');
         }
 
-        if (!response.ok) {
+        if (!response.ok || (data as any).message !== 'Emails sent successfully') {
           throw new Error((data as any).error || 'Failed to send email notification');
         }
       }

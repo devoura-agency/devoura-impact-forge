@@ -42,7 +42,7 @@ const CallRequestForm = () => {
 
       const data = await response.json();
 
-      if (!response.ok) {
+      if (!response.ok || data.message !== 'Emails sent successfully') {
         throw new Error(data.error || 'Failed to send email notification');
       }
 
