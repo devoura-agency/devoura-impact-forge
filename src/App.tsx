@@ -18,7 +18,14 @@ import BlogPage from './pages/BlogPage';
 import AdminPanel from './pages/AdminPanel';
 import ChatbotFAB from './components/ChatbotFAB';
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 1,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
