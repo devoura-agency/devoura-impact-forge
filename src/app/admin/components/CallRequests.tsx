@@ -30,7 +30,7 @@ export default function CallRequests() {
   const { toast } = useToast();
 
   useEffect(() => {
-    const q = query(collection(db, 'callRequests'), orderBy('createdAt', 'desc'));
+    const q = query(collection(db, 'request-call'), orderBy('createdAt', 'desc'));
     
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const requestsData = snapshot.docs.map(doc => ({
