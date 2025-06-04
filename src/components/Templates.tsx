@@ -223,7 +223,7 @@ const Templates = ({ showPageMode = false }: TemplatesProps) => {
               className="text-center mb-16"
             >
               <h2 className="text-4xl md:text-5xl font-bold text-brand-green mb-6">
-                Websites That Empower NGOs
+                Explore Our NGO Templates
               </h2>
               <p className="text-xl text-gray-700 max-w-3xl mx-auto">
                 Explore our professionally designed templates tailored for different NGO types. 

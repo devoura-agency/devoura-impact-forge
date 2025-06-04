@@ -2,8 +2,10 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Monitor, Bot, Eye, BarChart, Wrench } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const Services = () => {
+  const navigate = useNavigate();
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
     if (element) {
@@ -70,9 +72,10 @@ const Services = () => {
 
           <div className="text-center">
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button 
-                onClick={() => scrollToSection('contact')}
-                className="bg-brand-green hover:bg-brand-green-light text-white px-8 py-3"
+            <Button
+                size="lg"
+                className="bg-brand-green hover:bg-brand-green-light text-white px-8 py-3 "
+                onClick={() => navigate('/pricing')}
               >
                 Explore Our Packages
               </Button>
