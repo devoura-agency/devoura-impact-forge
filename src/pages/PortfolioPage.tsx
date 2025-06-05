@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -8,73 +7,42 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import { collection, getDocs, query, orderBy } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
 
 interface Website {
   id: string;
-  title: string;
   category: string;
-  url: string;
+  link: string;
   tag: string;
-  description: string;
+  createdAt: string;
 }
 
 const PortfolioPage = () => {
   const navigate = useNavigate();
-  const [websites, setWebsites] = useState<Website[]>([
-    {
-      id: '1',
-      title: "EduCare Foundation",
-      category: "Education NGO",
-      url: "https://educare-foundation-ngo.vercel.app/",
-      tag: 'starter',
-      description: "Empowering education for underprivileged children"
-    },
-    {
-      id: '2', 
-      title: "Empowering Women",
-      category: "Women's Rights",
-      url: "https://empowering-women-ngo.vercel.app/",
-      tag: 'starter',
-      description: "Supporting women's empowerment and equality"
-    },
-    {
-      id: '3',
-      title: "Wildlife Hope",
-      category: "Wildlife Conservation", 
-      url: "https://wildlife-hope-ngo.vercel.app/",
-      tag: 'starter',
-      description: "Protecting endangered species and their habitats"
-    },
-    {
-      id: '4',
-      title: "Future Bright Girls",
-      category: "Girl Child Education",
-      url: "https://future-bright-girls-ngo.vercel.app/",
-      tag: 'starter',
-      description: "Ensuring quality education for every girl child"
-    },
-    {
-      id: '5',
-      title: "Seva Bharat",
-      category: "Community Service",
-      url: "https://seva-bharat-ngo.vercel.app/",
-      tag: 'starter',
-      description: "Serving communities through various social initiatives"
-    },
-    {
-      id: '6',
-      title: "Jeevan Safar Sangam",
-      category: "Health & Wellness",
-      url: "https://jeevan-safar-sangam-ngo.vercel.app/",
-      tag: 'starter',
-      description: "Promoting health and wellness in rural communities"
-    }
-  ]);
-
+  const [websites, setWebsites] = useState<Website[]>([]);
   const [filter, setFilter] = useState('all');
 
+  useEffect(() => {
+    const fetchWebsites = async () => {
+      try {
+        const q = query(collection(db, 'websites'), orderBy('createdAt', 'desc'));
+        const querySnapshot = await getDocs(q);
+        const websitesData = querySnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        })) as Website[];
+        setWebsites(websitesData);
+      } catch (error) {
+        console.error('Error fetching websites:', error);
+      }
+    };
+
+    fetchWebsites();
+  }, []);
+
   const handleViewWebsite = (website: Website) => {
-    navigate(`/website-viewer?url=${encodeURIComponent(website.url)}&name=${encodeURIComponent(website.title)}`);
+    navigate(`/website-viewer?url=${encodeURIComponent(website.link)}&name=${encodeURIComponent(website.category)}`);
   };
 
   const filteredWebsites = filter === 'all' 
@@ -89,6 +57,14 @@ const PortfolioPage = () => {
       case 'superpack': return 'bg-purple-100 text-purple-800';
       default: return 'bg-gray-100 text-gray-800';
     }
+  };
+
+  const formatCategory = (category: string) => {
+    // Convert kebab-case to Title Case and add NGO
+    return category
+      .split('-')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ') + ' NGO';
   };
 
   return (
@@ -184,8 +160,8 @@ const PortfolioPage = () => {
                       {/* Live iframe preview */}
                       <div className="h-48 relative overflow-hidden bg-gray-100">
                         <iframe
-                          src={website.url}
-                          title={website.title}
+                          src={website.link}
+                          title={website.category}
                           className="w-full h-full border-0 transform scale-50 origin-top-left pointer-events-none"
                           style={{ 
                             width: '200%', 
@@ -204,14 +180,8 @@ const PortfolioPage = () => {
                     
                     <CardContent className="p-6">
                       <h3 className="text-xl font-bold text-brand-green mb-2">
-                        {website.title}
+                        {formatCategory(website.category)}
                       </h3>
-                      <p className="text-sm text-brand-green/70 mb-2">
-                        {website.category}
-                      </p>
-                      <p className="text-gray-600 mb-4 text-sm">
-                        {website.description}
-                      </p>
                       
                       <div className="flex gap-3">
                         <Button
