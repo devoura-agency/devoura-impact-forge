@@ -59,7 +59,7 @@ The Devoura Team
 P.S. We're offering a complimentary digital impact assessment for educational NGOs this month. Let's explore your potential together.
 `,
     'women-empowerment': `
-Subject: Amplify Women's Voices - Your Empowerment Mission Needs the Right Platform
+Subject: Amplify Womens Voices - Your Empowerment Mission Needs the Right Platform
 
 Dear ${name},
 
