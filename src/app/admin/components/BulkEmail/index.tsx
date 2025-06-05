@@ -1,6 +1,7 @@
 
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { collection, addDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
@@ -51,6 +52,8 @@ export default function BulkEmail() {
       try {
         const htmlTemplate = getHTMLEmailTemplate(recipient.name, recipient.ngoType as any);
         
+        console.log(`Sending email to ${recipient.email}...`);
+        
         const response = await fetch('/api/bulk-email', {
           method: 'POST',
           headers: { 
@@ -66,16 +69,23 @@ export default function BulkEmail() {
           })
         });
         
+        const responseText = await response.text();
+        console.log(`Response for ${recipient.email}:`, responseText);
+        
         if (response.ok) {
-          const data = await response.json();
-          success++;
-          if (!data.attachmentsIncluded) {
-            noAttachments++;
+          try {
+            const data = JSON.parse(responseText);
+            success++;
+            if (!data.attachmentsIncluded) {
+              noAttachments++;
+            }
+            console.log(`Email sent successfully to ${recipient.email}:`, data);
+          } catch (parseError) {
+            console.error(`JSON parse error for ${recipient.email}:`, parseError);
+            fail++;
           }
-          console.log(`Email sent successfully to ${recipient.email}:`, data);
         } else {
-          const errorData = await response.text();
-          console.error(`Failed to send email to ${recipient.email}:`, errorData);
+          console.error(`Failed to send email to ${recipient.email}:`, responseText);
           fail++;
         }
       } catch (error) {
@@ -129,64 +139,78 @@ export default function BulkEmail() {
   };
 
   return (
-    <div className="space-y-8 max-w-6xl mx-auto p-6">
-      <div className="text-center space-y-2">
-        <h2 className="text-3xl font-bold text-brand-green">Professional HTML Email Campaign</h2>
-        <p className="text-gray-600">Send personalized, professional emails to NGOs with our compelling templates</p>
+    <div className="space-y-6">
+      <div>
+        <h2 className="text-2xl font-bold tracking-tight">Bulk Email</h2>
+        <p className="text-muted-foreground">
+          Send personalized, professional emails to NGOs with our compelling templates
+        </p>
       </div>
       
-      <div className="bg-white rounded-lg shadow-sm border p-6">
-        <h3 className="text-lg font-semibold mb-4">Upload Recipients</h3>
-        <FileUpload onDataParsed={handleFileDataParsed} />
-      </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>Upload Recipients</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <FileUpload onDataParsed={handleFileDataParsed} />
+        </CardContent>
+      </Card>
 
-      <div className="flex items-center gap-4">
-        <div className="h-px flex-1 bg-gray-200"></div>
-        <span className="text-gray-500 font-medium">or add manually</span>
-        <div className="h-px flex-1 bg-gray-200"></div>
-      </div>
-
-      <div className="bg-white rounded-lg shadow-sm border p-6">
-        <h3 className="text-lg font-semibold mb-4">Add Individual Recipient</h3>
-        <ManualEntry onRecipientAdd={handleRecipientAdd} />
-      </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>Add Individual Recipient</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <ManualEntry onRecipientAdd={handleRecipientAdd} />
+        </CardContent>
+      </Card>
       
       {recipients.length > 0 && (
-        <div className="bg-white rounded-lg shadow-sm border p-6">
-          <RecipientsTable 
-            recipients={recipients}
-            onEdit={handleEdit}
-            onDelete={handleDelete}
-            onClearAll={handleClearAll}
-          />
-        </div>
+        <Card>
+          <CardHeader>
+            <CardTitle>Recipients ({recipients.length})</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <RecipientsTable 
+              recipients={recipients}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+              onClearAll={handleClearAll}
+            />
+          </CardContent>
+        </Card>
       )}
 
-      <div className="bg-white rounded-lg shadow-sm border p-6">
-        <h3 className="text-lg font-semibold mb-4">Email Preview</h3>
-        <EmailPreview />
-      </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>Email Preview</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <EmailPreview />
+        </CardContent>
+      </Card>
 
-      <div className="text-center">
+      <div className="flex justify-center">
         <Button 
           onClick={handleSendEmails} 
           disabled={sending || recipients.length === 0} 
-          className="w-full max-w-md bg-brand-green hover:bg-brand-green-light text-white py-3 text-lg font-semibold"
+          className="w-full max-w-md bg-brand-green hover:bg-brand-green-light text-white"
           size="lg"
         >
           {sending ? (
             <>
-              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
               Sending Professional HTML Emails...
             </>
           ) : (
             `🚀 Send Professional HTML Emails (${recipients.length})`
           )}
         </Button>
-        {recipients.length === 0 && (
-          <p className="text-gray-500 mt-2">Add recipients to enable sending</p>
-        )}
       </div>
+      
+      {recipients.length === 0 && (
+        <p className="text-center text-muted-foreground">Add recipients to enable sending</p>
+      )}
     </div>
   );
 }

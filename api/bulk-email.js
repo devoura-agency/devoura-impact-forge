@@ -41,13 +41,14 @@ const getPitchDeckAttachment = () => {
 };
 
 export default async function handler(req, res) {
-  // Set CORS headers
+  // Set CORS headers first
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST,OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Content-Type', 'application/json');
   
   if (req.method === 'OPTIONS') {
-    return res.status(200).end();
+    return res.status(200).json({ message: 'OK' });
   }
 
   if (req.method !== 'POST') {
@@ -55,6 +56,15 @@ export default async function handler(req, res) {
   }
 
   try {
+    // Check if email credentials are available
+    if (!EMAIL_USER || !EMAIL_PASS) {
+      console.error('Email credentials not configured');
+      return res.status(500).json({ 
+        error: 'Email service not configured',
+        details: 'EMAIL_USER and EMAIL_PASS environment variables are required'
+      });
+    }
+
     const { name, email, ngoType, subject, text, html } = req.body;
 
     // Validate required fields
@@ -101,7 +111,7 @@ export default async function handler(req, res) {
     const info = await transporter.sendMail(mailOptions);
     console.log('Email sent successfully:', info.messageId);
 
-    res.status(200).json({ 
+    return res.status(200).json({ 
       message: 'Email sent successfully',
       messageId: info.messageId,
       attachmentsIncluded: attachments.length > 0,
@@ -111,7 +121,7 @@ export default async function handler(req, res) {
     });
   } catch (error) {
     console.error('Bulk email error:', error);
-    res.status(500).json({ 
+    return res.status(500).json({ 
       error: 'Failed to send email', 
       details: error.message,
       stack: process.env.NODE_ENV === 'development' ? error.stack : undefined

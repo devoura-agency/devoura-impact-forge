@@ -34,17 +34,17 @@ export default function ManualEntry({ onRecipientAdd }: ManualEntryProps) {
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
-      <div>
-        <Label htmlFor="name">Organization Name</Label>
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
+      <div className="space-y-2">
+        <Label htmlFor="org-name">Organization Name</Label>
         <Input 
-          id="name"
+          id="org-name"
           placeholder="Enter NGO name" 
           value={manualEntry.name} 
           onChange={e => setManualEntry({ ...manualEntry, name: e.target.value })} 
         />
       </div>
-      <div>
+      <div className="space-y-2">
         <Label htmlFor="email">Email Address</Label>
         <Input 
           id="email"
@@ -54,10 +54,10 @@ export default function ManualEntry({ onRecipientAdd }: ManualEntryProps) {
           onChange={e => setManualEntry({ ...manualEntry, email: e.target.value })} 
         />
       </div>
-      <div>
-        <Label htmlFor="ngoType">NGO Category</Label>
+      <div className="space-y-2">
+        <Label htmlFor="ngo-category">NGO Category</Label>
         <Select value={manualEntry.ngoType} onValueChange={(value) => setManualEntry({ ...manualEntry, ngoType: value })}>
-          <SelectTrigger id="ngoType">
+          <SelectTrigger id="ngo-category">
             <SelectValue placeholder="Select category" />
           </SelectTrigger>
           <SelectContent>

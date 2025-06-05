@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { parseCSVFile, parseExcelFile } from '../utils/fileParser';
 import { Recipient } from '../types';
@@ -58,22 +59,20 @@ export default function FileUpload({ onDataParsed }: FileUploadProps) {
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-col sm:flex-row gap-4 items-end">
-        <div className="flex-1">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Upload CSV or Excel File
-          </label>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-end">
+        <div>
+          <Label htmlFor="file-upload">Upload CSV or Excel File</Label>
           <Input 
+            id="file-upload"
             type="file" 
             accept=".csv,.xls,.xlsx" 
             onChange={handleFileUpload}
-            className="file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-brand-green file:text-white hover:file:bg-brand-green-light"
           />
         </div>
         <Button 
           onClick={handleAddFileData}
           disabled={fileData.length === 0}
-          className="bg-brand-green hover:bg-brand-green-light text-white px-6"
+          className="bg-brand-green hover:bg-brand-green-light text-white"
         >
           Add to List ({fileData.length})
         </Button>
