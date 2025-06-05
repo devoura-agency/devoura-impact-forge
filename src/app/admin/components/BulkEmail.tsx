@@ -28,166 +28,66 @@ const NGO_TYPES = [
 const getEmailTemplate = (name: string, ngoType: string) => {
   const templates = {
     'education': `
-<!DOCTYPE html>
-<html>
-<head>
-  <style>
-    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-    .header { text-align: center; margin-bottom: 30px; }
-    .logo { max-width: 150px; margin-bottom: 20px; }
-    .cta-button {
-      display: inline-block;
-      background-color: #4CAF50;
-      color: white;
-      padding: 12px 24px;
-      text-decoration: none;
-      border-radius: 5px;
-      margin: 20px 0;
-    }
-    .highlight { color: #4CAF50; font-weight: bold; }
-    .stats { background-color: #f5f5f5; padding: 15px; border-radius: 5px; margin: 20px 0; }
-    .footer { text-align: center; margin-top: 30px; font-size: 12px; color: #666; }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <div class="header">
-      <img src="https://devoura.vercel.app/logo.png" alt="Devoura Logo" class="logo">
-      <h2 style="color: #4CAF50;">Transform Educational Lives Through Technology</h2>
-    </div>
+Subject: Transform Educational Lives Through Technology - Your Mission Deserves More
 
-    <p>Dear ${name},</p>
+Dear ${name},
 
-    <p>Every child deserves quality education, but are outdated systems holding your educational NGO back from reaching more lives?</p>
+Every child deserves quality education, but are outdated systems holding your educational NGO back from reaching more lives?
 
-    <div class="stats">
-      <p>📊 <strong>Did you know?</strong> Educational NGOs with professional digital presence see:</p>
-      <ul>
-        <li>40% more student engagement</li>
-        <li>60% higher donation rates</li>
-        <li>3x more volunteer applications</li>
-      </ul>
-    </div>
+In today's digital world, educational NGOs that embrace technology see 40% more student engagement and 60% higher donation rates. Yet many incredible organizations like yours struggle with:
 
-    <p>Yet many incredible organizations like yours struggle with:</p>
-    <ul>
-      <li>✗ Outdated websites that don't reflect your impact</li>
-      <li>✗ Manual processes that consume precious time</li>
-      <li>✗ Difficulty showcasing student success stories</li>
-      <li>✗ Limited reach to potential donors and volunteers</li>
-    </ul>
+✗ Outdated websites that don't reflect your impact
+✗ Manual processes that consume precious time
+✗ Difficulty showcasing student success stories
+✗ Limited reach to potential donors and volunteers
 
-    <p>At <span class="highlight">Devoura</span>, we've spent over 2 years exclusively transforming educational NGOs into digital powerhouses. We understand that your mission isn't just about education—it's about changing lives.</p>
+At Devoura, we specialize exclusively in educational NGO digital transformation. We've seen firsthand how the right technology can amplify your mission exponentially.
 
-    <p><strong>What we bring to educational organizations:</strong></p>
-    <ul>
-      <li>🎓 Student-centered engagement platforms that increase participation</li>
-      <li>📚 Resource management systems that streamline operations</li>
-      <li>💝 Compelling storytelling tools that boost donations by 30%</li>
-      <li>📊 Real-time impact dashboards that show donors exactly how their money helps</li>
-    </ul>
+**What we bring to educational organizations:**
+🎓 Student-centered engagement platforms that increase participation
+📚 Resource management systems that streamline operations  
+💝 Compelling storytelling tools that boost donations by 30%
+📊 Real-time impact dashboards that show donors exactly how their money helps
 
-    <p>Imagine having a website that doesn't just inform—but inspires action. A platform where potential donors can see exactly how their contribution changes a student's life, where volunteers can easily find ways to help, and where your educational programs reach the students who need them most.</p>
+Imagine having a website that doesn't just inform—but inspires action. A platform where potential donors can see exactly how their contribution changes a student's life, where volunteers can easily find ways to help, and where your educational programs reach the students who need them most.
 
-    <p>Your mission is too important to be limited by technology barriers.</p>
+Your mission is too important to be limited by technology barriers.
 
-    <div style="text-align: center;">
-      <a href="https://devoura.vercel.app/wizard" class="cta-button">Start Your Digital Transformation</a>
-    </div>
+Best regards,
+The Devoura Team
 
-    <p>Best regards,<br>
-    The Devoura Team</p>
-
-    <p style="font-style: italic;">P.S. We're offering a complimentary digital impact assessment for educational NGOs this month. Let's explore your potential together.</p>
-
-    <div class="footer">
-      <p>© 2024 Devoura. All rights reserved.</p>
-      <p>Visit us at <a href="https://devoura.vercel.app">devoura.vercel.app</a></p>
-    </div>
-  </div>
-</body>
-</html>
+P.S. We're offering a complimentary digital impact assessment for educational NGOs this month. Let's explore your potential together.
 `,
     'women-empowerment': `
-<!DOCTYPE html>
-<html>
-<head>
-  <style>
-    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-    .header { text-align: center; margin-bottom: 30px; }
-    .logo { max-width: 150px; margin-bottom: 20px; }
-    .cta-button {
-      display: inline-block;
-      background-color: #4CAF50;
-      color: white;
-      padding: 12px 24px;
-      text-decoration: none;
-      border-radius: 5px;
-      margin: 20px 0;
-    }
-    .highlight { color: #4CAF50; font-weight: bold; }
-    .stats { background-color: #f5f5f5; padding: 15px; border-radius: 5px; margin: 20px 0; }
-    .footer { text-align: center; margin-top: 30px; font-size: 12px; color: #666; }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <div class="header">
-      <img src="https://devoura.vercel.app/logo.png" alt="Devoura Logo" class="logo">
-      <h2 style="color: #4CAF50;">Amplify Women's Voices - Your Empowerment Mission Needs the Right Platform</h2>
-    </div>
+Subject: Amplify Women's Voices - Your Empowerment Mission Needs the Right Platform
 
-    <p>Dear ${name},</p>
+Dear ${name},
 
-    <p>Every woman you empower creates a ripple effect that changes families, communities, and generations. But is your current digital presence matching the magnitude of your impact?</p>
+Every woman you empower creates a ripple effect that changes families, communities, and generations. But is your current digital presence matching the magnitude of your impact?
 
-    <div class="stats">
-      <p>📊 <strong>Impact Statistics:</strong> Women empowerment NGOs with professional digital platforms see:</p>
-      <ul>
-        <li>50% more program applications</li>
-        <li>35% higher funding success rates</li>
-        <li>2x more community engagement</li>
-      </ul>
-    </div>
+Women empowerment NGOs with professional digital platforms see 50% more program applications and 35% higher funding success rates. Yet many powerful organizations struggle with:
 
-    <p>Yet many powerful organizations struggle with:</p>
-    <ul>
-      <li>✗ Websites that don't capture the strength of your mission</li>
-      <li>✗ Limited ability to share powerful success stories</li>
-      <li>✗ Difficulty connecting with women who need your programs</li>
-      <li>✗ Challenges in showcasing impact to potential funders</li>
-    </ul>
+✗ Websites that don't capture the strength of your mission
+✗ Limited ability to share powerful success stories
+✗ Difficulty connecting with women who need your programs
+✗ Challenges in showcasing impact to potential funders
 
-    <p>At <span class="highlight">Devoura</span>, we understand that women's empowerment isn't just a cause—it's a movement. With over 2 years of experience in digital transformation, we've helped numerous women empowerment organizations amplify their impact.</p>
+At Devoura, we understand that women's empowerment isn't just a cause—it's a movement. And movements need platforms that inspire, engage, and mobilize.
 
-    <p><strong>How we elevate women empowerment organizations:</strong></p>
-    <ul>
-      <li>💪 Impact storytelling platforms that showcase real transformation</li>
-      <li>🌟 Community engagement tools that connect women globally</li>
-      <li>💝 Donation systems that make supporting women's causes effortless</li>
-      <li>📱 Mobile-optimized platforms reaching women everywhere</li>
-    </ul>
+**How we elevate women empowerment organizations:**
+💪 Impact storytelling platforms that showcase real transformation
+🌟 Community engagement tools that connect women globally
+💝 Donation systems that make supporting women's causes effortless
+📱 Mobile-optimized platforms reaching women everywhere
 
-    <p>Picture this: A website where every visitor immediately understands the life-changing work you do. Where a single mother can easily find your job training program. Where a corporate sponsor sees exactly how their donation creates economic independence for women.</p>
+Picture this: A website where every visitor immediately understands the life-changing work you do. Where a single mother can easily find your job training program. Where a corporate sponsor sees exactly how their donation creates economic independence for women. Where volunteers can instantly connect with opportunities to make a difference.
 
-    <div style="text-align: center;">
-      <a href="https://devoura.vercel.app/wizard" class="cta-button">Transform Your Digital Presence</a>
-    </div>
+Your work changes lives—your digital presence should change minds and open hearts.
 
-    <p>Best regards,<br>
-    The Devoura Team</p>
+Best regards,
+The Devoura Team
 
-    <p style="font-style: italic;">P.S. We believe so strongly in women's empowerment that we're offering priority scheduling for organizations like yours. Your mission can't wait—neither should your digital transformation.</p>
-
-    <div class="footer">
-      <p>© 2024 Devoura. All rights reserved.</p>
-      <p>Visit us at <a href="https://devoura.vercel.app">devoura.vercel.app</a></p>
-    </div>
-  </div>
-</body>
-</html>
+P.S. We believe so strongly in women's empowerment that we're offering priority scheduling for organizations like yours. Your mission can't wait—neither should your digital transformation.
 `,
     'wildlife': `
 Subject: Save More Wildlife - Your Conservation Mission Needs Digital Innovation
@@ -451,8 +351,8 @@ export default function BulkEmail() {
             name: r.name,
             email: r.email,
             ngoType: r.ngoType,
-            subject: '🚀 Transform Your NGO\'s Digital Impact - Devoura Partnership',
-            html: getEmailTemplate(r.name, r.ngoType),
+            subject: 'Devoura NGO Collaboration',
+            text: getEmailTemplate(r.name, r.ngoType),
           })
         });
         
@@ -619,9 +519,7 @@ export default function BulkEmail() {
       {/* Email Preview */}
       <div className="bg-gray-50 p-4 rounded-md border text-sm text-gray-700">
         <strong>Email Preview (Education Template):</strong>
-        <div className="mt-2 text-xs max-h-60 overflow-y-auto">
-          <div dangerouslySetInnerHTML={{ __html: getEmailTemplate('Sample NGO', 'education') }} />
-        </div>
+        <pre className="whitespace-pre-wrap mt-2 text-xs max-h-60 overflow-y-auto">{getEmailTemplate('Sample NGO', 'education')}</pre>
         <div className="mt-4 text-xs text-gray-500">
           Note: Each email will include:
           <ul className="list-disc list-inside mt-1">
