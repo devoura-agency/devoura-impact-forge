@@ -314,40 +314,87 @@ Amplify your mission: ${WEBSITE_URL}
 }
 
 export default async function handler(req, res) {
+  // Set CORS headers first
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST,OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-  if (req.method === 'OPTIONS') return res.status(200).end();
+  res.setHeader('Content-Type', 'application/json');
+  
+  if (req.method === 'OPTIONS') {
+    return res.status(200).json({ message: 'OK' });
+  }
 
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
   try {
-    const { name, email, ngoType, subject, text } = req.body;
-
-    if (!name || !email || !ngoType) {
-      return res.status(400).json({ error: 'Missing required fields' });
+    // Check if email credentials are available
+    if (!EMAIL_USER || !EMAIL_PASS) {
+      console.error('Email credentials not configured');
+      return res.status(500).json({ 
+        error: 'Email service not configured',
+        details: 'EMAIL_USER and EMAIL_PASS environment variables are required'
+      });
     }
+
+    const { name, email, ngoType, subject, text, html } = req.body;
+
+    // Validate required fields
+    if (!name || !email || !ngoType) {
+      console.error('Missing required fields:', { name: !!name, email: !!email, ngoType: !!ngoType });
+      return res.status(400).json({ 
+        error: 'Missing required fields',
+        required: ['name', 'email', 'ngoType'],
+        received: { name: !!name, email: !!email, ngoType: !!ngoType }
+      });
+    }
+
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({ error: 'Invalid email format' });
+    }
+
+    console.log(`Preparing to send email to: ${email} (${name}) - NGO Type: ${ngoType}`);
 
     // Get attachments if pitch deck exists
     const attachments = getPitchDeckAttachment();
 
-    await transporter.sendMail({
-      from: EMAIL_USER,
+    const mailOptions = {
+      from: `"Devoura Team" <${EMAIL_USER}>`,
       to: email,
-      subject: subject || 'Devoura NGO Collaboration',
-      text: text || getEmailTemplate(name, ngoType),
+      subject: subject || '🚀 Transform Your NGO\'s Digital Impact - Devoura Partnership',
       attachments
-    });
+    };
 
-    res.status(200).json({ 
+    // Use HTML if provided, otherwise fall back to text
+    if (html) {
+      mailOptions.html = html;
+      console.log('Sending HTML email');
+    } else if (text) {
+      mailOptions.text = text;
+      console.log('Sending text email');
+    } else {
+      mailOptions.text = 'Professional NGO website solutions from Devoura';
+      console.log('Sending default text email');
+    }
+
+    // Send the email
+    const info = await transporter.sendMail(mailOptions);
+    console.log('Email sent successfully:', info.messageId);
+
+    return res.status(200).json({ 
       message: 'Email sent successfully',
-      attachmentsIncluded: attachments.length > 0
+      messageId: info.messageId,
+      attachmentsIncluded: attachments.length > 0,
+      format: html ? 'HTML' : 'Text',
+      recipient: email,
+      ngoType
     });
   } catch (error) {
     console.error('Bulk email error:', error);
-    res.status(500).json({ 
+    return res.status(500).json({ 
       error: 'Failed to send email', 
       details: error.message,
       stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
