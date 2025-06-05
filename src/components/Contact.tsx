@@ -21,7 +21,7 @@ const Contact = () => {
       title: "Connect on LinkedIn",
       description: "Connect with us for professional updates and insights.",
       action: "LinkedIn",
-      href: "#",
+      href: "https://www.linkedin.com/in/dev-aura-b61926369/",
       color: "bg-blue-50 hover:bg-blue-100 border-blue-200"
     },
     {
@@ -29,7 +29,7 @@ const Contact = () => {
       title: "Follow on Instagram",
       description: "See our latest projects and stories on Instagram.",
       action: "Instagram",
-      href: "#",
+      href: "https://www.instagram.com/devoura.agency/",
       color: "bg-pink-50 hover:bg-pink-100 border-pink-200"
     }
   ];

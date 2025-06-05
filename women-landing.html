@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Empower Women's NGOs | Devoura</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #EC4899;
+            --primary-dark: #DB2777;
+            --primary-light: #F472B6;
+            --brand-green: #4A6741;
+            --brand-cream: #F5F1E8;
+            --brand-gold: #D4AF37;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: #1F2937;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 2rem 0;
+        }
+        
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .logo-section img {
+            width: 48px;
+            height: 48px;
+        }
+        
+        .hero {
+            padding: 6rem 0;
+            background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary) 100%);
+            color: white;
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+        
+        .hero p {
+            font-size: 1.25rem;
+            margin-bottom: 2rem;
+            max-width: 600px;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background: var(--brand-gold);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--brand-gold);
+        }
+        
+        .features {
+            padding: 6rem 0;
+            background: var(--brand-cream);
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .feature-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        
+        .feature-card h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+        
+        .testimonial {
+            padding: 6rem 0;
+            background: white;
+        }
+        
+        .testimonial-card {
+            background: var(--brand-cream);
+            padding: 2rem;
+            border-radius: 1rem;
+            margin-top: 2rem;
+        }
+        
+        .footer {
+            background: var(--brand-green);
+            color: white;
+            padding: 4rem 0;
+            text-align: center;
+        }
+        
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="logo-section">
+                <img src="/lovable-uploads/1c757405-61a4-40fb-b732-c1c154f7a2c4.png" alt="Devoura Logo">
+                <span style="font-size: 1.5rem; font-weight: 600;">Devoura</span>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h1>Amplify Women's Voices Through Digital Empowerment</h1>
+            <p>With over 2 years of experience supporting women's NGOs, we understand the power of digital storytelling in advancing gender equality. Let us help you create a website that inspires action and drives real change.</p>
+            <a href="https://devoura.vercel.app/wizard" class="cta-button">Start Your Journey</a>
+            
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-number">2+</div>
+                    <div>Years of Excellence</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">500+</div>
+                    <div>NGOs Empowered</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">50+</div>
+                    <div>Countries Reached</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="features">
+        <div class="container">
+            <h2 style="text-align: center; font-size: 2.5rem; color: var(--primary); margin-bottom: 1rem;">Why Choose Devoura?</h2>
+            <p style="text-align: center; max-width: 600px; margin: 0 auto;">We're not just web developers—we're your partners in women's empowerment.</p>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h3>Impact-Focused Design</h3>
+                    <p>Create compelling narratives that highlight women's stories and drive meaningful engagement with your cause.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Community Building</h3>
+                    <p>Foster connections between supporters, volunteers, and beneficiaries through intuitive community features.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Resource Sharing</h3>
+                    <p>Easily distribute educational materials, support resources, and success stories to empower more women.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="testimonial">
+        <div class="container">
+            <h2 style="text-align: center; font-size: 2.5rem; color: var(--primary); margin-bottom: 1rem;">Success Stories</h2>
+            <div class="testimonial-card">
+                <p style="font-style: italic; margin-bottom: 1rem;">"Devoura helped us create a website that truly represents our mission. Our community engagement has tripled, and we've been able to reach and support more women than ever before."</p>
+                <p style="font-weight: 600;">- Maria Rodriguez, Executive Director of Women's Empowerment Network</p>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <p>Ready to amplify your impact on women's lives?</p>
+            <a href="https://devoura.vercel.app/wizard" class="cta-button" style="margin-top: 2rem;">Get Started Now</a>
+        </div>
+    </footer>
+</body>
+</html> 
