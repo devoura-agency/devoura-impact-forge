@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { ArrowRight, CheckCircle, TrendingUp, Users, Heart, Globe, Phone, Mail, ExternalLink, Code, Palette, Shield, Zap } from 'lucide-react';
+import { ArrowRight, CheckCircle, TrendingUp, Users, Heart, Globe, Phone, Mail, Code, Palette, Shield, Zap } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 
@@ -462,7 +462,7 @@ const PitchDeck = () => {
         </div>
       </motion.section>
 
-      {/* Slide 9: CTA */}
+      {/* Slide 9: Next Steps - Print Friendly */}
       <motion.section 
         className="min-h-screen flex items-center justify-center px-4 bg-gradient-to-br from-brand-cream via-white to-brand-gold/10"
         initial="initial"
@@ -473,35 +473,44 @@ const PitchDeck = () => {
         <div className="max-w-4xl mx-auto text-center">
           <motion.div variants={fadeInUp}>
             <h2 className="text-5xl md:text-7xl font-bold text-brand-green mb-8">
-              Ready to Amplify Your Impact?
+              Ready to Transform Your Impact?
             </h2>
             <p className="text-2xl text-gray-700 mb-12">
-              Take your NGO to the next level with a professional website that drives results
+              Partner with us to create a website that drives real results for your NGO
             </p>
             
-            <div className="flex flex-col sm:flex-row gap-6 justify-center mb-16">
-              <Button 
-                onClick={() => navigate('/request-call')}
-                size="lg"
-                className="bg-brand-green hover:bg-brand-green-light text-white px-12 py-6 text-xl rounded-full shadow-xl hover:shadow-2xl transition-all"
-              >
-                Schedule Free Consultation
-                <ArrowRight className="ml-3 h-6 w-6" />
-              </Button>
+            <div className="grid md:grid-cols-2 gap-8 mb-16">
+              <div className="bg-brand-green/10 p-8 rounded-2xl">
+                <div className="w-16 h-16 bg-brand-green rounded-full flex items-center justify-center mx-auto mb-6">
+                  <CheckCircle className="w-8 h-8 text-white" />
+                </div>
+                <h3 className="text-2xl font-bold text-brand-green mb-4">What You Get</h3>
+                <ul className="text-left text-lg text-gray-700 space-y-3">
+                  <li>• Professional, mobile-responsive design</li>
+                  <li>• Secure donation payment integration</li>
+                  <li>• Volunteer management system</li>
+                  <li>• SEO optimization for better visibility</li>
+                  <li>• Ongoing support and maintenance</li>
+                </ul>
+              </div>
               
-              <Button 
-                onClick={() => window.open('https://devoura.vercel.app', '_blank')}
-                variant="outline"
-                size="lg"
-                className="border-brand-green text-brand-green hover:bg-brand-green hover:text-white px-12 py-6 text-xl rounded-full"
-              >
-                <ExternalLink className="mr-3 h-6 w-6" />
-                View Our Portfolio
-              </Button>
+              <div className="bg-brand-gold/20 p-8 rounded-2xl">
+                <div className="w-16 h-16 bg-brand-green rounded-full flex items-center justify-center mx-auto mb-6">
+                  <TrendingUp className="w-8 h-8 text-white" />
+                </div>
+                <h3 className="text-2xl font-bold text-brand-green mb-4">Expected Results</h3>
+                <ul className="text-left text-lg text-gray-700 space-y-3">
+                  <li>• Up to 156% increase in donations</li>
+                  <li>• 89% more volunteer sign-ups</li>
+                  <li>• 40% better supporter engagement</li>
+                  <li>• Global reach for your mission</li>
+                  <li>• 24/7 fundraising capability</li>
+                </ul>
+              </div>
             </div>
             
             <div className="bg-brand-green/10 text-brand-green px-8 py-4 rounded-full inline-block text-lg font-medium">
-              ✨ Free consultation • No commitment • Just results
+              ✨ Start with a free consultation • devoura.vercel.app • devoura.agency@gmail.com
             </div>
           </motion.div>
         </div>

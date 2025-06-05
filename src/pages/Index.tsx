@@ -1,3 +1,4 @@
+
 import Header from '@/components/Header';
 import Hero from '@/components/Hero';
 import WhyNGOs from '@/components/WhyNGOs';
@@ -12,17 +13,17 @@ export default function Home() {
   return (
     <div className="min-h-screen">
       <Header />
-        <Hero />
+      <Hero />
       <WhyNGOs />
-      <section className="py-20 bg-white">
+      <section className="py-16 bg-white">
         <Templates />
       </section>
       <About />
       <Services />
-      <section className="py-20 bg-gradient-to-br from-brand-cream to-white">
+      <section className="py-16 bg-gradient-to-br from-brand-cream to-white">
         <Process />
       </section>
-      <section className="py-20 bg-white">
+      <section className="py-16 bg-white">
         <Contact />
       </section>
       <Footer />
