@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -6,55 +6,13 @@ import { useToast } from '@/hooks/use-toast';
 import Papa from 'papaparse';
 import * as XLSX from 'xlsx';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { collection, query, orderBy, onSnapshot, where, getDocs, limit, addDoc, updateDoc, doc } from 'firebase/firestore';
+import { collection, addDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
-import { Progress } from '@/components/ui/progress';
-import { AlertCircle } from 'lucide-react';
-import { toast } from '@/components/ui/use-toast';
-
-const API_BASE_URL = 'https://devoura.vercel.app';
 
 interface Recipient {
   name: string;
   email: string;
   ngoType: string;
-}
-
-interface EmailStatus {
-  recipient: Recipient;
-  status: 'pending' | 'sending' | 'success' | 'failed';
-  retryCount: number;
-  error?: string;
-}
-
-interface EmailError {
-  code: string;
-  message: string;
-  details?: string;
-  recipient?: string;
-  timestamp: string;
-}
-
-interface BulkEmailState {
-  recipients: Recipient[];
-  fileData: Recipient[];
-  manualEntry: Recipient;
-  sending: boolean;
-  emailStatuses: EmailStatus[];
-  progress: number;
-  batchId: string | null;
-  isPaused: boolean;
-  currentBatch: number;
-  totalBatches: number;
-  backgroundJob: NodeJS.Timeout | null;
-  dailyCount: number;
-  remainingEmails: number;
-  errors: EmailError[];
-  scheduledFor?: string;
-  isScheduling: boolean;
-  subject: string;
-  message: string;
-  attachments: File[];
 }
 
 const NGO_TYPES = [
@@ -67,34 +25,12 @@ const NGO_TYPES = [
   'other'
 ] as const;
 
-const BATCH_SIZE = 50; // Process 50 emails at a time
-const EMAIL_DELAY = 5000; // 5 seconds between emails
-const RETRY_DELAY = 10000; // 10 seconds between retries
-const MAX_RETRIES = 3;
-const DAILY_EMAIL_LIMIT = 100;
-
 export default function BulkEmail() {
-  const [state, setState] = useState<BulkEmailState>({
-    recipients: [],
-    fileData: [],
-    manualEntry: { name: '', email: '', ngoType: '' },
-    sending: false,
-    emailStatuses: [],
-    progress: 0,
-    batchId: null,
-    isPaused: false,
-    currentBatch: 0,
-    totalBatches: 0,
-    backgroundJob: null,
-    dailyCount: 0,
-    remainingEmails: DAILY_EMAIL_LIMIT,
-    errors: [],
-    scheduledFor: undefined,
-    isScheduling: false,
-    subject: '',
-    message: '',
-    attachments: []
-  });
+  const [recipients, setRecipients] = useState<Recipient[]>([]);
+  const [manualEntry, setManualEntry] = useState<Recipient>({ name: '', email: '', ngoType: '' });
+  const [sending, setSending] = useState(false);
+  const [fileData, setFileData] = useState<Recipient[]>([]);
+  const { toast } = useToast();
 
   // Handle file upload and parse
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -111,7 +47,7 @@ export default function BulkEmail() {
             email: row.email || row.Email || '',
             ngoType: row.ngoType || row['ngo-type'] || row['NGO Type'] || ''
           })).filter((r: Recipient) => r.email && r.name);
-          setState(prev => ({ ...prev, fileData: data }));
+          setFileData(data);
           toast({ 
             title: 'File Parsed', 
             description: `Found ${data.length} valid entries. Click 'Add to List' to review them.` 
@@ -132,7 +68,7 @@ export default function BulkEmail() {
           email: row.email || row.Email || '',
           ngoType: row.ngoType || row['ngo-type'] || row['NGO Type'] || ''
         })).filter((r: Recipient) => r.email && r.name);
-        setState(prev => ({ ...prev, fileData: data }));
+        setFileData(data);
         toast({ 
           title: 'File Parsed', 
           description: `Found ${data.length} valid entries. Click 'Add to List' to review them.` 
@@ -146,372 +82,131 @@ export default function BulkEmail() {
 
   // Add file data to recipients
   const handleAddFileData = () => {
-    if (state.fileData.length === 0) {
+    if (fileData.length === 0) {
       toast({ title: 'Error', description: 'No valid data to add', variant: 'destructive' });
       return;
     }
-    setState(prev => ({
-      ...prev,
-      recipients: [...prev.recipients, ...state.fileData],
-      fileData: []
-    }));
-    toast({ title: 'Success', description: `Added ${state.fileData.length} entries to the list` });
+    setRecipients([...recipients, ...fileData]);
+    setFileData([]);
+    toast({ title: 'Success', description: `Added ${fileData.length} entries to the list` });
   };
 
   // Manual entry add
   const handleAddManual = () => {
-    if (!state.manualEntry.name || !state.manualEntry.email || !state.manualEntry.ngoType) {
+    if (!manualEntry.name || !manualEntry.email || !manualEntry.ngoType) {
       toast({ title: 'Error', description: 'Name, Email, and NGO Type are required', variant: 'destructive' });
       return;
     }
-    setState(prev => ({
-      ...prev,
-      recipients: [...prev.recipients, state.manualEntry],
-      manualEntry: { name: '', email: '', ngoType: '' }
-    }));
+    setRecipients([...recipients, manualEntry]);
+    setManualEntry({ name: '', email: '', ngoType: '' });
   };
 
   // Edit row
   const handleEdit = (idx: number, field: keyof Recipient, value: string) => {
-    setState(prev => ({
-      ...prev,
-      recipients: prev.recipients.map((r, i) => i === idx ? { ...r, [field]: value } : r)
-    }));
+    setRecipients(recipients.map((r, i) => i === idx ? { ...r, [field]: value } : r));
   };
 
   // Delete row
   const handleDelete = (idx: number) => {
-    setState(prev => ({
-      ...prev,
-      recipients: prev.recipients.filter((_, i) => i !== idx)
-    }));
+    setRecipients(recipients.filter((_, i) => i !== idx));
   };
 
-  // Send single email with retry logic
-  const sendSingleEmail = async (recipient: Recipient) => {
-    try {
-      const response = await fetch('https://devoura.vercel.app/api/send-email', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name: recipient.name,
-          email: recipient.email,
-          ngoType: recipient.ngoType,
-          subject: state.subject || 'Devoura NGO Collaboration'
-        }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to send email');
-      }
-
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.error('Error sending email:', error);
-      throw error;
-    }
-  };
-
-  // Process a single batch of emails
-  const processBatch = async (batchIndex: number, queue: EmailStatus[]) => {
-    const start = batchIndex * BATCH_SIZE;
-    const end = Math.min(start + BATCH_SIZE, queue.length);
-    const batchQueue = queue.slice(start, end);
-
-    for (let i = 0; i < batchQueue.length; i++) {
-      if (state.isPaused) {
-        await new Promise(resolve => {
-          const checkPause = setInterval(() => {
-            if (!state.isPaused) {
-              clearInterval(checkPause);
-              resolve(true);
-            }
-          }, 1000);
-        });
-      }
-
-      const emailStatus = batchQueue[i];
-      const queueIndex = start + i;
-      
-      setState(prev => ({
-        ...prev,
-        emailStatuses: prev.emailStatuses.map((status, idx) => 
-          idx === queueIndex ? { ...status, status: 'sending' } : status
-        )
-      }));
-
-      try {
-        const data = await sendSingleEmail(emailStatus.recipient);
-        
-        setState(prev => ({
-          ...prev,
-          emailStatuses: prev.emailStatuses.map((status, idx) => 
-            idx === queueIndex ? { ...status, status: 'success', error: undefined } : status
-          )
-        }));
-      } catch (error) {
-        setState(prev => ({
-          ...prev,
-          emailStatuses: prev.emailStatuses.map((status, idx) => 
-            idx === queueIndex ? { 
-              ...status, 
-              status: 'failed',
-              error: error instanceof Error ? error.message : 'Unknown error'
-            } : status
-          )
-        }));
-      }
-
-      // Update progress
-      setState(prev => ({
-        ...prev,
-        progress: ((queueIndex + 1) / queue.length) * 100
-      }));
-    }
-  };
-
-  // Process all batches
-  const processAllBatches = async (queue: EmailStatus[]) => {
-    const batches = Math.ceil(queue.length / BATCH_SIZE);
-    setState(prev => ({ ...prev, totalBatches: batches }));
-    
-    for (let i = 0; i < batches; i++) {
-      if (state.isPaused) {
-        await new Promise(resolve => {
-          const checkPause = setInterval(() => {
-            if (!state.isPaused) {
-              clearInterval(checkPause);
-              resolve(true);
-            }
-          }, 1000);
-        });
-      }
-      
-      setState(prev => ({ ...prev, currentBatch: i + 1 }));
-      await processBatch(i, queue);
-      
-      // Add delay between batches
-      if (i < batches - 1) {
-        await new Promise(resolve => setTimeout(resolve, RETRY_DELAY));
-      }
-    }
-  };
-
-  // Send emails with queue system
+  // Send emails
   const handleSendEmails = async () => {
-    setState(prev => ({ ...prev, sending: true, progress: 0, isPaused: false, currentBatch: 0 }));
-    
-    // Initialize email statuses
-    const initialStatuses: EmailStatus[] = state.recipients.map(recipient => ({
-      recipient,
-      status: 'pending',
-      retryCount: 0
-    }));
-    setState(prev => ({ ...prev, emailStatuses: initialStatuses }));
+    setSending(true);
+    let success = 0;
+    let fail = 0;
+    let noAttachments = 0;
 
+    for (const r of recipients) {
+      try {
+        const res = await fetch('/api/bulk-email', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: r.name,
+            email: r.email,
+            ngoType: r.ngoType,
+            subject: 'Devoura NGO Collaboration'
+          })
+        });
+        
+        if (res.ok) {
+          const data = await res.json();
+          success++;
+          if (!data.attachmentsIncluded) {
+            noAttachments++;
+          }
+        } else {
+          fail++;
+        }
+      } catch {
+        fail++;
+      }
+    }
+
+    // Save batch to Firestore
     try {
-      // Create batch record in Firestore
-      const batchRef = await addDoc(collection(db, 'bulkEmailBatches'), {
+      await addDoc(collection(db, 'bulkEmailBatches'), {
         sentAt: new Date().toISOString(),
-        recipients: state.recipients,
-        status: 'in_progress',
-        stats: {
-          total: state.recipients.length,
-          success: 0,
-          failed: 0
-        }
-      });
-      setState(prev => ({ ...prev, batchId: batchRef.id }));
-
-      // Process emails in batches
-      const queue = [...initialStatuses];
-      const batches = Math.ceil(queue.length / BATCH_SIZE);
-      setState(prev => ({ ...prev, totalBatches: batches }));
-      
-      for (let i = 0; i < batches; i++) {
-        if (state.isPaused) {
-          await new Promise(resolve => {
-            const checkPause = setInterval(() => {
-              if (!state.isPaused) {
-                clearInterval(checkPause);
-                resolve(true);
-              }
-            }, 100);
-          });
-        }
-        
-        setState(prev => ({ ...prev, currentBatch: i + 1 }));
-        await processBatch(i, queue);
-        
-        // Add delay between batches
-        if (i < batches - 1) {
-          await new Promise(resolve => setTimeout(resolve, RETRY_DELAY));
-        }
-      }
-
-      // Update batch record with final results
-      const results = {
-        success: state.emailStatuses.filter(s => s.status === 'success').length,
-        fail: state.emailStatuses.filter(s => s.status === 'failed').length,
-        noAttachments: 0
-      };
-      
-      await updateDoc(doc(db, 'bulkEmailBatches', state.batchId), {
+        recipients,
         status: 'completed',
-        stats: results,
-        completedAt: new Date().toISOString()
+        stats: {
+          success,
+          fail,
+          noAttachments
+        }
       });
-      
-      setState(prev => ({ ...prev, sending: false }));
-    } catch (error) {
-      console.error('Error sending emails:', error);
-      handleError(error);
-      setState(prev => ({ ...prev, sending: false }));
+    } catch (err) {
+      toast({ title: 'Warning', description: 'Emails sent but failed to save batch to database', variant: 'destructive' });
     }
-  };
 
-  // Cleanup background job
-  useEffect(() => {
-    return () => {
-      if (state.backgroundJob) {
-        clearTimeout(state.backgroundJob);
+    setSending(false);
+    
+    // Show appropriate toast message
+    if (fail === 0) {
+      if (noAttachments > 0) {
+        toast({
+          title: 'Emails Sent (Without Pitch Deck)',
+          description: `Successfully sent ${success} emails, but pitch deck was not attached. Please ensure the PDF is in the correct location.`,
+          variant: 'default'
+        });
+      } else {
+        toast({
+          title: 'Success',
+          description: `Successfully sent ${success} emails with pitch deck attached.`,
+          variant: 'default'
+        });
       }
-    };
-  }, [state.backgroundJob]);
-
-  const handleSchedule = async () => {
-    if (!state.scheduledFor) {
+      setRecipients([]);
+    } else {
       toast({
-        title: 'Error',
-        description: 'Please select a scheduled time',
-        variant: 'destructive',
+        title: 'Partial Success',
+        description: `Sent: ${success}, Failed: ${fail}${noAttachments > 0 ? ', No Pitch Deck: ' + noAttachments : ''}`,
+        variant: 'destructive'
       });
-      return;
     }
-
-    try {
-      const response = await fetch(`${API_BASE_URL}/api/schedule-emails`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          recipients: state.recipients,
-          subject: state.subject,
-          message: state.message,
-          scheduledFor: state.scheduledFor,
-          attachments: state.attachments
-        }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to schedule emails');
-      }
-
-      const data = await response.json();
-      toast({
-        title: 'Success',
-        description: 'Emails scheduled successfully',
-      });
-      setState(prev => ({
-        ...prev,
-        recipients: [],
-        subject: '',
-        message: '',
-        attachments: [],
-        scheduledFor: undefined,
-        isScheduling: false
-      }));
-    } catch (error) {
-      console.error('Error scheduling emails:', error);
-      toast({
-        title: 'Error',
-        description: error instanceof Error ? error.message : 'Failed to schedule emails',
-        variant: 'destructive',
-      });
-      setState(prev => ({ ...prev, isScheduling: false }));
-    }
-  };
-
-  const handleError = async (error: any, recipient?: string) => {
-    // Only proceed if we have a valid recipient
-    if (!recipient) {
-      console.warn('No recipient provided for error logging');
-      return;
-    }
-
-    const errorDetails: EmailError = {
-      code: error.code || 'UNKNOWN_ERROR',
-      message: error.message || 'An unknown error occurred',
-      details: error.stack,
-      recipient,
-      timestamp: new Date().toISOString()
-    };
-
-    setState(prev => ({
-      ...prev,
-      errors: [...prev.errors, errorDetails]
-    }));
-
-    // Log error to Firestore with validated data
-    try {
-      await addDoc(collection(db, 'emailErrors'), {
-        recipient,
-        error: error.message || 'Unknown error',
-        code: error.code || 'UNKNOWN_ERROR',
-        details: error.stack || '',
-        timestamp: new Date() // Use Date object for Firestore timestamp
-      });
-    } catch (firestoreError) {
-      console.error('Failed to log error to Firestore:', firestoreError);
-    }
-
-    toast({
-      title: 'Error',
-      description: error.message || 'Failed to send email',
-      variant: 'destructive'
-    });
   };
 
   return (
     <div className="space-y-6">
       <h2 className="text-2xl font-semibold">Bulk Email Sender</h2>
       
-      {/* Daily Limit Info */}
-      <div className="bg-blue-50 p-4 rounded-md border border-blue-200">
-        <div className="flex justify-between items-center">
-          <div>
-            <h3 className="text-sm font-medium text-blue-800">Daily Email Limit</h3>
-            <p className="text-sm text-blue-600">
-              {state.dailyCount} emails sent today ({state.remainingEmails} remaining)
-            </p>
-          </div>
-          <div className="w-32">
-            <Progress value={(state.dailyCount / DAILY_EMAIL_LIMIT) * 100} className="h-2" />
-          </div>
-        </div>
-      </div>
-
       {/* File Upload Section */}
       <div className="space-y-4">
         <div className="flex flex-col md:flex-row gap-4 items-center">
           <Input type="file" accept=".csv,.xls,.xlsx" onChange={handleFileUpload} />
           <Button 
             onClick={handleAddFileData}
-            disabled={state.fileData.length === 0}
+            disabled={fileData.length === 0}
             className="bg-brand-green hover:bg-brand-green-light text-white"
           >
-            Add to List ({state.fileData.length})
+            Add to List ({fileData.length})
           </Button>
         </div>
-        {state.fileData.length > 0 && (
+        {fileData.length > 0 && (
           <div className="text-sm text-gray-600">
-            Found {state.fileData.length} valid entries. Click 'Add to List' to review them.
+            Found {fileData.length} valid entries. Click 'Add to List' to review them.
           </div>
         )}
       </div>
@@ -523,58 +218,36 @@ export default function BulkEmail() {
       </div>
 
       {/* Manual Entry Section */}
-      <div className="space-y-4">
-        <h3 className="text-lg font-medium">Add Recipient Manually</h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Input
-            placeholder="Name"
-            value={state.manualEntry.name}
-            onChange={e => setState(prev => ({ ...prev, manualEntry: { ...prev.manualEntry, name: e.target.value } }))}
-          />
-          <Input
-            placeholder="Email"
-            type="email"
-            value={state.manualEntry.email}
-            onChange={e => setState(prev => ({ ...prev, manualEntry: { ...prev.manualEntry, email: e.target.value } }))}
-          />
-          <Select value={state.manualEntry.ngoType} onValueChange={(value) => setState(prev => ({ ...prev, manualEntry: { ...prev.manualEntry, ngoType: value } }))}>
-            <SelectTrigger>
-              <SelectValue placeholder="Select NGO Type" />
-            </SelectTrigger>
-            <SelectContent>
-              {NGO_TYPES.map(type => (
-                <SelectItem key={type} value={type}>
-                  {type.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-        <Button 
-          onClick={handleAddManual}
-          className="bg-brand-green hover:bg-brand-green-light text-white"
-        >
-          Add Recipient
-        </Button>
+      <div className="flex gap-2">
+        <Input placeholder="Name" value={manualEntry.name} onChange={e => setManualEntry({ ...manualEntry, name: e.target.value })} />
+        <Input placeholder="Email" value={manualEntry.email} onChange={e => setManualEntry({ ...manualEntry, email: e.target.value })} />
+        <Select value={manualEntry.ngoType} onValueChange={(value) => setManualEntry({ ...manualEntry, ngoType: value })}>
+          <SelectTrigger className="w-[200px]">
+            <SelectValue placeholder="Select NGO Type" />
+          </SelectTrigger>
+          <SelectContent>
+            {NGO_TYPES.map(type => (
+              <SelectItem key={type} value={type}>
+                {type.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        <Button onClick={handleAddManual}>Add</Button>
       </div>
       
       {/* Recipients Table */}
-      {state.recipients.length > 0 && (
+      {recipients.length > 0 && (
         <div className="space-y-4">
           <div className="flex justify-between items-center">
-            <h3 className="text-lg font-medium">Recipients List ({state.recipients.length})</h3>
-            <div className="flex items-center gap-4">
-              <span className="text-sm text-gray-600">
-                {state.remainingEmails} emails remaining today
-              </span>
-              <Button 
-                variant="outline" 
-                onClick={() => setState(prev => ({ ...prev, recipients: [] }))}
-                className="text-red-600 hover:text-red-700"
-              >
-                Clear All
-              </Button>
-            </div>
+            <h3 className="text-lg font-medium">Recipients List ({recipients.length})</h3>
+            <Button 
+              variant="outline" 
+              onClick={() => setRecipients([])}
+              className="text-red-600 hover:text-red-700"
+            >
+              Clear All
+            </Button>
           </div>
           <Table>
             <TableHeader>
@@ -586,7 +259,7 @@ export default function BulkEmail() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {state.recipients.map((r, idx) => (
+              {recipients.map((r, idx) => (
                 <TableRow key={idx}>
                   <TableCell>
                     <Input value={r.name} onChange={e => handleEdit(idx, 'name', e.target.value)} />
@@ -637,128 +310,14 @@ export default function BulkEmail() {
         </div>
       </div>
 
-      {/* Progress and Status Section */}
-      {state.sending && (
-        <div className="space-y-4">
-          <div className="flex justify-between items-center">
-            <span className="text-sm text-gray-600">
-              Progress: {Math.round(state.progress)}% (Batch {state.currentBatch} of {state.totalBatches})
-            </span>
-            <span className="text-sm text-gray-600">
-              {state.emailStatuses.filter(s => s.status === 'success').length} / {state.recipients.length} sent
-              ({state.remainingEmails} remaining today)
-            </span>
-          </div>
-          <Progress value={state.progress} className="w-full" />
-          
-          <div className="flex justify-between items-center">
-            <Button
-              onClick={() => setState(prev => ({ ...prev, isPaused: !prev.isPaused }))}
-              variant="outline"
-              className={state.isPaused ? 'bg-yellow-100' : ''}
-            >
-              {state.isPaused ? 'Resume' : 'Pause'}
-            </Button>
-          </div>
-          
-          <div className="max-h-60 overflow-y-auto border rounded-md p-4">
-            {state.emailStatuses.map((status, idx) => (
-              <div key={idx} className="flex items-center justify-between py-2 border-b last:border-0">
-                <span className="text-sm">{status.recipient.email}</span>
-                <span className={`text-sm ${
-                  status.status === 'success' ? 'text-green-600' :
-                  status.status === 'failed' ? 'text-red-600' :
-                  status.status === 'sending' ? 'text-blue-600' :
-                  'text-gray-600'
-                }`}>
-                  {status.status.charAt(0).toUpperCase() + status.status.slice(1)}
-                  {status.error && ` - ${status.error}`}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Scheduling Section */}
-      <div className="space-y-4">
-        <div className="flex items-center gap-4">
-          <Button
-            variant="outline"
-            onClick={() => setState(prev => ({ ...prev, isScheduling: !prev.isScheduling }))}
-          >
-            {state.isScheduling ? 'Cancel Scheduling' : 'Schedule for Later'}
-          </Button>
-          {state.isScheduling && (
-            <div className="flex items-center gap-2">
-              <label className="text-sm font-medium">Schedule for:</label>
-              <input
-                type="datetime-local"
-                value={state.scheduledFor || ''}
-                onChange={(e) => setState(prev => ({ ...prev, scheduledFor: e.target.value }))}
-                min={new Date().toISOString().slice(0, 16)}
-                className="border rounded px-2 py-1"
-              />
-            </div>
-          )}
-        </div>
-
-        {state.isScheduling && state.scheduledFor && (
-          <div className="text-sm text-muted-foreground">
-            Emails will be sent on {new Date(state.scheduledFor).toLocaleString()}
-          </div>
-        )}
-      </div>
-
-      {/* Error Display */}
-      {state.errors.length > 0 && (
-        <div className="space-y-2">
-          <h3 className="text-lg font-semibold">Errors</h3>
-          <div className="space-y-2">
-            {state.errors.map((error, index) => (
-              <div key={index} className="p-4 bg-red-50 border border-red-200 rounded-lg">
-                <div className="flex items-center gap-2 text-red-600">
-                  <AlertCircle className="h-4 w-4" />
-                  <span className="font-medium">{error.code}</span>
-                </div>
-                <p className="mt-1 text-sm text-red-600">{error.message}</p>
-                {error.recipient && (
-                  <p className="text-sm text-red-500">Recipient: {error.recipient}</p>
-                )}
-                {error.details && (
-                  <pre className="mt-2 text-xs text-red-400 overflow-x-auto">
-                    {error.details}
-                  </pre>
-                )}
-                <p className="mt-1 text-xs text-red-400">
-                  {new Date(error.timestamp).toLocaleString()}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Action Buttons */}
-      <div className="flex gap-4">
-        {state.isScheduling ? (
-          <Button
-            onClick={handleSchedule}
-            disabled={!state.scheduledFor || state.isScheduling}
-          >
-            Schedule Emails
-          </Button>
-        ) : (
-          <Button
-            onClick={handleSendEmails}
-            disabled={state.sending || state.recipients.length === 0 || state.remainingEmails === 0}
-          >
-            {state.sending ? 'Sending...' : 
-             state.remainingEmails === 0 ? 'Daily Limit Reached' :
-             `Send ${Math.min(state.recipients.length, state.remainingEmails)} Emails`}
-          </Button>
-        )}
-      </div>
+      {/* Send Button */}
+      <Button 
+        onClick={handleSendEmails} 
+        disabled={sending || recipients.length === 0} 
+        className="w-full bg-brand-green hover:bg-brand-green-light text-white"
+      >
+        {sending ? 'Sending...' : `Continue & Send Emails (${recipients.length})`}
+      </Button>
     </div>
   );
 }
