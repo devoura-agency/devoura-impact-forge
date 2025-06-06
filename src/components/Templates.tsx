@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ExternalLink, Users, Heart, GraduationCap, Leaf, Shield, Building } from 'lucide-react';
+import { ExternalLink, Users, Heart, GraduationCap, Leaf, Shield, Building, Accessibility, Clock, Droplet, Child, Utensils } from 'lucide-react';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
@@ -48,8 +48,8 @@ const Templates = ({ showPageMode = false }: TemplatesProps) => {
       ]
     },
     {
-      id: 'social-welfare',
-      title: 'Social Welfare',
+      id: 'community-service',
+      title: 'Community Service',
       description: 'Building stronger communities through social initiatives',
       icon: Users,
       color: 'bg-purple-500',
@@ -59,19 +59,59 @@ const Templates = ({ showPageMode = false }: TemplatesProps) => {
       ]
     },
     {
-      id: 'healthcare',
-      title: 'Healthcare',
+      id: 'health-and-wellness',
+      title: 'Health & Wellness',
       description: 'Providing medical care and health awareness',
       icon: Shield,
       color: 'bg-red-500',
       examples: []
     },
     {
-      id: 'disaster-relief',
-      title: 'Disaster Relief',
+      id: 'disaster-management',
+      title: 'Disaster Management',
       description: 'Emergency response and disaster management',
       icon: Building,
       color: 'bg-orange-500',
+      examples: []
+    },
+    {
+      id: 'disability-support',
+      title: 'Disability Support',
+      description: 'Empowering and supporting people with disabilities',
+      icon: Accessibility,
+      color: 'bg-indigo-500',
+      examples: []
+    },
+    {
+      id: 'elderly-care',
+      title: 'Elderly Care',
+      description: 'Caring for and supporting senior citizens',
+      icon: Clock,
+      color: 'bg-amber-500',
+      examples: []
+    },
+    {
+      id: 'environmental-water',
+      title: 'Environment & Water',
+      description: 'Environmental conservation and water resource management',
+      icon: Droplet,
+      color: 'bg-cyan-500',
+      examples: []
+    },
+    {
+      id: 'child-welfare',
+      title: 'Child Welfare',
+      description: 'Protecting children\'s rights and welfare',
+      icon: Child,
+      color: 'bg-yellow-500',
+      examples: []
+    },
+    {
+      id: 'food-security',
+      title: 'Food Security',
+      description: 'Fighting hunger and ensuring food security',
+      icon: Utensils,
+      color: 'bg-emerald-500',
       examples: []
     }
   ];
@@ -233,7 +273,7 @@ const Templates = ({ showPageMode = false }: TemplatesProps) => {
           )}
 
           <motion.div
-            className={showPageMode ? "grid md:grid-cols-2 lg:grid-cols-3 gap-12 mb-16" : "grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12"}
+            className={showPageMode ? "grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-12 mb-16" : "grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 mb-12"}
             initial="hidden"
             animate="visible"
             variants={{

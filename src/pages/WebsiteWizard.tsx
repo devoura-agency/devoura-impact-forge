@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { GraduationCap, Heart, Leaf, Users, Shield, Building, ArrowLeft, ArrowRight, ExternalLink, Palette } from 'lucide-react';
+import { GraduationCap, Heart, Leaf, Users, Shield, Building, ArrowLeft, ArrowRight, ExternalLink, Palette, Accessibility, Clock, Droplet, Child, Utensils } from 'lucide-react';
 import Header from '@/components/Header';
 import { collection, getDocs, query, where, orderBy } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
@@ -14,6 +14,11 @@ const NGO_CATEGORIES = [
   { id: 'community-service', title: 'Community Service', icon: Users, color: 'bg-purple-500' },
   { id: 'health-and-wellness', title: 'Health & Wellness', icon: Shield, color: 'bg-red-500' },
   { id: 'disaster-management', title: 'Disaster Management', icon: Building, color: 'bg-orange-500' },
+  { id: 'disability-support', title: 'Disability Support', icon: Accessibility, color: 'bg-indigo-500' },
+  { id: 'elderly-care', title: 'Elderly Care', icon: Clock, color: 'bg-amber-500' },
+  { id: 'environmental-water', title: 'Environment & Water', icon: Droplet, color: 'bg-cyan-500' },
+  { id: 'child-welfare', title: 'Child Welfare', icon: Child, color: 'bg-yellow-500' },
+  { id: 'food-security', title: 'Food Security', icon: Utensils, color: 'bg-emerald-500' },
 ];
 
 const packages = [
@@ -189,7 +194,7 @@ const WebsiteWizard = () => {
           </motion.p>
           {step === 0 && (
             <motion.div initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} className="mb-12">
-              <div className="grid md:grid-cols-2 gap-8">
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {NGO_CATEGORIES.map((t, idx) => (
                   <motion.div
                     key={t.id}
