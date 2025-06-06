@@ -1,0 +1,283 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>End Hunger Through Technology - Devoura</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8fafc;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            background: linear-gradient(135deg, #10b981, #059669);
+            padding: 30px 20px;
+            text-align: center;
+            color: white;
+        }
+        .logo {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 20px;
+            background-color: white;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #10b981;
+            font-size: 18px;
+        }
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        .header p {
+            font-size: 16px;
+            opacity: 0.95;
+        }
+        .content {
+            padding: 40px 30px;
+        }
+        .greeting {
+            font-size: 18px;
+            color: #10b981;
+            margin-bottom: 25px;
+            font-weight: 600;
+        }
+        .main-text {
+            font-size: 16px;
+            line-height: 1.8;
+            margin-bottom: 30px;
+            color: #374151;
+        }
+        .highlight-box {
+            background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+            border-left: 4px solid #10b981;
+            padding: 25px;
+            margin: 30px 0;
+            border-radius: 8px;
+        }
+        .highlight-box h3 {
+            color: #10b981;
+            font-size: 20px;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+        .benefits {
+            list-style: none;
+            margin: 25px 0;
+        }
+        .benefits li {
+            padding: 12px 0;
+            padding-left: 30px;
+            position: relative;
+            color: #374151;
+            font-size: 16px;
+        }
+        .benefits li:before {
+            content: "🍽️";
+            position: absolute;
+            left: 0;
+            font-size: 18px;
+        }
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 30px 0;
+            padding: 25px;
+            background-color: #f8fafc;
+            border-radius: 12px;
+        }
+        .stat {
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 28px;
+            font-weight: 700;
+            color: #10b981;
+            display: block;
+        }
+        .stat-label {
+            font-size: 14px;
+            color: #6b7280;
+            margin-top: 5px;
+        }
+        .cta-section {
+            text-align: center;
+            margin: 40px 0;
+        }
+        .cta-primary {
+            display: inline-block;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            padding: 18px 35px;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 16px;
+            margin: 10px;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+            transition: all 0.3s ease;
+        }
+        .cta-secondary {
+            display: inline-block;
+            background-color: white;
+            color: #10b981;
+            padding: 18px 35px;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 16px;
+            margin: 10px;
+            border: 2px solid #10b981;
+            transition: all 0.3s ease;
+        }
+        .experience-badge {
+            background: linear-gradient(135deg, #3B82F6, #1e40af);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 50px;
+            display: inline-block;
+            font-weight: 700;
+            margin: 20px 0;
+            font-size: 16px;
+        }
+        .footer {
+            background-color: #1f2937;
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .footer p {
+            margin: 10px 0;
+            color: #d1d5db;
+        }
+        .quote {
+            font-style: italic;
+            font-size: 18px;
+            color: #10b981;
+            text-align: center;
+            margin: 30px 0;
+            padding: 20px;
+            background-color: #f8fafc;
+            border-radius: 10px;
+            border-left: 4px solid #10b981;
+        }
+        @media (max-width: 600px) {
+            .content {
+                padding: 30px 20px;
+            }
+            .stats {
+                flex-direction: column;
+                gap: 20px;
+            }
+            .cta-primary, .cta-secondary {
+                display: block;
+                margin: 10px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div style="width: 70px; height: 70px; background: rgba(255,255,255,0.2); border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(10px);">
+                <img src="https://devoura.vercel.app/logo.png" alt="Devoura Logo" style="width: 70px; height: 70px; border-radius: 50%; display: block; background: white; object-fit: contain;" />
+            </div>
+            <h1>End Hunger Through Technology</h1>
+            <p>Your Food Security Mission Deserves More</p>
+        </div>
+        
+        <div class="content">
+            <div class="greeting">Dear Hunger Fighter,</div>
+            
+            <div class="main-text">
+                No one should go hungry in a world of abundance, but are outdated systems preventing your food security NGO from reaching every empty stomach that needs filling?
+            </div>
+            
+            <div class="experience-badge">
+                ✨ 2+ Years of NGO Digital Excellence
+            </div>
+            
+            <div class="main-text">
+                Food insecurity affects millions globally, and every meal matters. Organizations with strong digital presence achieve <strong>55% better food distribution</strong> and <strong>65% more donor engagement</strong>. Yet many crucial food security organizations like yours struggle with systems that can't match the urgency of hunger.
+            </div>
+            
+            <div class="highlight-box">
+                <h3>At Devoura, we believe you are a true hunger hero</h3>
+                <p>With over 2 years of specialized experience in NGO digital transformation, we've witnessed how powerful technology can optimize food distribution and maximize impact. We have a strong vision to make ALL food security NGOs digitally powerful - and every hungry person deserves you to be one of them.</p>
+            </div>
+            
+            <div class="stats">
+                <div class="stat">
+                    <span class="stat-number">55%</span>
+                    <div class="stat-label">Better Food Distribution</div>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">65%</span>
+                    <div class="stat-label">More Donor Engagement</div>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">2+</span>
+                    <div class="stat-label">Years of Excellence</div>
+                </div>
+            </div>
+            
+            <div class="main-text">
+                <strong>What we bring to hunger fighters like you:</strong>
+            </div>
+            
+            <ul class="benefits">
+                <li>Real-time food inventory and distribution tracking systems</li>
+                <li>Community hunger mapping and response coordination</li>
+                <li>Compelling anti-hunger storytelling that increases donations by 35%</li>
+                <li>Volunteer meal program management platforms</li>
+            </ul>
+            
+            <div class="quote">
+                "Hunger doesn't wait, and neither should your ability to fight it. You are feeding hope - let us feed your digital capabilities."
+            </div>
+            
+            <div class="main-text">
+                Imagine having a digital platform that tracks every meal and maximizes every donation. A system where food distribution is optimized in real-time, where communities can report food needs instantly, and where your nutrition programs reach the most food-insecure families efficiently.
+            </div>
+            
+            <div class="cta-section">
+                <a href="https://devoura.vercel.app/wizard" class="cta-primary">🍽️ Start Your Digital Transformation</a>
+                <a href="https://devoura.vercel.app" class="cta-secondary">🌟 Explore Our Impact</a>
+            </div>
+            
+            <div class="main-text">
+                Your work feeds communities—your digital presence should feed your organization's growth and efficiency. Let's discuss how we can help you distribute food more effectively, engage more donors, and create sustainable solutions to hunger.
+            </div>
+            
+            <div class="main-text">
+                <strong>Ready to become the hunger hero every community needs?</strong>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p><strong>The Devoura Team</strong></p>
+            <p>Empowering Food Security NGOs with 2+ Years of Digital Excellence</p>
+            <p>🌐 <a href="https://devoura.vercel.app" style="color: #60a5fa;">devoura.vercel.app</a></p>
+            <p>P.S. We're offering a complimentary digital food distribution assessment this month. Hunger can't wait—let's explore your feeding potential together.</p>
+        </div>
+    </div>
+</body>
+</html>

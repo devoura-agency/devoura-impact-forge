@@ -1,0 +1,283 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Protect Every Child's Future - Devoura</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8fafc;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            background: linear-gradient(135deg, #eab308, #ca8a04);
+            padding: 30px 20px;
+            text-align: center;
+            color: white;
+        }
+        .logo {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 20px;
+            background-color: white;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #eab308;
+            font-size: 18px;
+        }
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        .header p {
+            font-size: 16px;
+            opacity: 0.95;
+        }
+        .content {
+            padding: 40px 30px;
+        }
+        .greeting {
+            font-size: 18px;
+            color: #eab308;
+            margin-bottom: 25px;
+            font-weight: 600;
+        }
+        .main-text {
+            font-size: 16px;
+            line-height: 1.8;
+            margin-bottom: 30px;
+            color: #374151;
+        }
+        .highlight-box {
+            background: linear-gradient(135deg, #fefce8, #fef3c7);
+            border-left: 4px solid #eab308;
+            padding: 25px;
+            margin: 30px 0;
+            border-radius: 8px;
+        }
+        .highlight-box h3 {
+            color: #eab308;
+            font-size: 20px;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+        .benefits {
+            list-style: none;
+            margin: 25px 0;
+        }
+        .benefits li {
+            padding: 12px 0;
+            padding-left: 30px;
+            position: relative;
+            color: #374151;
+            font-size: 16px;
+        }
+        .benefits li:before {
+            content: "👶";
+            position: absolute;
+            left: 0;
+            font-size: 18px;
+        }
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 30px 0;
+            padding: 25px;
+            background-color: #f8fafc;
+            border-radius: 12px;
+        }
+        .stat {
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 28px;
+            font-weight: 700;
+            color: #eab308;
+            display: block;
+        }
+        .stat-label {
+            font-size: 14px;
+            color: #6b7280;
+            margin-top: 5px;
+        }
+        .cta-section {
+            text-align: center;
+            margin: 40px 0;
+        }
+        .cta-primary {
+            display: inline-block;
+            background: linear-gradient(135deg, #eab308, #ca8a04);
+            color: white;
+            padding: 18px 35px;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 16px;
+            margin: 10px;
+            box-shadow: 0 4px 15px rgba(234, 179, 8, 0.3);
+            transition: all 0.3s ease;
+        }
+        .cta-secondary {
+            display: inline-block;
+            background-color: white;
+            color: #eab308;
+            padding: 18px 35px;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 16px;
+            margin: 10px;
+            border: 2px solid #eab308;
+            transition: all 0.3s ease;
+        }
+        .experience-badge {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 50px;
+            display: inline-block;
+            font-weight: 700;
+            margin: 20px 0;
+            font-size: 16px;
+        }
+        .footer {
+            background-color: #1f2937;
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .footer p {
+            margin: 10px 0;
+            color: #d1d5db;
+        }
+        .quote {
+            font-style: italic;
+            font-size: 18px;
+            color: #eab308;
+            text-align: center;
+            margin: 30px 0;
+            padding: 20px;
+            background-color: #f8fafc;
+            border-radius: 10px;
+            border-left: 4px solid #eab308;
+        }
+        @media (max-width: 600px) {
+            .content {
+                padding: 30px 20px;
+            }
+            .stats {
+                flex-direction: column;
+                gap: 20px;
+            }
+            .cta-primary, .cta-secondary {
+                display: block;
+                margin: 10px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div style="width: 70px; height: 70px; background: rgba(255,255,255,0.2); border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(10px);">
+                <img src="https://devoura.vercel.app/logo.png" alt="Devoura Logo" style="width: 70px; height: 70px; border-radius: 50%; display: block; background: white; object-fit: contain;" />
+            </div>
+            <h1>Protect Every Child's Future Through Technology</h1>
+            <p>Your Child Protection Mission Deserves More</p>
+        </div>
+        
+        <div class="content">
+            <div class="greeting">Dear Child Advocate,</div>
+            
+            <div class="main-text">
+                Every child deserves safety, education, and a bright future, but are outdated digital systems limiting your child welfare NGO's ability to protect and serve more children?
+            </div>
+            
+            <div class="experience-badge">
+                ✨ 2+ Years of NGO Digital Excellence
+            </div>
+            
+            <div class="main-text">
+                Child welfare is one of society's most critical missions. Organizations with strong digital presence achieve <strong>60% better case management</strong> and <strong>45% more community support</strong>. Yet many vital child protection organizations like yours struggle with systems that don't match the urgency of your mission.
+            </div>
+            
+            <div class="highlight-box">
+                <h3>At Devoura, we believe you are a true child champion</h3>
+                <p>With over 2 years of specialized experience in NGO digital transformation, we've seen how powerful technology can enhance child protection efforts and expand your reach. We have a strong vision to make ALL child welfare NGOs digitally empowered - and every child deserves you to be one of them.</p>
+            </div>
+            
+            <div class="stats">
+                <div class="stat">
+                    <span class="stat-number">60%</span>
+                    <div class="stat-label">Better Case Management</div>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">45%</span>
+                    <div class="stat-label">More Community Support</div>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">2+</span>
+                    <div class="stat-label">Years of Excellence</div>
+                </div>
+            </div>
+            
+            <div class="main-text">
+                <strong>What we bring to child advocates like you:</strong>
+            </div>
+            
+            <ul class="benefits">
+                <li>Secure case management systems for child protection</li>
+                <li>Safe reporting platforms for child abuse and exploitation</li>
+                <li>Educational resource portals for children and families</li>
+                <li>Volunteer coordination systems for child welfare programs</li>
+            </ul>
+            
+            <div class="quote">
+                "Every child's future depends on the protection and opportunities we provide today. You are their voice - let us amplify that voice through technology."
+            </div>
+            
+            <div class="main-text">
+                Imagine having a digital platform that prioritizes child safety while maximizing your impact. A secure system where case workers can efficiently manage child welfare cases, where communities can safely report concerns, and where your programs reach the most vulnerable children who need protection.
+            </div>
+            
+            <div class="cta-section">
+                <a href="https://devoura.vercel.app/wizard" class="cta-primary">👶 Start Your Digital Transformation</a>
+                <a href="https://devoura.vercel.app" class="cta-secondary">🌟 Explore Our Impact</a>
+            </div>
+            
+            <div class="main-text">
+                Your work protects the most vulnerable—your digital presence should protect and expand your ability to serve. Let's discuss how we can help you manage cases more efficiently, engage more supporters, and create safer environments for children.
+            </div>
+            
+            <div class="main-text">
+                <strong>Ready to become the child champion every community needs?</strong>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p><strong>The Devoura Team</strong></p>
+            <p>Empowering Child Welfare NGOs with 2+ Years of Digital Excellence</p>
+            <p>🌐 <a href="https://devoura.vercel.app" style="color: #60a5fa;">devoura.vercel.app</a></p>
+            <p>P.S. We're offering a complimentary digital child welfare assessment this month. Children's safety can't wait—let's explore your protection potential together.</p>
+        </div>
+    </div>
+</body>
+</html>
