@@ -17,5 +17,11 @@
       "src": "/(.*)",
       "dest": "/index.html"
     }
+  ],
+  "crons": [
+    {
+      "path": "/api/process-scheduled-emails",
+      "schedule": "*/5 * * * *"
+    }
   ]
 } 
