@@ -6,13 +6,21 @@ import { useToast } from '@/hooks/use-toast';
 import Papa from 'papaparse';
 import * as XLSX from 'xlsx';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { collection, addDoc } from 'firebase/firestore';
+import { collection, addDoc, updateDoc, doc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
+import { Progress } from '@/components/ui/progress';
 
 interface Recipient {
   name: string;
   email: string;
   ngoType: string;
+}
+
+interface EmailStatus {
+  recipient: Recipient;
+  status: 'pending' | 'sending' | 'success' | 'failed';
+  retryCount: number;
+  error?: string;
 }
 
 const NGO_TYPES = [
@@ -25,11 +33,18 @@ const NGO_TYPES = [
   'other'
 ] as const;
 
+const MAX_RETRIES = 3;
+const RETRY_DELAY = 5000; // 5 seconds
+const EMAIL_DELAY = 2000; // 2 seconds between emails
+
 export default function BulkEmail() {
   const [recipients, setRecipients] = useState<Recipient[]>([]);
+  const [fileData, setFileData] = useState<Recipient[]>([]);
   const [manualEntry, setManualEntry] = useState<Recipient>({ name: '', email: '', ngoType: '' });
   const [sending, setSending] = useState(false);
-  const [fileData, setFileData] = useState<Recipient[]>([]);
+  const [emailStatuses, setEmailStatuses] = useState<EmailStatus[]>([]);
+  const [progress, setProgress] = useState(0);
+  const [batchId, setBatchId] = useState<string | null>(null);
   const { toast } = useToast();
 
   // Handle file upload and parse
@@ -111,80 +126,130 @@ export default function BulkEmail() {
     setRecipients(recipients.filter((_, i) => i !== idx));
   };
 
-  // Send emails
+  // Send single email with retry logic
+  const sendSingleEmail = async (recipient: Recipient, retryCount = 0): Promise<boolean> => {
+    try {
+      await new Promise(resolve => setTimeout(resolve, EMAIL_DELAY));
+      
+      const res = await fetch('/api/bulk-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: recipient.name,
+          email: recipient.email,
+          ngoType: recipient.ngoType,
+          subject: 'Devoura NGO Collaboration'
+        })
+      });
+
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+      }
+
+      const data = await res.json();
+      return true;
+    } catch (error) {
+      if (retryCount < MAX_RETRIES) {
+        await new Promise(resolve => setTimeout(resolve, RETRY_DELAY));
+        return sendSingleEmail(recipient, retryCount + 1);
+      }
+      throw error;
+    }
+  };
+
+  // Process email queue
+  const processEmailQueue = async (queue: EmailStatus[]) => {
+    const results = {
+      success: 0,
+      fail: 0,
+      noAttachments: 0
+    };
+
+    for (let i = 0; i < queue.length; i++) {
+      const emailStatus = queue[i];
+      
+      // Update status to sending
+      setEmailStatuses(prev => prev.map((status, idx) => 
+        idx === i ? { ...status, status: 'sending' } : status
+      ));
+
+      try {
+        const success = await sendSingleEmail(emailStatus.recipient);
+        
+        if (success) {
+          results.success++;
+          setEmailStatuses(prev => prev.map((status, idx) => 
+            idx === i ? { ...status, status: 'success' } : status
+          ));
+        }
+      } catch (error) {
+        results.fail++;
+        setEmailStatuses(prev => prev.map((status, idx) => 
+          idx === i ? { 
+            ...status, 
+            status: 'failed',
+            error: error instanceof Error ? error.message : 'Unknown error'
+          } : status
+        ));
+      }
+
+      // Update progress
+      setProgress(((i + 1) / queue.length) * 100);
+    }
+
+    return results;
+  };
+
+  // Send emails with queue system
   const handleSendEmails = async () => {
     setSending(true);
-    let success = 0;
-    let fail = 0;
-    let noAttachments = 0;
+    setProgress(0);
+    
+    // Initialize email statuses
+    const initialStatuses: EmailStatus[] = recipients.map(recipient => ({
+      recipient,
+      status: 'pending',
+      retryCount: 0
+    }));
+    setEmailStatuses(initialStatuses);
 
-    for (const r of recipients) {
-      try {
-        const res = await fetch('/api/bulk-email', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            name: r.name,
-            email: r.email,
-            ngoType: r.ngoType,
-            subject: 'Devoura NGO Collaboration'
-          })
-        });
-        
-        if (res.ok) {
-          const data = await res.json();
-          success++;
-          if (!data.attachmentsIncluded) {
-            noAttachments++;
-          }
-        } else {
-          fail++;
-        }
-      } catch {
-        fail++;
-      }
-    }
-
-    // Save batch to Firestore
     try {
-      await addDoc(collection(db, 'bulkEmailBatches'), {
+      // Create batch record in Firestore
+      const batchRef = await addDoc(collection(db, 'bulkEmailBatches'), {
         sentAt: new Date().toISOString(),
         recipients,
-        status: 'completed',
+        status: 'in_progress',
         stats: {
-          success,
-          fail,
-          noAttachments
+          success: 0,
+          fail: 0,
+          noAttachments: 0
         }
       });
-    } catch (err) {
-      toast({ title: 'Warning', description: 'Emails sent but failed to save batch to database', variant: 'destructive' });
-    }
+      setBatchId(batchRef.id);
 
-    setSending(false);
-    
-    // Show appropriate toast message
-    if (fail === 0) {
-      if (noAttachments > 0) {
-        toast({
-          title: 'Emails Sent (Without Pitch Deck)',
-          description: `Successfully sent ${success} emails, but pitch deck was not attached. Please ensure the PDF is in the correct location.`,
-          variant: 'default'
-        });
-      } else {
-        toast({
-          title: 'Success',
-          description: `Successfully sent ${success} emails with pitch deck attached.`,
-          variant: 'default'
-        });
-      }
-      setRecipients([]);
-    } else {
+      // Process the queue
+      const results = await processEmailQueue(initialStatuses);
+
+      // Update batch record with final results
+      await updateDoc(doc(db, 'bulkEmailBatches', batchRef.id), {
+        status: 'completed',
+        stats: results,
+        completedAt: new Date().toISOString()
+      });
+
       toast({
-        title: 'Partial Success',
-        description: `Sent: ${success}, Failed: ${fail}${noAttachments > 0 ? ', No Pitch Deck: ' + noAttachments : ''}`,
+        title: 'Bulk Email Complete',
+        description: `Successfully sent ${results.success} emails. ${results.fail} failed.`,
+        variant: results.fail > 0 ? 'destructive' : 'default'
+      });
+    } catch (error) {
+      toast({
+        title: 'Error',
+        description: 'Failed to process email batch. Please try again.',
         variant: 'destructive'
       });
+    } finally {
+      setSending(false);
     }
   };
 
@@ -310,13 +375,43 @@ export default function BulkEmail() {
         </div>
       </div>
 
+      {/* Progress and Status Section */}
+      {sending && (
+        <div className="space-y-4">
+          <div className="flex justify-between items-center">
+            <span className="text-sm text-gray-600">Progress: {Math.round(progress)}%</span>
+            <span className="text-sm text-gray-600">
+              {emailStatuses.filter(s => s.status === 'success').length} / {recipients.length} sent
+            </span>
+          </div>
+          <Progress value={progress} className="w-full" />
+          
+          <div className="max-h-60 overflow-y-auto border rounded-md p-4">
+            {emailStatuses.map((status, idx) => (
+              <div key={idx} className="flex items-center justify-between py-2 border-b last:border-0">
+                <span className="text-sm">{status.recipient.email}</span>
+                <span className={`text-sm ${
+                  status.status === 'success' ? 'text-green-600' :
+                  status.status === 'failed' ? 'text-red-600' :
+                  status.status === 'sending' ? 'text-blue-600' :
+                  'text-gray-600'
+                }`}>
+                  {status.status.charAt(0).toUpperCase() + status.status.slice(1)}
+                  {status.error && ` - ${status.error}`}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Send Button */}
       <Button 
         onClick={handleSendEmails} 
         disabled={sending || recipients.length === 0} 
         className="w-full bg-brand-green hover:bg-brand-green-light text-white"
       >
-        {sending ? 'Sending...' : `Continue & Send Emails (${recipients.length})`}
+        {sending ? 'Sending...' : `Send ${recipients.length} Emails`}
       </Button>
     </div>
   );
