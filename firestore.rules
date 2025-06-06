@@ -2,25 +2,68 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Allow authenticated users to read/write
-    match /{document=**} {
-      allow read, write: if request.auth != null;
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
     }
     
-    // Allow public write access to specific collections for form submissions
-    match /request-call/{document} {
-      allow create: if true;
-      allow read, update, delete: if request.auth != null;
+    function isAdmin() {
+      return isAuthenticated() && 
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid));
     }
-    
-    match /wizard-submissions/{document} {
-      allow create: if true;
-      allow read, update, delete: if request.auth != null;
-    }
-    
+
+    // Public read access to website templates
     match /websites/{document} {
       allow read: if true;
-      allow write: if request.auth != null;
+      allow write: if isAdmin();
+    }
+
+    // Form submissions - public create, admin read/update/delete
+    match /request-call/{document} {
+      allow create: if true;
+      allow read, update, delete: if isAdmin();
+    }
+
+    match /wizard-submissions/{document} {
+      allow create: if true;
+      allow read, update, delete: if isAdmin();
+    }
+    
+    match /contacts/{document} {
+      allow create: if true;
+      allow read, update, delete: if isAdmin();
+    }
+    
+    // Email system collections - admin only
+    match /bulkEmailBatches/{document} {
+      allow read, write: if isAdmin();
+    }
+    
+    match /emailErrors/{document} {
+      allow read, write: if isAdmin();
+    }
+    
+    match /emailHistory/{document} {
+      allow read, write: if isAdmin();
+    }
+    
+    match /scheduledEmails/{document} {
+      allow read, write: if isAdmin();
+    }
+    
+    match /emailAnalytics/{document} {
+      allow read, write: if isAdmin();
+    }
+
+    // Admin management
+    match /admins/{userId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+
+    // Default deny
+    match /{document=**} {
+      allow read, write: if false;
     }
   }
 } 

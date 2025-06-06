@@ -1,174 +1,113 @@
 import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
-import { addDoc, collection, getDocs, query, where, updateDoc, doc } from 'firebase/firestore';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
-const DAILY_EMAIL_LIMIT = 100;
 
-// Check daily email count
-async function checkDailyEmailCount() {
-  const today = new Date().toISOString().split('T')[0];
-  const counterRef = collection(db, 'emailCounters');
-  const counterDoc = await getDocs(query(counterRef, where('date', '==', today)));
-  
-  if (counterDoc.empty) {
-    return 0;
-  }
-  
-  return counterDoc.docs[0].data().count;
-}
+// Add website URL constant
+const WEBSITE_URL = process.env.NEXT_PUBLIC_WEBSITE_URL || 'https://devoura.vercel.app';
 
-// Increment daily email count
-async function incrementDailyEmailCount() {
-  const today = new Date().toISOString().split('T')[0];
-  const counterRef = collection(db, 'emailCounters');
-  const counterDoc = await getDocs(query(counterRef, where('date', '==', today)));
-  
-  if (counterDoc.empty) {
-    await addDoc(counterRef, {
-      date: today,
-      count: 1
-    });
-    return 1;
-  }
-  
-  const docRef = counterDoc.docs[0].ref;
-  const newCount = counterDoc.docs[0].data().count + 1;
-  await updateDoc(docRef, { count: newCount });
-  return newCount;
-}
-
-export async function POST(req: Request) {
+// Function to get HTML template based on NGO type
+const getEmailTemplate = async (name: string, ngoType: string) => {
   try {
-    const { recipients, subject, message, attachments } = await req.json();
-
-    if (!recipients || !Array.isArray(recipients) || recipients.length === 0) {
-      return NextResponse.json(
-        { error: 'No recipients provided' },
-        { status: 400 }
-      );
-    }
-
-    if (!subject || !message) {
-      return NextResponse.json(
-        { error: 'Subject and message are required' },
-        { status: 400 }
-      );
-    }
-
-    // Check daily limit
-    const currentCount = await checkDailyEmailCount();
-    if (currentCount >= DAILY_EMAIL_LIMIT) {
-      return NextResponse.json(
-        { 
-          error: 'Daily email limit reached',
-          dailyCount: currentCount,
-          remainingEmails: 0
-        },
-        { status: 429 }
-      );
-    }
-
-    // Create batch record
-    const batchRef = await addDoc(collection(db, 'bulkEmailBatches'), {
-      sentAt: new Date().toISOString(),
-      recipients,
-      status: 'in_progress',
-      stats: {
-        total: recipients.length,
-        success: 0,
-        failed: 0
-      }
-    });
-
-    const results = {
-      success: 0,
-      failed: 0,
-      errors: [] as Array<{ recipient: string; error: string }>
+    // Map ngoType to template filename
+    const templateMap: Record<string, string> = {
+      'education': 'education-template.html',
+      'women-empowerment': 'women-empowerment-template.html',
+      'wildlife': 'wildlife-template.html',
+      'community-service': 'community-service-template.html',
+      'health-and-wellness': 'health-wellness-template.html',
+      'disaster-management': 'disaster-management-template.html',
+      'other': 'general-template.html'
     };
 
-    // Process each recipient
-    for (const recipient of recipients) {
-      try {
-        // Check if we've hit the daily limit
-        const currentCount = await checkDailyEmailCount();
-        if (currentCount >= DAILY_EMAIL_LIMIT) {
-          throw new Error('Daily email limit reached');
-        }
-
-        // Send email
-        await resend.emails.send({
-          from: 'Devoura <onboarding@resend.dev>',
-          to: recipient.email,
-          subject,
-          html: message,
-          attachments: attachments?.map((file: any) => ({
-            filename: file.name,
-            content: file.content
-          }))
-        });
-
-        // Increment counter and update results
-        await incrementDailyEmailCount();
-        results.success++;
-
-        // Log successful email
-        await addDoc(collection(db, 'emailHistory'), {
-          recipient,
-          status: 'success',
-          sentAt: new Date().toISOString(),
-          batchId: batchRef.id
-        });
-
-      } catch (error) {
-        console.error(`Failed to send email to ${recipient.email}:`, error);
-        results.failed++;
-        results.errors.push({
-          recipient: recipient.email,
-          error: error instanceof Error ? error.message : 'Unknown error'
-        });
-
-        // Log failed email
-        await addDoc(collection(db, 'emailHistory'), {
-          recipient,
-          status: 'failed',
-          sentAt: new Date().toISOString(),
-          error: error instanceof Error ? error.message : 'Unknown error',
-          batchId: batchRef.id
-        });
-      }
+    const templateFile = templateMap[ngoType] || 'general-template.html';
+    const response = await fetch(`${WEBSITE_URL}/email-templates/${templateFile}`);
+    
+    if (!response.ok) {
+      console.warn(`Template not found: ${templateFile}`);
+      return null;
     }
 
-    // Update batch record with final results
-    await updateDoc(doc(db, 'bulkEmailBatches', batchRef.id), {
-      status: 'completed',
-      stats: {
-        total: recipients.length,
-        success: results.success,
-        failed: results.failed
-      }
-    });
-
-    // Get final count
-    const finalCount = await checkDailyEmailCount();
-
-    return NextResponse.json({
-      success: true,
-      batchId: batchRef.id,
-      results,
-      dailyCount: finalCount,
-      remainingEmails: DAILY_EMAIL_LIMIT - finalCount
-    });
-
+    let template = await response.text();
+    
+    // Replace placeholders in the template
+    template = template.replace(/{{name}}/g, name);
+    template = template.replace(/{{website_url}}/g, WEBSITE_URL);
+    
+    return template;
   } catch (error) {
-    console.error('Error in bulk email:', error);
-    return NextResponse.json(
-      { 
-        error: 'Failed to send bulk emails',
-        details: error instanceof Error ? error.message : 'Unknown error'
-      },
-      { status: 500 }
-    );
+    console.error('Error reading email template:', error);
+    return null;
+  }
+};
+
+export async function POST(request: Request) {
+  try {
+    const { name, email, ngoType, subject } = await request.json();
+
+    if (!name || !email || !ngoType) {
+      return NextResponse.json(
+        { error: 'Missing required fields' },
+        { status: 400 }
+      );
+    }
+
+    // Get HTML template
+    const htmlContent = await getEmailTemplate(name, ngoType);
+    if (!htmlContent) {
+      return NextResponse.json(
+        { error: 'Failed to load email template' },
+        { status: 500 }
+      );
+    }
+
+    // Send email using Resend
+    const { data, error } = await resend.emails.send({
+      from: 'Devoura <noreply@devoura.vercel.app>',
+      to: email,
+      subject: subject || 'Devoura NGO Collaboration',
+      html: htmlContent,
+    });
+
+    if (error) {
+      throw error;
+    }
+
+    // Log successful email in Firestore
+    await addDoc(collection(db, 'emailHistory'), {
+      recipient: email,
+      name,
+      ngoType,
+      subject,
+      status: 'sent',
+      sentAt: serverTimestamp(),
+      messageId: data?.id
+    });
+
+    return NextResponse.json({ 
+      message: 'Email sent successfully',
+      messageId: data?.id
+    });
+  } catch (error: any) {
+    console.error('Bulk email error:', error);
+
+    // Log error in Firestore
+    try {
+      await addDoc(collection(db, 'emailErrors'), {
+        recipient: email,
+        error: error.message,
+        timestamp: serverTimestamp(),
+        details: error
+      });
+    } catch (firestoreError) {
+      console.error('Failed to log error to Firestore:', firestoreError);
+    }
+
+    return NextResponse.json({ 
+      error: 'Failed to send email', 
+      details: error.message
+    }, { status: 500 });
   }
 } 

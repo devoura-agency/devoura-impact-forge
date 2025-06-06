@@ -192,33 +192,19 @@ export default function BulkEmail() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          recipients: [recipient],
-          subject: state.subject,
-          message: state.message,
-          attachments: state.attachments
+          name: recipient.name,
+          email: recipient.email,
+          ngoType: recipient.ngoType,
+          subject: state.subject
         })
       });
 
       if (!res.ok) {
         const errorData = await res.json();
-        if (res.status === 429) {
-          // Daily limit reached
-          toast({
-            title: 'Daily Limit Reached',
-            description: 'You have reached the daily email limit. Please try again tomorrow.',
-            variant: 'destructive'
-          });
-          return false;
-        }
         throw new Error(errorData.error || 'Failed to send email');
       }
 
       const data = await res.json();
-      setState(prev => ({
-        ...prev,
-        dailyCount: data.dailyCount,
-        remainingEmails: data.remainingEmails
-      }));
       return true;
     } catch (error) {
       console.error('Error sending email:', error);
@@ -442,22 +428,38 @@ export default function BulkEmail() {
     }
   };
 
-  const handleError = (error: any, recipient?: string) => {
-    const emailError: EmailError = {
+  const handleError = async (error: any, recipient?: string) => {
+    const errorDetails: EmailError = {
       code: error.code || 'UNKNOWN_ERROR',
       message: error.message || 'An unknown error occurred',
-      details: error.details || error.stack,
+      details: error.stack,
       recipient,
       timestamp: new Date().toISOString()
     };
 
     setState(prev => ({
       ...prev,
-      errors: [...prev.errors, emailError]
+      errors: [...prev.errors, errorDetails]
     }));
 
-    // Log error to Firestore for analytics
-    addDoc(collection(db, 'emailErrors'), emailError);
+    // Log error to Firestore
+    try {
+      await addDoc(collection(db, 'emailErrors'), {
+        recipient,
+        error: error.message,
+        code: error.code,
+        details: error.stack,
+        timestamp: new Date().toISOString()
+      });
+    } catch (firestoreError) {
+      console.error('Failed to log error to Firestore:', firestoreError);
+    }
+
+    toast({
+      title: 'Error',
+      description: error.message || 'Failed to send email',
+      variant: 'destructive'
+    });
   };
 
   return (
