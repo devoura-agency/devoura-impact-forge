@@ -1,7 +1,7 @@
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ExternalLink, Users, Heart, GraduationCap, Leaf, Shield, Building, Accessibility, Clock, Droplet, Baby, Utensils } from 'lucide-react';
+import { ExternalLink, Users, Heart, GraduationCap, Leaf, Shield, Building, Accessibility, Clock, Droplet, Baby, Utensils, Palette } from 'lucide-react';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
@@ -113,6 +113,14 @@ const Templates = ({ showPageMode = false }: TemplatesProps) => {
       description: 'Fighting hunger and ensuring food security',
       icon: Utensils,
       color: 'bg-emerald-500',
+      examples: []
+    },
+    {
+      id: 'request-custom',
+      title: 'Request Custom Template',
+      description: 'Need something unique? We\'ll create a custom design just for your NGO',
+      icon: Palette,
+      color: 'bg-gradient-to-br from-brand-green to-brand-gold',
       examples: []
     }
   ];
@@ -274,7 +282,7 @@ const Templates = ({ showPageMode = false }: TemplatesProps) => {
           )}
 
           <motion.div
-            className={showPageMode ? "grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-12 mb-16" : "grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 mb-12"}
+            className={showPageMode ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-16" : "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12"}
             initial="hidden"
             animate="visible"
             variants={{
@@ -288,6 +296,7 @@ const Templates = ({ showPageMode = false }: TemplatesProps) => {
           >
             {templates.map((template, index) => {
               const IconComponent = template.icon;
+              const isCustom = template.id === 'request-custom';
               return (
                 <motion.div
                   key={template.id}
@@ -296,19 +305,20 @@ const Templates = ({ showPageMode = false }: TemplatesProps) => {
                     visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.5, type: 'spring' } }
                   } : {}}
                   whileHover={showPageMode ? { scale: 1.04, boxShadow: '0 8px 32px rgba(0,0,0,0.10)' } : {}}
+                  className="h-full"
                 >
-                  <Card className="group hover:shadow-xl transition-all duration-300 border-2 hover:border-brand-green">
-                    <CardHeader className="text-center">
+                  <Card className={`group hover:shadow-xl transition-all duration-300 border-2 hover:border-brand-green h-full flex flex-col ${isCustom ? 'bg-gradient-to-br from-brand-cream to-white' : ''}`}>
+                    <CardHeader className="text-center flex-grow">
                       <motion.div
                         whileHover={showPageMode ? { scale: 1.1 } : {}}
-                        className={`w-16 h-16 ${template.color} rounded-full flex items-center justify-center mx-auto mb-4`}
+                        className={`w-16 h-16 ${isCustom ? 'bg-gradient-to-br from-brand-green to-brand-gold' : template.color} rounded-full flex items-center justify-center mx-auto mb-4`}
                       >
                         <IconComponent className="w-8 h-8 text-white" />
                       </motion.div>
-                      <CardTitle className="text-xl text-brand-green">{template.title}</CardTitle>
+                      <CardTitle className="text-lg text-brand-green text-center">{template.title}</CardTitle>
                     </CardHeader>
-                    <CardContent className="text-center">
-                      <p className="text-gray-600 mb-6">{template.description}</p>
+                    <CardContent className="text-center flex-grow flex items-center">
+                      <p className="text-gray-600 text-sm">{template.description}</p>
                     </CardContent>
                   </Card>
                 </motion.div>

@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -20,6 +19,7 @@ const NGO_CATEGORIES = [
   { id: 'environmental-water', title: 'Environment & Water', icon: Droplet, color: 'bg-cyan-500' },
   { id: 'child-welfare', title: 'Child Welfare', icon: Baby, color: 'bg-yellow-500' },
   { id: 'food-security', title: 'Food Security', icon: Utensils, color: 'bg-emerald-500' },
+  { id: 'request-custom', title: 'Request Custom Template', icon: Palette, color: 'bg-gradient-to-br from-brand-green to-brand-gold' },
 ];
 
 const packages = [
@@ -195,35 +195,28 @@ const WebsiteWizard = () => {
           </motion.p>
           {step === 0 && (
             <motion.div initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} className="mb-12">
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {NGO_CATEGORIES.map((t, idx) => (
-                  <motion.div
-                    key={t.id}
-                    whileHover={{ scale: 1.04, boxShadow: '0 8px 32px rgba(0,0,0,0.10)' }}
-                    className={`rounded-2xl shadow-xl bg-white p-8 flex flex-col items-center cursor-pointer border-4 ${selectedTemplate === t.id ? 'border-brand-gold' : 'border-transparent'}`}
-                    onClick={() => setSelectedTemplate(t.id)}
-                  >
-                    <div className={`w-16 h-16 ${t.color} rounded-full flex items-center justify-center mb-4`}>
-                      <t.icon className="w-8 h-8 text-white" />
-                    </div>
-                    <h3 className="text-xl font-bold text-brand-green mb-2">{t.title}</h3>
-                  </motion.div>
-                ))}
-                
-                {/* Request Custom Template Card */}
-                <motion.div
-                  whileHover={{ scale: 1.04, boxShadow: '0 8px 32px rgba(0,0,0,0.10)' }}
-                  className={`rounded-2xl shadow-xl bg-white p-8 flex flex-col items-center cursor-pointer border-4 ${selectedTemplate === 'custom' ? 'border-brand-gold' : 'border-transparent'}`}
-                  onClick={() => setSelectedTemplate('custom')}
-                >
-                  <div className="w-16 h-16 bg-gradient-to-br from-brand-green to-brand-gold rounded-full flex items-center justify-center mb-4">
-                    <Palette className="w-8 h-8 text-white" />
-                  </div>
-                  <h3 className="text-xl font-bold text-brand-green mb-2">Request Custom Template</h3>
-                  <p className="text-gray-600 text-center text-sm">
-                    Need something unique? We'll create a custom design just for your NGO.
-                  </p>
-                </motion.div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {NGO_CATEGORIES.map((t, idx) => {
+                  const isCustom = t.id === 'request-custom';
+                  return (
+                    <motion.div
+                      key={t.id}
+                      whileHover={{ scale: 1.04, boxShadow: '0 8px 32px rgba(0,0,0,0.10)' }}
+                      className={`rounded-2xl shadow-xl bg-white p-6 flex flex-col items-center cursor-pointer border-4 ${selectedTemplate === t.id ? 'border-brand-gold' : 'border-transparent'} h-full min-h-[200px] ${isCustom ? 'bg-gradient-to-br from-brand-cream to-white' : ''}`}
+                      onClick={() => setSelectedTemplate(t.id)}
+                    >
+                      <div className={`w-16 h-16 ${isCustom ? 'bg-gradient-to-br from-brand-green to-brand-gold' : t.color} rounded-full flex items-center justify-center mb-4`}>
+                        <t.icon className="w-8 h-8 text-white" />
+                      </div>
+                      <h3 className="text-lg font-bold text-brand-green mb-2 text-center">{t.title}</h3>
+                      {isCustom && (
+                        <p className="text-gray-600 text-center text-sm">
+                          Need something unique? We'll create a custom design just for your NGO.
+                        </p>
+                      )}
+                    </motion.div>
+                  );
+                })}
               </div>
             </motion.div>
           )}
