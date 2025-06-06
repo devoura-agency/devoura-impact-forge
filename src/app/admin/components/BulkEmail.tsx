@@ -12,6 +12,8 @@ import { Progress } from '@/components/ui/progress';
 import { AlertCircle } from 'lucide-react';
 import { toast } from '@/components/ui/use-toast';
 
+const API_BASE_URL = 'https://devoura.vercel.app';
+
 interface Recipient {
   name: string;
   email: string;
@@ -188,31 +190,25 @@ export default function BulkEmail() {
   // Send single email with retry logic
   const sendSingleEmail = async (recipient: Recipient): Promise<boolean> => {
     try {
-      // Validate recipient data
-      if (!recipient.email || !recipient.name) {
-        throw new Error('Invalid recipient data');
-      }
-
-      const res = await fetch('https://devoura.vercel.app/api/bulk-email', {
+      const response = await fetch(`${API_BASE_URL}/api/bulk-email`, {
         method: 'POST',
-        headers: { 
+        headers: {
           'Content-Type': 'application/json',
-          'Accept': 'application/json'
         },
         body: JSON.stringify({
           name: recipient.name,
           email: recipient.email,
-          ngoType: recipient.ngoType || 'other',
+          ngoType: recipient.ngoType,
           subject: state.subject || 'Devoura NGO Collaboration'
-        })
+        }),
       });
 
-      if (!res.ok) {
-        const errorData = await res.json().catch(() => ({ error: 'Failed to parse error response' }));
+      if (!response.ok) {
+        const errorData = await response.json();
         throw new Error(errorData.error || 'Failed to send email');
       }
 
-      const data = await res.json().catch(() => ({ messageId: null }));
+      const data = await response.json();
       
       // Log successful email with proper timestamp
       await addDoc(collection(db, 'emailHistory'), {
@@ -221,7 +217,7 @@ export default function BulkEmail() {
         ngoType: recipient.ngoType,
         subject: state.subject,
         status: 'sent',
-        sentAt: new Date(), // Use Date object for Firestore timestamp
+        sentAt: new Date(),
         messageId: data.messageId
       });
 
@@ -403,30 +399,39 @@ export default function BulkEmail() {
   }, [state.backgroundJob]);
 
   const handleSchedule = async () => {
-    if (!state.scheduledFor) return;
+    if (!state.scheduledFor) {
+      toast({
+        title: 'Error',
+        description: 'Please select a scheduled time',
+        variant: 'destructive',
+      });
+      return;
+    }
 
-    setState(prev => ({ ...prev, isScheduling: true }));
     try {
-      const response = await fetch('/api/schedule-emails', {
+      const response = await fetch(`${API_BASE_URL}/api/schedule-emails`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify({
           recipients: state.recipients,
           subject: state.subject,
           message: state.message,
           scheduledFor: state.scheduledFor,
           attachments: state.attachments
-        })
+        }),
       });
 
       if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || 'Failed to schedule emails');
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to schedule emails');
       }
 
-      toast({ 
+      const data = await response.json();
+      toast({
         title: 'Success',
-        description: 'Emails scheduled successfully'
+        description: 'Emails scheduled successfully',
       });
       setState(prev => ({
         ...prev,
@@ -439,10 +444,10 @@ export default function BulkEmail() {
       }));
     } catch (error) {
       console.error('Error scheduling emails:', error);
-      toast({ 
+      toast({
         title: 'Error',
         description: error instanceof Error ? error.message : 'Failed to schedule emails',
-        variant: 'destructive'
+        variant: 'destructive',
       });
       setState(prev => ({ ...prev, isScheduling: false }));
     }

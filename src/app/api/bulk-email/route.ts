@@ -6,7 +6,7 @@ import { db } from '@/lib/firebase';
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 // Add website URL constant
-const WEBSITE_URL = process.env.NEXT_PUBLIC_WEBSITE_URL || 'https://devoura.vercel.app';
+const WEBSITE_URL = 'https://devoura.vercel.app';
 
 // Function to get HTML template based on NGO type
 const getEmailTemplate = async (name: string, ngoType: string) => {
@@ -44,32 +44,13 @@ const getEmailTemplate = async (name: string, ngoType: string) => {
 };
 
 export async function POST(request: Request) {
-  // Handle CORS
-  if (request.method === 'OPTIONS') {
-    return new NextResponse(null, {
-      status: 204,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'POST, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-      },
-    });
-  }
-
   try {
     const { name, email, ngoType, subject } = await request.json();
 
     if (!name || !email || !ngoType) {
       return NextResponse.json(
         { error: 'Missing required fields' },
-        { 
-          status: 400,
-          headers: {
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Methods': 'POST, OPTIONS',
-            'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-          }
-        }
+        { status: 400 }
       );
     }
 
@@ -78,14 +59,7 @@ export async function POST(request: Request) {
     if (!emailRegex.test(email)) {
       return NextResponse.json(
         { error: 'Invalid email format' },
-        { 
-          status: 400,
-          headers: {
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Methods': 'POST, OPTIONS',
-            'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-          }
-        }
+        { status: 400 }
       );
     }
 
@@ -94,14 +68,7 @@ export async function POST(request: Request) {
     if (!htmlContent) {
       return NextResponse.json(
         { error: 'Failed to load email template' },
-        { 
-          status: 500,
-          headers: {
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Methods': 'POST, OPTIONS',
-            'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-          }
-        }
+        { status: 500 }
       );
     }
 
@@ -131,12 +98,6 @@ export async function POST(request: Request) {
     return NextResponse.json({ 
       message: 'Email sent successfully',
       messageId: data?.id
-    }, {
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'POST, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-      }
     });
   } catch (error: any) {
     console.error('Bulk email error:', error);
@@ -156,13 +117,6 @@ export async function POST(request: Request) {
     return NextResponse.json({ 
       error: 'Failed to send email', 
       details: error.message
-    }, { 
-      status: 500,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'POST, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-      }
-    });
+    }, { status: 500 });
   }
 } 
