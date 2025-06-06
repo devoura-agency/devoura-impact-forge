@@ -18,10 +18,10 @@
       "dest": "/index.html"
     }
   ],
-  "crons": [
+  "rewrites": [
     {
-      "path": "/api/process-scheduled-emails",
-      "schedule": "*/5 * * * *"
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ]
 } 

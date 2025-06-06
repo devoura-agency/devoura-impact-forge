@@ -7,15 +7,6 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(req: Request) {
   try {
-    // Verify the request is from a trusted source (e.g., cron job)
-    const authHeader = req.headers.get('authorization');
-    if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
-    }
-
     // Get all pending scheduled emails that are due
     const now = new Date();
     const scheduledEmailsRef = collection(db, 'scheduledEmails');
@@ -30,6 +21,13 @@ export async function POST(req: Request) {
       id: doc.id,
       ...doc.data()
     }));
+
+    if (scheduledEmails.length === 0) {
+      return NextResponse.json({
+        success: true,
+        message: 'No scheduled emails to process'
+      });
+    }
 
     const results = {
       processed: 0,
@@ -100,7 +98,8 @@ export async function POST(req: Request) {
 
     return NextResponse.json({
       success: true,
-      results
+      results,
+      message: `Processed ${results.processed} batches (${results.success} successful, ${results.failed} failed)`
     });
   } catch (error) {
     console.error('Error processing scheduled emails:', error);

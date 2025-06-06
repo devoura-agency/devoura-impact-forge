@@ -17,6 +17,7 @@ import {
   BarChart,
   Bar
 } from 'recharts';
+import { toast } from '@/components/ui/use-toast';
 
 interface EmailStats {
   total: number;
@@ -150,6 +151,32 @@ export default function EmailDashboard() {
     }
   };
 
+  const handleProcessScheduled = async () => {
+    try {
+      const response = await fetch('/api/process-scheduled-emails', {
+        method: 'POST'
+      });
+
+      const data = await response.json();
+      
+      if (data.success) {
+        toast({
+          title: 'Success',
+          description: data.message
+        });
+      } else {
+        throw new Error(data.error || 'Failed to process scheduled emails');
+      }
+    } catch (error) {
+      console.error('Error processing scheduled emails:', error);
+      toast({
+        title: 'Error',
+        description: error instanceof Error ? error.message : 'Failed to process scheduled emails',
+        variant: 'destructive'
+      });
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
@@ -172,6 +199,13 @@ export default function EmailDashboard() {
             onClick={() => setSelectedTab('scheduled')}
           >
             Scheduled
+          </Button>
+          <Button
+            variant="outline"
+            onClick={handleProcessScheduled}
+            className="ml-4"
+          >
+            Process Scheduled
           </Button>
         </div>
       </div>
