@@ -188,27 +188,47 @@ export default function BulkEmail() {
   // Send single email with retry logic
   const sendSingleEmail = async (recipient: Recipient): Promise<boolean> => {
     try {
-      const res = await fetch('/api/bulk-email', {
+      // Validate recipient data
+      if (!recipient.email || !recipient.name) {
+        throw new Error('Invalid recipient data');
+      }
+
+      const res = await fetch('https://devoura.vercel.app/api/bulk-email', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
         body: JSON.stringify({
           name: recipient.name,
           email: recipient.email,
-          ngoType: recipient.ngoType,
-          subject: state.subject
+          ngoType: recipient.ngoType || 'other',
+          subject: state.subject || 'Devoura NGO Collaboration'
         })
       });
 
       if (!res.ok) {
-        const errorData = await res.json();
+        const errorData = await res.json().catch(() => ({ error: 'Failed to parse error response' }));
         throw new Error(errorData.error || 'Failed to send email');
       }
 
-      const data = await res.json();
+      const data = await res.json().catch(() => ({ messageId: null }));
+      
+      // Log successful email with proper timestamp
+      await addDoc(collection(db, 'emailHistory'), {
+        recipient: recipient.email,
+        name: recipient.name,
+        ngoType: recipient.ngoType,
+        subject: state.subject,
+        status: 'sent',
+        sentAt: new Date(), // Use Date object for Firestore timestamp
+        messageId: data.messageId
+      });
+
       return true;
     } catch (error) {
       console.error('Error sending email:', error);
-      handleError(error, recipient.email);
+      await handleError(error, recipient.email);
       return false;
     }
   };
@@ -429,6 +449,12 @@ export default function BulkEmail() {
   };
 
   const handleError = async (error: any, recipient?: string) => {
+    // Only proceed if we have a valid recipient
+    if (!recipient) {
+      console.warn('No recipient provided for error logging');
+      return;
+    }
+
     const errorDetails: EmailError = {
       code: error.code || 'UNKNOWN_ERROR',
       message: error.message || 'An unknown error occurred',
@@ -442,14 +468,14 @@ export default function BulkEmail() {
       errors: [...prev.errors, errorDetails]
     }));
 
-    // Log error to Firestore
+    // Log error to Firestore with validated data
     try {
       await addDoc(collection(db, 'emailErrors'), {
         recipient,
-        error: error.message,
-        code: error.code,
-        details: error.stack,
-        timestamp: new Date().toISOString()
+        error: error.message || 'Unknown error',
+        code: error.code || 'UNKNOWN_ERROR',
+        details: error.stack || '',
+        timestamp: new Date() // Use Date object for Firestore timestamp
       });
     } catch (firestoreError) {
       console.error('Failed to log error to Firestore:', firestoreError);

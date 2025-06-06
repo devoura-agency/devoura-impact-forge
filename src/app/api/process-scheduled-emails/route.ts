@@ -1,11 +1,23 @@
 import { NextResponse } from 'next/server';
-import { collection, query, where, getDocs, updateDoc, doc, Timestamp } from 'firebase/firestore';
+import { collection, query, where, getDocs, updateDoc, doc, Timestamp, addDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { Resend } from 'resend';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(req: Request) {
+  // Handle CORS
+  if (req.method === 'OPTIONS') {
+    return new NextResponse(null, {
+      status: 204,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'POST, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+      },
+    });
+  }
+
   try {
     // Get all pending scheduled emails that are due
     const now = new Date();
@@ -26,6 +38,12 @@ export async function POST(req: Request) {
       return NextResponse.json({
         success: true,
         message: 'No scheduled emails to process'
+      }, {
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'POST, OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+        }
       });
     }
 
@@ -48,7 +66,7 @@ export async function POST(req: Request) {
         for (const recipient of batch.recipients) {
           try {
             await resend.emails.send({
-              from: 'Devoura <onboarding@resend.dev>',
+              from: 'Devoura <noreply@devoura.vercel.app>',
               to: recipient.email,
               subject: batch.subject,
               html: batch.message,
@@ -100,12 +118,25 @@ export async function POST(req: Request) {
       success: true,
       results,
       message: `Processed ${results.processed} batches (${results.success} successful, ${results.failed} failed)`
+    }, {
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'POST, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+      }
     });
   } catch (error) {
     console.error('Error processing scheduled emails:', error);
     return NextResponse.json(
       { error: 'Failed to process scheduled emails' },
-      { status: 500 }
+      { 
+        status: 500,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'POST, OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+        }
+      }
     );
   }
 } 
