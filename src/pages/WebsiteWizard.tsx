@@ -1,8 +1,9 @@
+
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { GraduationCap, Heart, Leaf, Users, Shield, Building, ArrowLeft, ArrowRight, ExternalLink, Palette, Accessibility, Clock, Droplet, Child, Utensils } from 'lucide-react';
+import { GraduationCap, Heart, Leaf, Users, Shield, Building, ArrowLeft, ArrowRight, ExternalLink, Palette, Accessibility, Clock, Droplet, Baby, Utensils } from 'lucide-react';
 import Header from '@/components/Header';
 import { collection, getDocs, query, where, orderBy } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
@@ -17,7 +18,7 @@ const NGO_CATEGORIES = [
   { id: 'disability-support', title: 'Disability Support', icon: Accessibility, color: 'bg-indigo-500' },
   { id: 'elderly-care', title: 'Elderly Care', icon: Clock, color: 'bg-amber-500' },
   { id: 'environmental-water', title: 'Environment & Water', icon: Droplet, color: 'bg-cyan-500' },
-  { id: 'child-welfare', title: 'Child Welfare', icon: Child, color: 'bg-yellow-500' },
+  { id: 'child-welfare', title: 'Child Welfare', icon: Baby, color: 'bg-yellow-500' },
   { id: 'food-security', title: 'Food Security', icon: Utensils, color: 'bg-emerald-500' },
 ];
 

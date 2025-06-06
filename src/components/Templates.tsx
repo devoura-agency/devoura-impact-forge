@@ -1,6 +1,7 @@
+
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ExternalLink, Users, Heart, GraduationCap, Leaf, Shield, Building, Accessibility, Clock, Droplet, Child, Utensils } from 'lucide-react';
+import { ExternalLink, Users, Heart, GraduationCap, Leaf, Shield, Building, Accessibility, Clock, Droplet, Baby, Utensils } from 'lucide-react';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
@@ -102,7 +103,7 @@ const Templates = ({ showPageMode = false }: TemplatesProps) => {
       id: 'child-welfare',
       title: 'Child Welfare',
       description: 'Protecting children\'s rights and welfare',
-      icon: Child,
+      icon: Baby,
       color: 'bg-yellow-500',
       examples: []
     },
