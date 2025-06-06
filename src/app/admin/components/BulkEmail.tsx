@@ -188,9 +188,9 @@ export default function BulkEmail() {
   };
 
   // Send single email with retry logic
-  const sendSingleEmail = async (recipient: Recipient): Promise<boolean> => {
+  const sendSingleEmail = async (recipient: Recipient) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/bulk-email`, {
+      const response = await fetch('https://devoura.vercel.app/api/send-email', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -209,23 +209,10 @@ export default function BulkEmail() {
       }
 
       const data = await response.json();
-      
-      // Log successful email with proper timestamp
-      await addDoc(collection(db, 'emailHistory'), {
-        recipient: recipient.email,
-        name: recipient.name,
-        ngoType: recipient.ngoType,
-        subject: state.subject,
-        status: 'sent',
-        sentAt: new Date(),
-        messageId: data.messageId
-      });
-
-      return true;
+      return data;
     } catch (error) {
       console.error('Error sending email:', error);
-      await handleError(error, recipient.email);
-      return false;
+      throw error;
     }
   };
 
@@ -258,16 +245,14 @@ export default function BulkEmail() {
       }));
 
       try {
-        const success = await sendSingleEmail(emailStatus.recipient);
+        const data = await sendSingleEmail(emailStatus.recipient);
         
-        if (success) {
-          setState(prev => ({
-            ...prev,
-            emailStatuses: prev.emailStatuses.map((status, idx) => 
-              idx === queueIndex ? { ...status, status: 'success' } : status
-            )
-          }));
-        }
+        setState(prev => ({
+          ...prev,
+          emailStatuses: prev.emailStatuses.map((status, idx) => 
+            idx === queueIndex ? { ...status, status: 'success', error: undefined } : status
+          )
+        }));
       } catch (error) {
         setState(prev => ({
           ...prev,
