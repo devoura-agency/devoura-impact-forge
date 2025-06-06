@@ -1,0 +1,294 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Save More Wildlife - Devoura</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f0fdf4;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            background: linear-gradient(135deg, #22C55E, #16a34a);
+            padding: 30px 20px;
+            text-align: center;
+            color: white;
+        }
+        .logo {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 20px;
+            background-color: white;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #22C55E;
+            font-size: 18px;
+        }
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        .header p {
+            font-size: 16px;
+            opacity: 0.95;
+        }
+        .content {
+            padding: 40px 30px;
+        }
+        .greeting {
+            font-size: 18px;
+            color: #22C55E;
+            margin-bottom: 25px;
+            font-weight: 600;
+        }
+        .main-text {
+            font-size: 16px;
+            line-height: 1.8;
+            margin-bottom: 30px;
+            color: #374151;
+        }
+        .highlight-box {
+            background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+            border-left: 4px solid #22C55E;
+            padding: 25px;
+            margin: 30px 0;
+            border-radius: 8px;
+        }
+        .highlight-box h3 {
+            color: #22C55E;
+            font-size: 20px;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+        .benefits {
+            list-style: none;
+            margin: 25px 0;
+        }
+        .benefits li {
+            padding: 12px 0;
+            padding-left: 30px;
+            position: relative;
+            color: #374151;
+            font-size: 16px;
+        }
+        .benefits li:before {
+            content: "🌿";
+            position: absolute;
+            left: 0;
+            font-size: 18px;
+        }
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 30px 0;
+            padding: 25px;
+            background-color: #f0fdf4;
+            border-radius: 12px;
+        }
+        .stat {
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 28px;
+            font-weight: 700;
+            color: #22C55E;
+            display: block;
+        }
+        .stat-label {
+            font-size: 14px;
+            color: #6b7280;
+            margin-top: 5px;
+        }
+        .cta-section {
+            text-align: center;
+            margin: 40px 0;
+        }
+        .cta-primary {
+            display: inline-block;
+            background: linear-gradient(135deg, #22C55E, #16a34a);
+            color: white;
+            padding: 18px 35px;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 16px;
+            margin: 10px;
+            box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3);
+            transition: all 0.3s ease;
+        }
+        .cta-secondary {
+            display: inline-block;
+            background-color: white;
+            color: #22C55E;
+            padding: 18px 35px;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 16px;
+            margin: 10px;
+            border: 2px solid #22C55E;
+            transition: all 0.3s ease;
+        }
+        .experience-badge {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 50px;
+            display: inline-block;
+            font-weight: 700;
+            margin: 20px 0;
+            font-size: 16px;
+        }
+        .footer {
+            background-color: #1f2937;
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .footer p {
+            margin: 10px 0;
+            color: #d1d5db;
+        }
+        .quote {
+            font-style: italic;
+            font-size: 18px;
+            color: #22C55E;
+            text-align: center;
+            margin: 30px 0;
+            padding: 20px;
+            background-color: #f0fdf4;
+            border-radius: 10px;
+            border-left: 4px solid #22C55E;
+        }
+        .urgency {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin: 25px 0;
+            font-weight: 600;
+        }
+        @media (max-width: 600px) {
+            .content {
+                padding: 30px 20px;
+            }
+            .stats {
+                flex-direction: column;
+                gap: 20px;
+            }
+            .cta-primary, .cta-secondary {
+                display: block;
+                margin: 10px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">D</div>
+            <h1>Save More Wildlife</h1>
+            <p>Your Conservation Mission Needs Digital Innovation</p>
+        </div>
+        
+        <div class="content">
+            <div class="greeting">Dear Wildlife Conservation Hero,</div>
+            
+            <div class="main-text">
+                Every species you protect and every habitat you preserve matters more than ever. But are outdated digital tools limiting your conservation impact when wildlife needs you most?
+            </div>
+            
+            <div class="experience-badge">
+                ✨ 2+ Years of Conservation Digital Excellence
+            </div>
+            
+            <div class="urgency">
+                ⏰ Every day delayed is another day wildlife faces threats without your maximum impact.
+            </div>
+            
+            <div class="main-text">
+                Wildlife conservation NGOs with modern digital platforms reach <strong>3x more supporters</strong> and secure <strong>45% more funding</strong>. Yet many crucial organizations face outdated websites that don't convey the urgency of conservation.
+            </div>
+            
+            <div class="highlight-box">
+                <h3>You are Earth's guardian - a true planet changemaker</h3>
+                <p>With over 2 years of specialized experience in conservation NGO digital transformation, we believe that saving wildlife requires both field expertise and digital innovation. We have a strong vision to make ALL NGOs powerful online - and Earth's protectors like you deserve every possible advantage.</p>
+            </div>
+            
+            <div class="stats">
+                <div class="stat">
+                    <span class="stat-number">3x</span>
+                    <div class="stat-label">More Supporters</div>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">45%</span>
+                    <div class="stat-label">More Funding</div>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">2+</span>
+                    <div class="stat-label">Years Saving Wildlife</div>
+                </div>
+            </div>
+            
+            <div class="main-text">
+                <strong>How we support wildlife conservation heroes like you:</strong>
+            </div>
+            
+            <ul class="benefits">
+                <li>Real-time wildlife tracking and monitoring dashboards</li>
+                <li>Interactive conservation maps showing immediate impact</li>
+                <li>Urgent action alert systems for conservation emergencies</li>
+                <li>Powerful visual storytelling that moves hearts and opens wallets</li>
+            </ul>
+            
+            <div class="quote">
+                "The planet's biodiversity depends on organizations like yours having every possible advantage. Time is running out - let's amplify your impact NOW."
+            </div>
+            
+            <div class="main-text">
+                Imagine a website where visitors can watch your conservation work happen in real-time. Where a nature lover can instantly adopt an endangered animal. Where a concerned citizen can immediately take action to protect a threatened habitat. Where corporate sponsors see exactly how their support saves species from extinction.
+            </div>
+            
+            <div class="cta-section">
+                <a href="https://devoura.vercel.app/wizard" class="cta-primary">🦎 Start Protecting More Wildlife</a>
+                <a href="https://devoura.vercel.app" class="cta-secondary">🌍 See Conservation Success</a>
+            </div>
+            
+            <div class="main-text">
+                We understand that conservation is a race against time. That's why we create digital solutions that mobilize supporters instantly and turn concern into conservation action. Let's discuss how we can help you save more wildlife and create greater conservation impact.
+            </div>
+            
+            <div class="main-text">
+                <strong>Every species matters. Every habitat counts. Every moment is precious.</strong>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p><strong>The Devoura Team</strong></p>
+            <p>Digital Conservation Allies for 2+ Years</p>
+            <p>🌐 <a href="https://devoura.vercel.app" style="color: #4ade80;">devoura.vercel.app</a></p>
+            <p>P.S. We're offering expedited development for wildlife conservation organizations because we know every moment counts. Let's get your conservation mission the digital power it needs—today.</p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,294 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Save More Lives - Crisis Response Digital Solutions - Devoura</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #fff7ed;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            background: linear-gradient(135deg, #F97316, #ea580c);
+            padding: 30px 20px;
+            text-align: center;
+            color: white;
+        }
+        .logo {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 20px;
+            background-color: white;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #F97316;
+            font-size: 18px;
+        }
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        .header p {
+            font-size: 16px;
+            opacity: 0.95;
+        }
+        .content {
+            padding: 40px 30px;
+        }
+        .greeting {
+            font-size: 18px;
+            color: #F97316;
+            margin-bottom: 25px;
+            font-weight: 600;
+        }
+        .main-text {
+            font-size: 16px;
+            line-height: 1.8;
+            margin-bottom: 30px;
+            color: #374151;
+        }
+        .highlight-box {
+            background: linear-gradient(135deg, #fff7ed, #fed7aa);
+            border-left: 4px solid #F97316;
+            padding: 25px;
+            margin: 30px 0;
+            border-radius: 8px;
+        }
+        .highlight-box h3 {
+            color: #F97316;
+            font-size: 20px;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+        .benefits {
+            list-style: none;
+            margin: 25px 0;
+        }
+        .benefits li {
+            padding: 12px 0;
+            padding-left: 30px;
+            position: relative;
+            color: #374151;
+            font-size: 16px;
+        }
+        .benefits li:before {
+            content: "🚨";
+            position: absolute;
+            left: 0;
+            font-size: 18px;
+        }
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 30px 0;
+            padding: 25px;
+            background-color: #fff7ed;
+            border-radius: 12px;
+        }
+        .stat {
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 28px;
+            font-weight: 700;
+            color: #F97316;
+            display: block;
+        }
+        .stat-label {
+            font-size: 14px;
+            color: #6b7280;
+            margin-top: 5px;
+        }
+        .cta-section {
+            text-align: center;
+            margin: 40px 0;
+        }
+        .cta-primary {
+            display: inline-block;
+            background: linear-gradient(135deg, #F97316, #ea580c);
+            color: white;
+            padding: 18px 35px;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 16px;
+            margin: 10px;
+            box-shadow: 0 4px 15px rgba(249, 115, 22, 0.3);
+            transition: all 0.3s ease;
+        }
+        .cta-secondary {
+            display: inline-block;
+            background-color: white;
+            color: #F97316;
+            padding: 18px 35px;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 16px;
+            margin: 10px;
+            border: 2px solid #F97316;
+            transition: all 0.3s ease;
+        }
+        .experience-badge {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 50px;
+            display: inline-block;
+            font-weight: 700;
+            margin: 20px 0;
+            font-size: 16px;
+        }
+        .footer {
+            background-color: #1f2937;
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .footer p {
+            margin: 10px 0;
+            color: #d1d5db;
+        }
+        .quote {
+            font-style: italic;
+            font-size: 18px;
+            color: #F97316;
+            text-align: center;
+            margin: 30px 0;
+            padding: 20px;
+            background-color: #fff7ed;
+            border-radius: 10px;
+            border-left: 4px solid #F97316;
+        }
+        .urgency {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin: 25px 0;
+            font-weight: 600;
+        }
+        @media (max-width: 600px) {
+            .content {
+                padding: 30px 20px;
+            }
+            .stats {
+                flex-direction: column;
+                gap: 20px;
+            }
+            .cta-primary, .cta-secondary {
+                display: block;
+                margin: 10px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">D</div>
+            <h1>Save More Lives</h1>
+            <p>Crisis Response Needs Instant Digital Solutions</p>
+        </div>
+        
+        <div class="content">
+            <div class="greeting">Dear Disaster Response Hero,</div>
+            
+            <div class="main-text">
+                When disaster strikes, every second counts. Every life you save and every family you help recover matters immensely. But are outdated systems slowing down your life-saving response?
+            </div>
+            
+            <div class="experience-badge">
+                ✨ 2+ Years of Crisis Response Digital Excellence
+            </div>
+            
+            <div class="urgency">
+                ⚡ URGENT: Disasters don't wait for convenient timing, and neither should your digital preparedness.
+            </div>
+            
+            <div class="main-text">
+                Disaster management organizations with modern digital command centers respond <strong>50% faster</strong> and coordinate <strong>3x more effective relief efforts</strong>. Yet many critical organizations struggle with communication systems that fail during emergencies.
+            </div>
+            
+            <div class="highlight-box">
+                <h3>You are a life-saver - a true emergency response changemaker</h3>
+                <p>With over 2 years of specialized experience in disaster response digital transformation, we know that disaster response is about speed, coordination, and saving lives. We have a strong vision to make ALL NGOs powerful online - and first responders like you need systems that perform when it matters most.</p>
+            </div>
+            
+            <div class="stats">
+                <div class="stat">
+                    <span class="stat-number">50%</span>
+                    <div class="stat-label">Faster Response</div>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">3x</span>
+                    <div class="stat-label">More Effective Relief</div>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">2+</span>
+                    <div class="stat-label">Years Crisis Ready</div>
+                </div>
+            </div>
+            
+            <div class="main-text">
+                <strong>How we power disaster response heroes like you:</strong>
+            </div>
+            
+            <ul class="benefits">
+                <li>Real-time emergency coordination dashboards</li>
+                <li>Live resource tracking and distribution systems</li>
+                <li>Mobile-first communication for field teams</li>
+                <li>Instant donor alert systems for emergency funding</li>
+            </ul>
+            
+            <div class="quote">
+                "When lives are at stake, your response tools must be flawless. Every life you save matters. Every system enhancement helps you save more."
+            </div>
+            
+            <div class="main-text">
+                Picture this: A command center where you instantly coordinate rescue efforts across multiple locations. Where emergency supplies are tracked in real-time from donation to distribution. Where affected families quickly find aid and shelter. Where emergency donors see immediate impact and respond instantly to urgent needs.
+            </div>
+            
+            <div class="cta-section">
+                <a href="https://devoura.vercel.app/wizard" class="cta-primary">🆘 Prepare to Save More Lives</a>
+                <a href="https://devoura.vercel.app" class="cta-secondary">🚨 See Crisis Response Success</a>
+            </div>
+            
+            <div class="main-text">
+                We specialize in creating crisis-ready digital infrastructure that doesn't just work—it works when everything else is failing, when connectivity is poor, and when every second counts. Time is critical—let's discuss how we can strengthen your disaster response capabilities immediately.
+            </div>
+            
+            <div class="main-text">
+                <strong>Every second matters. Every life counts. Every response must be perfect.</strong>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p><strong>The Devoura Team</strong></p>
+            <p>Emergency Digital Response Allies for 2+ Years</p>
+            <p>🌐 <a href="https://devoura.vercel.app" style="color: #fb923c;">devoura.vercel.app</a></p>
+            <p>P.S. We're offering emergency priority development for disaster management organizations because when the next crisis hits, you need to be ready. Every moment counts.</p>
+        </div>
+    </div>
+</body>
+</html>

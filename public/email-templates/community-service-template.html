@@ -1,0 +1,281 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Strengthen Communities - Devoura</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #faf5ff;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            background: linear-gradient(135deg, #A855F7, #7c3aed);
+            padding: 30px 20px;
+            text-align: center;
+            color: white;
+        }
+        .logo {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 20px;
+            background-color: white;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #A855F7;
+            font-size: 18px;
+        }
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        .header p {
+            font-size: 16px;
+            opacity: 0.95;
+        }
+        .content {
+            padding: 40px 30px;
+        }
+        .greeting {
+            font-size: 18px;
+            color: #A855F7;
+            margin-bottom: 25px;
+            font-weight: 600;
+        }
+        .main-text {
+            font-size: 16px;
+            line-height: 1.8;
+            margin-bottom: 30px;
+            color: #374151;
+        }
+        .highlight-box {
+            background: linear-gradient(135deg, #faf5ff, #f3e8ff);
+            border-left: 4px solid #A855F7;
+            padding: 25px;
+            margin: 30px 0;
+            border-radius: 8px;
+        }
+        .highlight-box h3 {
+            color: #A855F7;
+            font-size: 20px;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+        .benefits {
+            list-style: none;
+            margin: 25px 0;
+        }
+        .benefits li {
+            padding: 12px 0;
+            padding-left: 30px;
+            position: relative;
+            color: #374151;
+            font-size: 16px;
+        }
+        .benefits li:before {
+            content: "🤝";
+            position: absolute;
+            left: 0;
+            font-size: 18px;
+        }
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 30px 0;
+            padding: 25px;
+            background-color: #faf5ff;
+            border-radius: 12px;
+        }
+        .stat {
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 28px;
+            font-weight: 700;
+            color: #A855F7;
+            display: block;
+        }
+        .stat-label {
+            font-size: 14px;
+            color: #6b7280;
+            margin-top: 5px;
+        }
+        .cta-section {
+            text-align: center;
+            margin: 40px 0;
+        }
+        .cta-primary {
+            display: inline-block;
+            background: linear-gradient(135deg, #A855F7, #7c3aed);
+            color: white;
+            padding: 18px 35px;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 16px;
+            margin: 10px;
+            box-shadow: 0 4px 15px rgba(168, 85, 247, 0.3);
+            transition: all 0.3s ease;
+        }
+        .cta-secondary {
+            display: inline-block;
+            background-color: white;
+            color: #A855F7;
+            padding: 18px 35px;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 16px;
+            margin: 10px;
+            border: 2px solid #A855F7;
+            transition: all 0.3s ease;
+        }
+        .experience-badge {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 50px;
+            display: inline-block;
+            font-weight: 700;
+            margin: 20px 0;
+            font-size: 16px;
+        }
+        .footer {
+            background-color: #1f2937;
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .footer p {
+            margin: 10px 0;
+            color: #d1d5db;
+        }
+        .quote {
+            font-style: italic;
+            font-size: 18px;
+            color: #A855F7;
+            text-align: center;
+            margin: 30px 0;
+            padding: 20px;
+            background-color: #faf5ff;
+            border-radius: 10px;
+            border-left: 4px solid #A855F7;
+        }
+        @media (max-width: 600px) {
+            .content {
+                padding: 30px 20px;
+            }
+            .stats {
+                flex-direction: column;
+                gap: 20px;
+            }
+            .cta-primary, .cta-secondary {
+                display: block;
+                margin: 10px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">D</div>
+            <h1>Strengthen Communities</h1>
+            <p>Your Service Mission Deserves Maximum Impact</p>
+        </div>
+        
+        <div class="content">
+            <div class="greeting">Dear Community Service Champion,</div>
+            
+            <div class="main-text">
+                Strong communities are built by organizations like yours, one service at a time. But are digital limitations preventing you from reaching everyone who needs your help?
+            </div>
+            
+            <div class="experience-badge">
+                ✨ 2+ Years of Community Building Excellence
+            </div>
+            
+            <div class="main-text">
+                Community service organizations with professional digital presence serve <strong>60% more people</strong> and attract <strong>40% more volunteers</strong>. Yet many dedicated organizations struggle with outdated systems that slow down service delivery.
+            </div>
+            
+            <div class="highlight-box">
+                <h3>You are a community builder - a true local changemaker</h3>
+                <p>With over 2 years of specialized experience in community service digital transformation, we know that community service is about connection, accessibility, and impact. We have a strong vision to make ALL NGOs powerful online - and community builders like you deserve tools that bring people together.</p>
+            </div>
+            
+            <div class="stats">
+                <div class="stat">
+                    <span class="stat-number">60%</span>
+                    <div class="stat-label">More People Served</div>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">40%</span>
+                    <div class="stat-label">More Volunteers</div>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">2+</span>
+                    <div class="stat-label">Years Building Communities</div>
+                </div>
+            </div>
+            
+            <div class="main-text">
+                <strong>How we amplify community service heroes like you:</strong>
+            </div>
+            
+            <ul class="benefits">
+                <li>Community resource maps connecting people with services</li>
+                <li>Volunteer coordination systems that maximize helping hands</li>
+                <li>Service request platforms that streamline assistance</li>
+                <li>Impact visualization showing real community transformation</li>
+            </ul>
+            
+            <div class="quote">
+                "Your community deserves access to every resource and service you offer. Strong communities start with strong organizations like yours."
+            </div>
+            
+            <div class="main-text">
+                Envision a digital hub where community members instantly find the help they need. Where volunteers easily discover meaningful ways to serve. Where local businesses see exactly how their support strengthens neighborhoods. Where every service you provide creates visible, shareable impact.
+            </div>
+            
+            <div class="cta-section">
+                <a href="https://devoura.vercel.app/wizard" class="cta-primary">🏠 Build Stronger Communities</a>
+                <a href="https://devoura.vercel.app" class="cta-secondary">🤝 See Community Impact</a>
+            </div>
+            
+            <div class="main-text">
+                We specialize in creating digital bridges that connect community needs with community resources, making your service more effective and far-reaching. Let's explore how we can help you serve more people and build stronger communities.
+            </div>
+            
+            <div class="main-text">
+                <strong>Together, we can ensure no community member goes without the support they need.</strong>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p><strong>The Devoura Team</strong></p>
+            <p>Community Building Partners for 2+ Years</p>
+            <p>🌐 <a href="https://devoura.vercel.app" style="color: #c084fc;">devoura.vercel.app</a></p>
+            <p>P.S. Strong communities start with strong organizations. We're prioritizing community service NGOs because we believe in the ripple effect of local impact. Let's strengthen your community together.</p>
+        </div>
+    </div>
+</body>
+</html>

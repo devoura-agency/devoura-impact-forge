@@ -1,0 +1,294 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heal More Lives - Devoura</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #fef2f2;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            background: linear-gradient(135deg, #EF4444, #dc2626);
+            padding: 30px 20px;
+            text-align: center;
+            color: white;
+        }
+        .logo {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 20px;
+            background-color: white;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #EF4444;
+            font-size: 18px;
+        }
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        .header p {
+            font-size: 16px;
+            opacity: 0.95;
+        }
+        .content {
+            padding: 40px 30px;
+        }
+        .greeting {
+            font-size: 18px;
+            color: #EF4444;
+            margin-bottom: 25px;
+            font-weight: 600;
+        }
+        .main-text {
+            font-size: 16px;
+            line-height: 1.8;
+            margin-bottom: 30px;
+            color: #374151;
+        }
+        .highlight-box {
+            background: linear-gradient(135deg, #fef2f2, #fecaca);
+            border-left: 4px solid #EF4444;
+            padding: 25px;
+            margin: 30px 0;
+            border-radius: 8px;
+        }
+        .highlight-box h3 {
+            color: #EF4444;
+            font-size: 20px;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+        .benefits {
+            list-style: none;
+            margin: 25px 0;
+        }
+        .benefits li {
+            padding: 12px 0;
+            padding-left: 30px;
+            position: relative;
+            color: #374151;
+            font-size: 16px;
+        }
+        .benefits li:before {
+            content: "❤️";
+            position: absolute;
+            left: 0;
+            font-size: 18px;
+        }
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 30px 0;
+            padding: 25px;
+            background-color: #fef2f2;
+            border-radius: 12px;
+        }
+        .stat {
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 28px;
+            font-weight: 700;
+            color: #EF4444;
+            display: block;
+        }
+        .stat-label {
+            font-size: 14px;
+            color: #6b7280;
+            margin-top: 5px;
+        }
+        .cta-section {
+            text-align: center;
+            margin: 40px 0;
+        }
+        .cta-primary {
+            display: inline-block;
+            background: linear-gradient(135deg, #EF4444, #dc2626);
+            color: white;
+            padding: 18px 35px;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 16px;
+            margin: 10px;
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+            transition: all 0.3s ease;
+        }
+        .cta-secondary {
+            display: inline-block;
+            background-color: white;
+            color: #EF4444;
+            padding: 18px 35px;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 16px;
+            margin: 10px;
+            border: 2px solid #EF4444;
+            transition: all 0.3s ease;
+        }
+        .experience-badge {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 50px;
+            display: inline-block;
+            font-weight: 700;
+            margin: 20px 0;
+            font-size: 16px;
+        }
+        .footer {
+            background-color: #1f2937;
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .footer p {
+            margin: 10px 0;
+            color: #d1d5db;
+        }
+        .quote {
+            font-style: italic;
+            font-size: 18px;
+            color: #EF4444;
+            text-align: center;
+            margin: 30px 0;
+            padding: 20px;
+            background-color: #fef2f2;
+            border-radius: 10px;
+            border-left: 4px solid #EF4444;
+        }
+        .urgency {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin: 25px 0;
+            font-weight: 600;
+        }
+        @media (max-width: 600px) {
+            .content {
+                padding: 30px 20px;
+            }
+            .stats {
+                flex-direction: column;
+                gap: 20px;
+            }
+            .cta-primary, .cta-secondary {
+                display: block;
+                margin: 10px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">D</div>
+            <h1>Heal More Lives</h1>
+            <p>Your Health Mission Needs Digital Innovation</p>
+        </div>
+        
+        <div class="content">
+            <div class="greeting">Dear Health & Wellness Hero,</div>
+            
+            <div class="main-text">
+                Every life you touch through health and wellness services creates waves of healing that extend to families and communities. But are digital barriers limiting how many people you can help?
+            </div>
+            
+            <div class="experience-badge">
+                ✨ 2+ Years of Health NGO Digital Excellence
+            </div>
+            
+            <div class="urgency">
+                ⚡ Health can't wait, and neither should your digital transformation.
+            </div>
+            
+            <div class="main-text">
+                Health and wellness NGOs with modern digital platforms reach <strong>70% more patients</strong> and secure <strong>50% more medical funding</strong>. Yet many vital organizations face systems that slow down patient care and service delivery.
+            </div>
+            
+            <div class="highlight-box">
+                <h3>You are a healer - a true life-saving changemaker</h3>
+                <p>With over 2 years of specialized experience in health NGO digital transformation, we understand that health is urgent and wellness is essential. We have a strong vision to make ALL NGOs powerful online - and life-savers like you deserve digital tools that work as hard as you do.</p>
+            </div>
+            
+            <div class="stats">
+                <div class="stat">
+                    <span class="stat-number">70%</span>
+                    <div class="stat-label">More Patients Reached</div>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">50%</span>
+                    <div class="stat-label">More Medical Funding</div>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">2+</span>
+                    <div class="stat-label">Years Saving Lives</div>
+                </div>
+            </div>
+            
+            <div class="main-text">
+                <strong>How we support health and wellness heroes like you:</strong>
+            </div>
+            
+            <ul class="benefits">
+                <li>Patient management systems that streamline care delivery</li>
+                <li>Health resource libraries accessible to entire communities</li>
+                <li>Telemedicine integration for remote health support</li>
+                <li>Health outcome tracking that proves your life-saving impact</li>
+            </ul>
+            
+            <div class="quote">
+                "Every person deserves access to the health and wellness services you provide. Your healing mission is too important to be limited by technology barriers."
+            </div>
+            
+            <div class="main-text">
+                Imagine a platform where patients easily access your health services. Where families find crucial health education when they need it most. Where medical volunteers quickly connect with opportunities to heal. Where donors see exactly how their support saves lives and improves health outcomes.
+            </div>
+            
+            <div class="cta-section">
+                <a href="https://devoura.vercel.app/wizard" class="cta-primary">💊 Start Healing More Lives</a>
+                <a href="https://devoura.vercel.app" class="cta-secondary">❤️ See Health Impact</a>
+            </div>
+            
+            <div class="main-text">
+                We specialize in creating digital health solutions that don't just manage data—they save lives and improve wellness for entire communities. Let's discuss how we can help you heal more lives and create greater health impact.
+            </div>
+            
+            <div class="main-text">
+                <strong>Every life matters. Every healing moment counts. Every day is precious.</strong>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p><strong>The Devoura Team</strong></p>
+            <p>Digital Health Allies for 2+ Years</p>
+            <p>🌐 <a href="https://devoura.vercel.app" style="color: #f87171;">devoura.vercel.app</a></p>
+            <p>P.S. Health can't wait, and neither should your digital transformation. We're offering priority development for health organizations because every day means more lives you could be reaching.</p>
+        </div>
+    </div>
+</body>
+</html>

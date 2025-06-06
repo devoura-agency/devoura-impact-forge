@@ -1,0 +1,304 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Devoura Email Templates - Preview Center</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8fafc;
+            color: #333;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        .header h1 {
+            font-size: 2.5rem;
+            color: #2F5233;
+            margin-bottom: 15px;
+        }
+        .header p {
+            font-size: 1.2rem;
+            color: #6b7280;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .templates-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+        .template-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .template-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+        .template-header {
+            padding: 25px;
+            color: white;
+            text-align: center;
+        }
+        .template-content {
+            padding: 25px;
+        }
+        .template-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        .template-description {
+            margin-bottom: 20px;
+            color: #6b7280;
+        }
+        .template-features {
+            list-style: none;
+            margin-bottom: 25px;
+        }
+        .template-features li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+            color: #374151;
+        }
+        .template-features li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #10b981;
+            font-weight: bold;
+        }
+        .template-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 12px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .btn-primary {
+            background-color: #2F5233;
+            color: white;
+        }
+        .btn-primary:hover {
+            background-color: #4a7c59;
+        }
+        .btn-secondary {
+            background-color: white;
+            border: 2px solid #e5e7eb;
+            color: #374151;
+        }
+        .btn-secondary:hover {
+            border-color: #2F5233;
+            color: #2F5233;
+        }
+        
+        /* Category-specific colors */
+        .education { background: linear-gradient(135deg, #3B82F6, #1e40af); }
+        .women { background: linear-gradient(135deg, #EC4899, #be185d); }
+        .wildlife { background: linear-gradient(135deg, #22C55E, #16a34a); }
+        .community { background: linear-gradient(135deg, #A855F7, #7c3aed); }
+        .health { background: linear-gradient(135deg, #EF4444, #dc2626); }
+        .disaster { background: linear-gradient(135deg, #F97316, #ea580c); }
+        .general { background: linear-gradient(135deg, #2F5233, #4a7c59); }
+        
+        .footer {
+            text-align: center;
+            padding: 40px 0;
+            border-top: 1px solid #e5e7eb;
+            margin-top: 50px;
+        }
+        
+        @media (max-width: 768px) {
+            .templates-grid {
+                grid-template-columns: 1fr;
+            }
+            .template-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Devoura Email Templates</h1>
+            <p>Professional, emotionally compelling email templates designed for each NGO category. Each template is crafted to inspire action and drive engagement.</p>
+        </div>
+        
+        <div class="templates-grid">
+            <div class="template-card">
+                <div class="template-header education">
+                    <h2 class="template-title">Education NGO</h2>
+                    <p>Transform Educational Lives Through Technology</p>
+                </div>
+                <div class="template-content">
+                    <p class="template-description">Designed for educational organizations focused on student engagement and learning outcomes.</p>
+                    <ul class="template-features">
+                        <li>40% more student engagement messaging</li>
+                        <li>Student-centered storytelling</li>
+                        <li>Educational impact statistics</li>
+                        <li>Learning-focused call-to-actions</li>
+                    </ul>
+                    <div class="template-actions">
+                        <a href="education-template.html" class="btn btn-primary">Preview Template</a>
+                        <a href="education-template.html" download class="btn btn-secondary">Download HTML</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="template-card">
+                <div class="template-header women">
+                    <h2 class="template-title">Women Empowerment</h2>
+                    <p>Amplify Women's Voices</p>
+                </div>
+                <div class="template-content">
+                    <p class="template-description">Powerful messaging for organizations focused on women's rights and empowerment.</p>
+                    <ul class="template-features">
+                        <li>50% more program applications messaging</li>
+                        <li>Empowerment-focused storytelling</li>
+                        <li>Women's impact success stories</li>
+                        <li>Movement-building call-to-actions</li>
+                    </ul>
+                    <div class="template-actions">
+                        <a href="women-empowerment-template.html" class="btn btn-primary">Preview Template</a>
+                        <a href="women-empowerment-template.html" download class="btn btn-secondary">Download HTML</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="template-card">
+                <div class="template-header wildlife">
+                    <h2 class="template-title">Wildlife Conservation</h2>
+                    <p>Save More Wildlife</p>
+                </div>
+                <div class="template-content">
+                    <p class="template-description">Urgent messaging for wildlife and environmental conservation organizations.</p>
+                    <ul class="template-features">
+                        <li>3x more supporter reach messaging</li>
+                        <li>Conservation urgency emphasis</li>
+                        <li>Wildlife protection success metrics</li>
+                        <li>Environmental action call-to-actions</li>
+                    </ul>
+                    <div class="template-actions">
+                        <a href="wildlife-template.html" class="btn btn-primary">Preview Template</a>
+                        <a href="wildlife-template.html" download class="btn btn-secondary">Download HTML</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="template-card">
+                <div class="template-header community">
+                    <h2 class="template-title">Community Service</h2>
+                    <p>Strengthen Communities</p>
+                </div>
+                <div class="template-content">
+                    <p class="template-description">Community-focused messaging for local service and volunteer organizations.</p>
+                    <ul class="template-features">
+                        <li>60% more people served messaging</li>
+                        <li>Community building emphasis</li>
+                        <li>Local impact storytelling</li>
+                        <li>Volunteer engagement call-to-actions</li>
+                    </ul>
+                    <div class="template-actions">
+                        <a href="community-service-template.html" class="btn btn-primary">Preview Template</a>
+                        <a href="community-service-template.html" download class="btn btn-secondary">Download HTML</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="template-card">
+                <div class="template-header health">
+                    <h2 class="template-title">Health & Wellness</h2>
+                    <p>Heal More Lives</p>
+                </div>
+                <div class="template-content">
+                    <p class="template-description">Life-saving messaging for health, medical, and wellness organizations.</p>
+                    <ul class="template-features">
+                        <li>70% more patients reached messaging</li>
+                        <li>Health urgency emphasis</li>
+                        <li>Medical impact success stories</li>
+                        <li>Life-saving call-to-actions</li>
+                    </ul>
+                    <div class="template-actions">
+                        <a href="health-wellness-template.html" class="btn btn-primary">Preview Template</a>
+                        <a href="health-wellness-template.html" download class="btn btn-secondary">Download HTML</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="template-card">
+                <div class="template-header disaster">
+                    <h2 class="template-title">Disaster Management</h2>
+                    <p>Crisis Response Digital Solutions</p>
+                </div>
+                <div class="template-content">
+                    <p class="template-description">Emergency response messaging for disaster relief and crisis management.</p>
+                    <ul class="template-features">
+                        <li>50% faster response messaging</li>
+                        <li>Crisis urgency emphasis</li>
+                        <li>Emergency coordination features</li>
+                        <li>Life-saving response call-to-actions</li>
+                    </ul>
+                    <div class="template-actions">
+                        <a href="disaster-management-template.html" class="btn btn-primary">Preview Template</a>
+                        <a href="disaster-management-template.html" download class="btn btn-secondary">Download HTML</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="template-card">
+                <div class="template-header general">
+                    <h2 class="template-title">General NGO</h2>
+                    <p>Amplify Your Impact</p>
+                </div>
+                <div class="template-content">
+                    <p class="template-description">Versatile messaging suitable for any NGO sector or mission focus.</p>
+                    <ul class="template-features">
+                        <li>65% more supporter messaging</li>
+                        <li>Universal mission emphasis</li>
+                        <li>Cross-sector impact metrics</li>
+                        <li>Flexible engagement call-to-actions</li>
+                    </ul>
+                    <div class="template-actions">
+                        <a href="general-template.html" class="btn btn-primary">Preview Template</a>
+                        <a href="general-template.html" download class="btn btn-secondary">Download HTML</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p><strong>Devoura Email Templates</strong> - Professional HTML email templates for NGO outreach</p>
+            <p>🌐 <a href="https://devoura.vercel.app" style="color: #2F5233;">devoura.vercel.app</a></p>
+        </div>
+    </div>
+</body>
+</html>
