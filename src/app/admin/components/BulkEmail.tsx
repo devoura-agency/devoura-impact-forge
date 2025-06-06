@@ -10,6 +10,7 @@ import { collection, query, orderBy, onSnapshot, where, getDocs, limit, addDoc, 
 import { db } from '@/lib/firebase';
 import { Progress } from '@/components/ui/progress';
 import { AlertCircle } from 'lucide-react';
+import { toast } from '@/components/ui/use-toast';
 
 interface Recipient {
   name: string;
@@ -92,7 +93,6 @@ export default function BulkEmail() {
     message: '',
     attachments: []
   });
-  const { toast } = useToast();
 
   // Handle file upload and parse
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -186,18 +186,16 @@ export default function BulkEmail() {
   };
 
   // Send single email with retry logic
-  const sendSingleEmail = async (recipient: Recipient, retryCount = 0): Promise<boolean> => {
+  const sendSingleEmail = async (recipient: Recipient): Promise<boolean> => {
     try {
-      await new Promise(resolve => setTimeout(resolve, EMAIL_DELAY));
-      
       const res = await fetch('/api/bulk-email', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          name: recipient.name,
-          email: recipient.email,
-          ngoType: recipient.ngoType,
-          subject: 'Devoura NGO Collaboration'
+          recipients: [recipient],
+          subject: state.subject,
+          message: state.message,
+          attachments: state.attachments
         })
       });
 
@@ -207,13 +205,12 @@ export default function BulkEmail() {
           // Daily limit reached
           toast({
             title: 'Daily Limit Reached',
-            description: errorData.details,
+            description: 'You have reached the daily email limit. Please try again tomorrow.',
             variant: 'destructive'
           });
-          setState(prev => ({ ...prev, sending: false }));
           return false;
         }
-        throw new Error(errorData.details || `HTTP error! status: ${res.status}`);
+        throw new Error(errorData.error || 'Failed to send email');
       }
 
       const data = await res.json();
@@ -224,11 +221,9 @@ export default function BulkEmail() {
       }));
       return true;
     } catch (error) {
-      if (retryCount < MAX_RETRIES) {
-        await new Promise(resolve => setTimeout(resolve, RETRY_DELAY));
-        return sendSingleEmail(recipient, retryCount + 1);
-      }
-      throw error;
+      console.error('Error sending email:', error);
+      handleError(error, recipient.email);
+      return false;
     }
   };
 
@@ -338,46 +333,56 @@ export default function BulkEmail() {
         recipients: state.recipients,
         status: 'in_progress',
         stats: {
+          total: state.recipients.length,
           success: 0,
-          fail: 0,
-          noAttachments: 0
+          failed: 0
         }
       });
       setState(prev => ({ ...prev, batchId: batchRef.id }));
 
-      // Start background processing
-      const job = setTimeout(async () => {
-        await processAllBatches(initialStatuses);
-        
-        // Update batch record with final results
-        const results = {
-          success: state.emailStatuses.filter(s => s.status === 'success').length,
-          fail: state.emailStatuses.filter(s => s.status === 'failed').length,
-          noAttachments: 0
-        };
-        
-        await updateDoc(doc(db, 'bulkEmailBatches', state.batchId), {
-          status: 'completed',
-          stats: results,
-          completedAt: new Date().toISOString()
-        });
-
-        toast({
-          title: 'Bulk Email Complete',
-          description: `Successfully sent ${results.success} emails. ${results.fail} failed.`,
-          variant: results.fail > 0 ? 'destructive' : 'default'
-        });
-        
-        setState(prev => ({ ...prev, sending: false }));
-      }, 0);
+      // Process emails in batches
+      const queue = [...initialStatuses];
+      const batches = Math.ceil(queue.length / BATCH_SIZE);
+      setState(prev => ({ ...prev, totalBatches: batches }));
       
-      setState(prev => ({ ...prev, backgroundJob: job }));
-    } catch (error) {
-      toast({
-        title: 'Error',
-        description: 'Failed to process email batch. Please try again.',
-        variant: 'destructive'
+      for (let i = 0; i < batches; i++) {
+        if (state.isPaused) {
+          await new Promise(resolve => {
+            const checkPause = setInterval(() => {
+              if (!state.isPaused) {
+                clearInterval(checkPause);
+                resolve(true);
+              }
+            }, 100);
+          });
+        }
+        
+        setState(prev => ({ ...prev, currentBatch: i + 1 }));
+        await processBatch(i, queue);
+        
+        // Add delay between batches
+        if (i < batches - 1) {
+          await new Promise(resolve => setTimeout(resolve, RETRY_DELAY));
+        }
+      }
+
+      // Update batch record with final results
+      const results = {
+        success: state.emailStatuses.filter(s => s.status === 'success').length,
+        fail: state.emailStatuses.filter(s => s.status === 'failed').length,
+        noAttachments: 0
+      };
+      
+      await updateDoc(doc(db, 'bulkEmailBatches', state.batchId), {
+        status: 'completed',
+        stats: results,
+        completedAt: new Date().toISOString()
       });
+      
+      setState(prev => ({ ...prev, sending: false }));
+    } catch (error) {
+      console.error('Error sending emails:', error);
+      handleError(error);
       setState(prev => ({ ...prev, sending: false }));
     }
   };
