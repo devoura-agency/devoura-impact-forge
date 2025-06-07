@@ -1,3 +1,4 @@
+
 import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
@@ -50,7 +51,7 @@ export default function BulkEmailSender() {
           name,
           email,
           ngoType,
-          status: 'pending' as const,
+          status: 'pending',
           retryCount: 0
         };
       });
@@ -140,11 +141,7 @@ export default function BulkEmailSender() {
 
         batch.progress = ((currentIndexRef.current + 1) / totalRecipients) * 100;
         setCurrentBatch(batch);
-        await updateDoc(doc(db, 'emailBatches', batch.id), {
-          recipients: batch.recipients,
-          progress: batch.progress,
-          status: batch.status
-        });
+        await updateDoc(doc(db, 'emailBatches', batch.id), batch);
       }
 
       currentIndexRef.current++;
@@ -153,10 +150,7 @@ export default function BulkEmailSender() {
     if (currentIndexRef.current >= totalRecipients) {
       batch.status = 'completed';
       batch.completedAt = new Date();
-      await updateDoc(doc(db, 'emailBatches', batch.id), {
-        status: batch.status,
-        completedAt: batch.completedAt
-      });
+      await updateDoc(doc(db, 'emailBatches', batch.id), batch);
       setCurrentBatch(null);
       currentIndexRef.current = 0;
     }
@@ -173,14 +167,9 @@ export default function BulkEmailSender() {
   const togglePause = () => {
     setIsPaused(!isPaused);
     if (currentBatch) {
-      const updatedBatch: EmailBatch = { 
-        ...currentBatch, 
-        status: !isPaused ? 'paused' : 'in_progress' 
-      };
+      const updatedBatch = { ...currentBatch, status: !isPaused ? 'paused' : 'in_progress' };
       setCurrentBatch(updatedBatch);
-      updateDoc(doc(db, 'emailBatches', updatedBatch.id), {
-        status: updatedBatch.status
-      });
+      updateDoc(doc(db, 'emailBatches', updatedBatch.id), updatedBatch);
     }
   };
 

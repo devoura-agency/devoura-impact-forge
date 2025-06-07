@@ -51,20 +51,11 @@ export default function EmailHistory() {
     }).format(date);
   };
 
-  const getBatchStatusColor = (status: EmailBatch['status']) => {
+  const getStatusColor = (status: EmailBatch['status']) => {
     switch (status) {
       case 'completed': return 'text-green-600';
       case 'in_progress': return 'text-blue-600';
       case 'paused': return 'text-yellow-600';
-      case 'pending': return 'text-gray-600';
-      default: return 'text-gray-600';
-    }
-  };
-
-  const getRecipientStatusColor = (status: EmailRecipient['status']) => {
-    switch (status) {
-      case 'success': return 'text-green-600';
-      case 'failed': return 'text-red-600';
       case 'pending': return 'text-gray-600';
       default: return 'text-gray-600';
     }
@@ -93,7 +84,7 @@ export default function EmailHistory() {
                 <TableRow key={batch.id}>
                   <TableCell>{formatDate(batch.createdAt)}</TableCell>
                   <TableCell>{batch.subject}</TableCell>
-                  <TableCell className={getBatchStatusColor(batch.status)}>
+                  <TableCell className={getStatusColor(batch.status)}>
                     {batch.status.charAt(0).toUpperCase() + batch.status.slice(1)}
                   </TableCell>
                   <TableCell>{Math.round(batch.progress)}%</TableCell>
@@ -128,7 +119,7 @@ export default function EmailHistory() {
                                 <TableCell>{recipient.name}</TableCell>
                                 <TableCell>{recipient.email}</TableCell>
                                 <TableCell>{recipient.ngoType}</TableCell>
-                                <TableCell className={getRecipientStatusColor(recipient.status)}>
+                                <TableCell className={getStatusColor(recipient.status)}>
                                   {recipient.status.charAt(0).toUpperCase() + recipient.status.slice(1)}
                                 </TableCell>
                                 <TableCell>{recipient.retryCount}</TableCell>
