@@ -51,7 +51,7 @@ export default function BulkEmailSender() {
           name,
           email,
           ngoType,
-          status: 'pending',
+          status: 'pending' as const,
           retryCount: 0
         };
       });
@@ -167,7 +167,10 @@ export default function BulkEmailSender() {
   const togglePause = () => {
     setIsPaused(!isPaused);
     if (currentBatch) {
-      const updatedBatch = { ...currentBatch, status: !isPaused ? 'paused' : 'in_progress' };
+      const updatedBatch: EmailBatch = { 
+        ...currentBatch, 
+        status: !isPaused ? 'paused' : 'in_progress' 
+      };
       setCurrentBatch(updatedBatch);
       updateDoc(doc(db, 'emailBatches', updatedBatch.id), updatedBatch);
     }

@@ -3,14 +3,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Mail, Upload } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useNavigate } from "react-router-dom";
 import CallRequests from "./components/CallRequests";
 import ContactRequests from "./components/ContactRequests";
 import WebsiteTemplates from "./components/WebsiteTemplates";
 import BulkEmail from "./components/BulkEmail";
 
 export default function AdminPanel() {
-  const router = useRouter();
+  const navigate = useNavigate();
 
   return (
     <div className="container mx-auto py-8">
@@ -30,7 +30,7 @@ export default function AdminPanel() {
               Send bulk emails to NGOs with retry logic, progress tracking, and pause/resume functionality.
             </p>
             <Button 
-              onClick={() => router.push('/admin/bulk-email')}
+              onClick={() => navigate('/admin/bulk-email')}
               className="w-full"
             >
               Open Bulk Email Sender
@@ -50,7 +50,7 @@ export default function AdminPanel() {
               Upload CSV/Excel files and automatically categorize NGOs by type for easy management.
             </p>
             <Button 
-              onClick={() => router.push('/admin/categorizer')}
+              onClick={() => navigate('/admin/categorizer')}
               className="w-full"
             >
               Open NGO Categorizer
