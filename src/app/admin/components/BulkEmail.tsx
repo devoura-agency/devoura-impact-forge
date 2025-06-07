@@ -22,6 +22,11 @@ const NGO_TYPES = [
   'community-service',
   'health-and-wellness',
   'disaster-management',
+  'environment-water',
+  'disability',
+  'old-age',
+  'child-welfare',
+  'food',
   'other'
 ] as const;
 

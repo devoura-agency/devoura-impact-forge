@@ -30,6 +30,11 @@ const NGO_CATEGORIES = [
   'community-service',
   'health-and-wellness',
   'disaster-management',
+  'environment-water',
+  'disability',
+  'old-age',
+  'child-welfare',
+  'food'
 ];
 
 export default function WebsiteTemplates() {

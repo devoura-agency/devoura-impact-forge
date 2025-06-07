@@ -14,11 +14,11 @@ const NGO_CATEGORIES = [
   { id: 'community-service', title: 'Community Service', icon: Users, color: 'bg-purple-500' },
   { id: 'health-and-wellness', title: 'Health & Wellness', icon: Shield, color: 'bg-red-500' },
   { id: 'disaster-management', title: 'Disaster Management', icon: Building, color: 'bg-orange-500' },
-  { id: 'disability-support', title: 'Disability Support', icon: Accessibility, color: 'bg-indigo-500' },
-  { id: 'elderly-care', title: 'Elderly Care', icon: Clock, color: 'bg-amber-500' },
-  { id: 'environmental-water', title: 'Environment & Water', icon: Droplet, color: 'bg-cyan-500' },
+  { id: 'disability', title: 'Disability Support', icon: Accessibility, color: 'bg-indigo-500' },
+  { id: 'old-age', title: 'Elderly Care', icon: Clock, color: 'bg-amber-500' },
+  { id: 'environment-water', title: 'Environment & Water', icon: Droplet, color: 'bg-cyan-500' },
   { id: 'child-welfare', title: 'Child Welfare', icon: Baby, color: 'bg-yellow-500' },
-  { id: 'food-security', title: 'Food Security', icon: Utensils, color: 'bg-emerald-500' },
+  { id: 'food', title: 'Food Security', icon: Utensils, color: 'bg-emerald-500' },
   { id: 'request-custom', title: 'Request Custom Template', icon: Palette, color: 'bg-gradient-to-br from-brand-green to-brand-gold' },
 ];
 
