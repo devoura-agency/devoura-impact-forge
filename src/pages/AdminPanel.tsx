@@ -14,6 +14,7 @@ import WebsiteTemplates from "../app/admin/components/WebsiteTemplates";
 import BulkEmail from "../app/admin/components/BulkEmail";
 import EmailsSent from "../app/admin/components/EmailsSent";
 import WizardRequests from "../app/admin/components/WizardRequests";
+import NgoCategorizer from "../app/admin/components/NgoCategorizer";
 
 // Existing website links data
 const existingWebsites = [
@@ -200,13 +201,14 @@ const AdminPanel = () => {
 
           {/* Tabs for admin sections */}
           <Tabs defaultValue="call-requests" className="w-full">
-            <TabsList className="grid grid-cols-6 w-full">
+            <TabsList className="grid grid-cols-7 w-full">
               <TabsTrigger value="call-requests">Call Requests</TabsTrigger>
               <TabsTrigger value="contact-requests">Contact Requests</TabsTrigger>
               <TabsTrigger value="website-templates">Website Templates</TabsTrigger>
               <TabsTrigger value="bulk-email">Bulk Email</TabsTrigger>
               <TabsTrigger value="wizard-requests">Wizard Requests</TabsTrigger>
               <TabsTrigger value="emails-sent">Emails Sent</TabsTrigger>
+              <TabsTrigger value="categorizer">Categorizer</TabsTrigger>
             </TabsList>
 
             <TabsContent value="call-requests">
@@ -231,6 +233,10 @@ const AdminPanel = () => {
 
             <TabsContent value="emails-sent">
               <EmailsSent />
+            </TabsContent>
+
+            <TabsContent value="categorizer">
+              <NgoCategorizer />
             </TabsContent>
           </Tabs>
         </div>
