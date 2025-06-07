@@ -107,7 +107,7 @@ export default function WebsiteTemplates() {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div>Loading...</div>; 
   }
 
   return (
