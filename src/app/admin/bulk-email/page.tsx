@@ -1,4 +1,3 @@
-
 import BulkEmailSender from '../components/BulkEmailSender';
 import EmailHistory from '../components/EmailHistory';
 
@@ -10,4 +9,4 @@ export default function BulkEmailPage() {
       <EmailHistory />
     </div>
   );
-}
+} 
