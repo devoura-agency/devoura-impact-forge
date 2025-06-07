@@ -1,3 +1,4 @@
+
 import { createTransport } from 'nodemailer';
 import dotenv from 'dotenv';
 import path from 'path';
@@ -48,6 +49,11 @@ const getEmailTemplate = async (name, ngoType) => {
       'community-service': 'community-service-template.html',
       'health-and-wellness': 'health-wellness-template.html',
       'disaster-management': 'disaster-management-template.html',
+      'elderly-care': 'elderly-care-template.html',
+      'disability-support': 'disability-support-template.html',
+      'child-welfare': 'child-welfare-template.html',
+      'environmental-water': 'environmental-water-template.html',
+      'food-security': 'food-security-template.html',
       'other': 'general-template.html'
     };
 
@@ -118,4 +124,4 @@ export default async function handler(req, res) {
       stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
     });
   }
-} 
+}

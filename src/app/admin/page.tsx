@@ -1,8 +1,10 @@
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import CallRequests from "./components/CallRequests";
 import ContactRequests from "./components/ContactRequests";
 import WebsiteTemplates from "./components/WebsiteTemplates";
 import BulkEmail from "./components/BulkEmail";
+import NgoCategorizer from "./components/NgoCategorizer";
 
 export default function AdminPanel() {
   return (
@@ -10,11 +12,12 @@ export default function AdminPanel() {
       <h1 className="text-3xl font-bold mb-8">Admin Dashboard</h1>
       
       <Tabs defaultValue="call-requests" className="w-full">
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="grid w-full grid-cols-5">
           <TabsTrigger value="call-requests">Call Requests</TabsTrigger>
           <TabsTrigger value="contact-requests">Contact Requests</TabsTrigger>
           <TabsTrigger value="templates">Website Templates</TabsTrigger>
           <TabsTrigger value="bulk-email">Bulk Email</TabsTrigger>
+          <TabsTrigger value="categorizer">Categorizer</TabsTrigger>
         </TabsList>
 
         <TabsContent value="call-requests">
@@ -32,7 +35,11 @@ export default function AdminPanel() {
         <TabsContent value="bulk-email">
           <BulkEmail />
         </TabsContent>
+
+        <TabsContent value="categorizer">
+          <NgoCategorizer />
+        </TabsContent>
       </Tabs>
     </div>
   );
-} 
+}
