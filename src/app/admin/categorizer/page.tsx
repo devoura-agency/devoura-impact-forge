@@ -1,3 +1,4 @@
+
 import NgoCategorizer from '../components/NgoCategorizer';
 
 export default function CategorizerPage() {
@@ -7,4 +8,4 @@ export default function CategorizerPage() {
       <NgoCategorizer />
     </div>
   );
-} 
+}

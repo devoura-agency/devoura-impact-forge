@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from 'react';
 import { collection, query, orderBy, onSnapshot } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
@@ -142,4 +143,4 @@ export default function EmailHistory() {
       </CardContent>
     </Card>
   );
-} 
+}
