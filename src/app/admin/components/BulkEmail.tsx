@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -6,13 +6,29 @@ import { useToast } from '@/hooks/use-toast';
 import Papa from 'papaparse';
 import * as XLSX from 'xlsx';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { collection, addDoc } from 'firebase/firestore';
+import { collection, addDoc, query, orderBy, limit, getDocs } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
+import { Progress } from '@/components/ui/progress';
+import { Pause, Play, History, Plus } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 
 interface Recipient {
   name: string;
   email: string;
   ngoType: string;
+  status?: 'pending' | 'sending' | 'success' | 'failed';
+  retries?: number;
+}
+
+interface EmailHistory {
+  id: string;
+  sentAt: string;
+  recipients: Recipient[];
+  stats: {
+    success: number;
+    fail: number;
+    noAttachments: number;
+  };
 }
 
 const NGO_TYPES = [
@@ -30,12 +46,37 @@ const NGO_TYPES = [
   'other'
 ] as const;
 
+const MAX_RETRIES = 3;
+const SUCCESS_DELAY = 2000; // 2 seconds
+const RETRY_DELAY = 5000; // 5 seconds
+
 export default function BulkEmail() {
   const [recipients, setRecipients] = useState<Recipient[]>([]);
   const [manualEntry, setManualEntry] = useState<Recipient>({ name: '', email: '', ngoType: '' });
   const [sending, setSending] = useState(false);
+  const [paused, setPaused] = useState(false);
   const [fileData, setFileData] = useState<Recipient[]>([]);
+  const [progress, setProgress] = useState(0);
+  const [emailHistory, setEmailHistory] = useState<EmailHistory[]>([]);
+  const [currentBatch, setCurrentBatch] = useState<Recipient[]>([]);
+  const [showHistory, setShowHistory] = useState(false);
   const { toast } = useToast();
+  const abortControllerRef = useRef<AbortController | null>(null);
+
+  // Load email history
+  const loadEmailHistory = async () => {
+    try {
+      const q = query(collection(db, 'bulkEmailBatches'), orderBy('sentAt', 'desc'), limit(10));
+      const querySnapshot = await getDocs(q);
+      const history = querySnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      })) as EmailHistory[];
+      setEmailHistory(history);
+    } catch (err) {
+      toast({ title: 'Error', description: 'Failed to load email history', variant: 'destructive' });
+    }
+  };
 
   // Handle file upload and parse
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -50,7 +91,9 @@ export default function BulkEmail() {
           const data = results.data.map((row: any) => ({
             name: row.name || row.Name || '',
             email: row.email || row.Email || '',
-            ngoType: row.ngoType || row['ngo-type'] || row['NGO Type'] || ''
+            ngoType: row.ngoType || row['ngo-type'] || row['NGO Type'] || '',
+            status: 'pending' as const,
+            retries: 0
           })).filter((r: Recipient) => r.email && r.name);
           setFileData(data);
           toast({ 
@@ -71,7 +114,9 @@ export default function BulkEmail() {
         const data = XLSX.utils.sheet_to_json(ws).map((row: any) => ({
           name: row.name || row.Name || '',
           email: row.email || row.Email || '',
-          ngoType: row.ngoType || row['ngo-type'] || row['NGO Type'] || ''
+          ngoType: row.ngoType || row['ngo-type'] || row['NGO Type'] || '',
+          status: 'pending' as const,
+          retries: 0
         })).filter((r: Recipient) => r.email && r.name);
         setFileData(data);
         toast({ 
@@ -102,7 +147,7 @@ export default function BulkEmail() {
       toast({ title: 'Error', description: 'Name, Email, and NGO Type are required', variant: 'destructive' });
       return;
     }
-    setRecipients([...recipients, manualEntry]);
+    setRecipients([...recipients, { ...manualEntry, status: 'pending', retries: 0 }]);
     setManualEntry({ name: '', email: '', ngoType: '' });
   };
 
@@ -116,86 +161,213 @@ export default function BulkEmail() {
     setRecipients(recipients.filter((_, i) => i !== idx));
   };
 
-  // Send emails
-  const handleSendEmails = async () => {
-    setSending(true);
-    let success = 0;
-    let fail = 0;
-    let noAttachments = 0;
-
-    for (const r of recipients) {
+  // Send single email with retry mechanism
+  const sendEmailWithRetry = async (recipient: Recipient): Promise<boolean> => {
+    let attempts = 0;
+    
+    while (attempts < MAX_RETRIES) {
       try {
+        if (paused) {
+          await new Promise(resolve => {
+            const checkPause = setInterval(() => {
+              if (!paused) {
+                clearInterval(checkPause);
+                resolve(true);
+              }
+            }, 1000);
+          });
+        }
+
         const res = await fetch('/api/bulk-email', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            name: r.name,
-            email: r.email,
-            ngoType: r.ngoType,
+            name: recipient.name,
+            email: recipient.email,
+            ngoType: recipient.ngoType,
             subject: 'Devoura NGO Collaboration'
-          })
+          }),
+          signal: abortControllerRef.current?.signal
         });
-        
+
         if (res.ok) {
-          const data = await res.json();
-          success++;
-          if (!data.attachmentsIncluded) {
-            noAttachments++;
-          }
-        } else {
-          fail++;
+          await new Promise(resolve => setTimeout(resolve, SUCCESS_DELAY));
+          return true;
         }
-      } catch {
-        fail++;
+        
+        attempts++;
+        if (attempts < MAX_RETRIES) {
+          await new Promise(resolve => setTimeout(resolve, RETRY_DELAY));
+        }
+      } catch (err) {
+        if (err.name === 'AbortError') {
+          throw err;
+        }
+        attempts++;
+        if (attempts < MAX_RETRIES) {
+          await new Promise(resolve => setTimeout(resolve, RETRY_DELAY));
+        }
       }
     }
+    
+    return false;
+  };
 
-    // Save batch to Firestore
+  // Send emails
+  const handleSendEmails = async () => {
+    setSending(true);
+    setProgress(0);
+    abortControllerRef.current = new AbortController();
+    
+    let successCount = 0;
+    let failCount = 0;
+    let noAttachments = 0;
+    const totalEmails = recipients.length;
+
     try {
+      for (let i = 0; i < recipients.length; i++) {
+        if (paused) {
+          await new Promise(resolve => {
+            const checkPause = setInterval(() => {
+              if (!paused) {
+                clearInterval(checkPause);
+                resolve(true);
+              }
+            }, 1000);
+          });
+        }
+
+        const recipient = recipients[i];
+        setRecipients(prev => prev.map((r, idx) => 
+          idx === i ? { ...r, status: 'sending' } : r
+        ));
+
+        const emailSuccess = await sendEmailWithRetry(recipient);
+        
+        setRecipients(prev => prev.map((r, idx) => 
+          idx === i ? { ...r, status: emailSuccess ? 'success' : 'failed' } : r
+        ));
+
+        if (emailSuccess) {
+          successCount++;
+        } else {
+          failCount++;
+        }
+
+        setProgress(((i + 1) / totalEmails) * 100);
+      }
+
+      // Save batch to Firestore
       await addDoc(collection(db, 'bulkEmailBatches'), {
         sentAt: new Date().toISOString(),
         recipients,
         status: 'completed',
         stats: {
-          success,
-          fail,
+          success: successCount,
+          fail: failCount,
           noAttachments
         }
       });
-    } catch (err) {
-      toast({ title: 'Warning', description: 'Emails sent but failed to save batch to database', variant: 'destructive' });
-    }
 
-    setSending(false);
-    
-    // Show appropriate toast message
-    if (fail === 0) {
-      if (noAttachments > 0) {
+      // Update history
+      await loadEmailHistory();
+
+      // Show appropriate toast message
+      if (failCount === 0) {
         toast({
-          title: 'Emails Sent (Without Pitch Deck)',
-          description: `Successfully sent ${success} emails, but pitch deck was not attached. Please ensure the PDF is in the correct location.`,
+          title: 'Success',
+          description: `Successfully sent ${successCount} emails.`,
           variant: 'default'
+        });
+        setRecipients([]);
+      } else {
+        toast({
+          title: 'Partial Success',
+          description: `Sent: ${successCount}, Failed: ${failCount}`,
+          variant: 'destructive'
+        });
+      }
+    } catch (err) {
+      if (err.name === 'AbortError') {
+        toast({
+          title: 'Operation Cancelled',
+          description: 'Email sending was cancelled.',
+          variant: 'destructive'
         });
       } else {
         toast({
-          title: 'Success',
-          description: `Successfully sent ${success} emails with pitch deck attached.`,
-          variant: 'default'
+          title: 'Error',
+          description: 'An error occurred while sending emails.',
+          variant: 'destructive'
         });
       }
-      setRecipients([]);
-    } else {
-      toast({
-        title: 'Partial Success',
-        description: `Sent: ${success}, Failed: ${fail}${noAttachments > 0 ? ', No Pitch Deck: ' + noAttachments : ''}`,
-        variant: 'destructive'
-      });
+    } finally {
+      setSending(false);
+      setProgress(0);
+      abortControllerRef.current = null;
     }
+  };
+
+  // Handle pause/resume
+  const togglePause = () => {
+    setPaused(!paused);
+    if (!paused) {
+      abortControllerRef.current?.abort();
+    }
+  };
+
+  // Add next batch
+  const handleAddNextBatch = () => {
+    if (currentBatch.length === 0) {
+      toast({ title: 'Error', description: 'No batch data to add', variant: 'destructive' });
+      return;
+    }
+    setRecipients([...recipients, ...currentBatch]);
+    setCurrentBatch([]);
   };
 
   return (
     <div className="space-y-6">
-      <h2 className="text-2xl font-semibold">Bulk Email Sender</h2>
+      <div className="flex justify-between items-center">
+        <h2 className="text-2xl font-semibold">Bulk Email Sender</h2>
+        <div className="flex gap-2">
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button variant="outline" onClick={loadEmailHistory}>
+                <History className="w-4 h-4 mr-2" />
+                History
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-4xl">
+              <DialogHeader>
+                <DialogTitle>Email History</DialogTitle>
+              </DialogHeader>
+              <div className="max-h-[60vh] overflow-y-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Date</TableHead>
+                      <TableHead>Total</TableHead>
+                      <TableHead>Success</TableHead>
+                      <TableHead>Failed</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {emailHistory.map((batch) => (
+                      <TableRow key={batch.id}>
+                        <TableCell>{new Date(batch.sentAt).toLocaleString()}</TableCell>
+                        <TableCell>{batch.recipients.length}</TableCell>
+                        <TableCell>{batch.stats.success}</TableCell>
+                        <TableCell>{batch.stats.fail}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </DialogContent>
+          </Dialog>
+        </div>
+      </div>
       
       {/* File Upload Section */}
       <div className="space-y-4">
@@ -246,13 +418,15 @@ export default function BulkEmail() {
         <div className="space-y-4">
           <div className="flex justify-between items-center">
             <h3 className="text-lg font-medium">Recipients List ({recipients.length})</h3>
-            <Button 
-              variant="outline" 
-              onClick={() => setRecipients([])}
-              className="text-red-600 hover:text-red-700"
-            >
-              Clear All
-            </Button>
+            <div className="flex gap-2">
+              <Button 
+                variant="outline" 
+                onClick={() => setRecipients([])}
+                className="text-red-600 hover:text-red-700"
+              >
+                Clear All
+              </Button>
+            </div>
           </div>
           <Table>
             <TableHeader>
@@ -260,6 +434,7 @@ export default function BulkEmail() {
                 <TableHead>Name</TableHead>
                 <TableHead>Email</TableHead>
                 <TableHead>NGO Type</TableHead>
+                <TableHead>Status</TableHead>
                 <TableHead>Actions</TableHead>
               </TableRow>
             </TableHeader>
@@ -287,12 +462,33 @@ export default function BulkEmail() {
                     </Select>
                   </TableCell>
                   <TableCell>
+                    <span className={`px-2 py-1 rounded-full text-xs ${
+                      r.status === 'success' ? 'bg-green-100 text-green-800' :
+                      r.status === 'failed' ? 'bg-red-100 text-red-800' :
+                      r.status === 'sending' ? 'bg-blue-100 text-blue-800' :
+                      'bg-gray-100 text-gray-800'
+                    }`}>
+                      {r.status || 'Pending'}
+                    </span>
+                  </TableCell>
+                  <TableCell>
                     <Button variant="destructive" onClick={() => handleDelete(idx)}>Delete</Button>
                   </TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
+        </div>
+      )}
+
+      {/* Progress Bar */}
+      {sending && (
+        <div className="space-y-2">
+          <div className="flex justify-between text-sm">
+            <span>Progress</span>
+            <span>{Math.round(progress)}%</span>
+          </div>
+          <Progress value={progress} className="h-2" />
         </div>
       )}
 
@@ -315,14 +511,35 @@ export default function BulkEmail() {
         </div>
       </div>
 
-      {/* Send Button */}
-      <Button 
-        onClick={handleSendEmails} 
-        disabled={sending || recipients.length === 0} 
-        className="w-full bg-brand-green hover:bg-brand-green-light text-white"
-      >
-        {sending ? 'Sending...' : `Continue & Send Emails (${recipients.length})`}
-      </Button>
+      {/* Control Buttons */}
+      <div className="flex gap-2">
+        <Button 
+          onClick={handleSendEmails} 
+          disabled={sending || recipients.length === 0} 
+          className="flex-1 bg-brand-green hover:bg-brand-green-light text-white"
+        >
+          {sending ? 'Sending...' : `Send Emails (${recipients.length})`}
+        </Button>
+        {sending && (
+          <Button 
+            onClick={togglePause}
+            variant="outline"
+            className="w-32"
+          >
+            {paused ? (
+              <>
+                <Play className="w-4 h-4 mr-2" />
+                Resume
+              </>
+            ) : (
+              <>
+                <Pause className="w-4 h-4 mr-2" />
+                Pause
+              </>
+            )}
+          </Button>
+        )}
+      </div>
     </div>
   );
 }
