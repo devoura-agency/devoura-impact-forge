@@ -59,10 +59,12 @@ const getEmailTemplate = async (name, ngoType) => {
 };
 
 export default async function handler(req, res) {
+  // Set CORS headers
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST,OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
   if (req.method === 'OPTIONS') {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'POST,OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
     return res.status(200).end();
   }
 
@@ -71,15 +73,18 @@ export default async function handler(req, res) {
   }
 
   try {
+    console.log('Received request body:', req.body);
     const { name, email, ngoType, subject, senderEmail } = req.body;
 
     if (!name || !email || !ngoType) {
+      console.error('Missing required fields:', { name, email, ngoType });
       return res.status(400).json({ error: 'Missing required fields' });
     }
 
     // Get HTML template
     const htmlContent = await getEmailTemplate(name, ngoType);
     if (!htmlContent) {
+      console.error('Failed to load email template for ngoType:', ngoType);
       return res.status(500).json({ error: 'Failed to load email template' });
     }
 
@@ -103,6 +108,12 @@ export default async function handler(req, res) {
       }
     };
 
+    console.log('Sending email with data:', {
+      to: emailData.to,
+      subject: emailData.subject,
+      sender: emailData.sender
+    });
+
     // Send email using Brevo API
     const response = await fetch('https://api.brevo.com/v3/smtp/email', {
       method: 'POST',
@@ -114,24 +125,25 @@ export default async function handler(req, res) {
       body: JSON.stringify(emailData)
     });
 
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || 'Failed to send email');
-    }
+    const responseData = await response.json();
+    console.log('Brevo API response:', responseData);
 
-    const result = await response.json();
-    console.log('Email sent successfully:', result);
+    if (!response.ok) {
+      console.error('Brevo API error:', responseData);
+      throw new Error(responseData.message || 'Failed to send email');
+    }
 
     res.status(200).json({ 
       message: 'Email sent successfully',
-      messageId: result.messageId,
+      messageId: responseData.messageId,
       attachmentsIncluded: attachments.length > 0
     });
   } catch (error) {
     console.error('Email error:', error);
     res.status(500).json({ 
       error: 'Failed to send email',
-      details: error.message
+      details: error.message,
+      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
     });
   }
 }
