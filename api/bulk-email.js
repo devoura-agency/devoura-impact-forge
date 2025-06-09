@@ -5,15 +5,21 @@ import fs from 'fs';
 
 dotenv.config();
 
-const { EMAIL_USER, EMAIL_PASS } = process.env;
+// Update environment variables to include Brevo SMTP credentials
+const { BREVO_SMTP_KEY, DEFAULT_SENDER_EMAIL } = process.env;
 
-const transporter = createTransport({
-  service: 'gmail',
-  auth: {
-    user: EMAIL_USER,
-    pass: EMAIL_PASS,
-  },
-});
+// Create Brevo SMTP transport
+const createBrevoTransport = (senderEmail) => {
+  return createTransport({
+    host: 'smtp-relay.brevo.com',
+    port: 587,
+    secure: false,
+    auth: {
+      user: 'info.devoura@gmail.com', // Your Brevo SMTP username
+      pass: 'I1GMR37nyC2qjJYs', // Your Brevo SMTP key
+    },
+  });
+};
 
 // Add website URL constant
 const WEBSITE_URL = 'https://devoura.vercel.app';
@@ -83,7 +89,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { name, email, ngoType, subject } = req.body;
+    const { name, email, ngoType, subject, senderEmail } = req.body;
 
     if (!name || !email || !ngoType) {
       return res.status(400).json({ error: 'Missing required fields' });
@@ -98,8 +104,11 @@ export default async function handler(req, res) {
     // Get attachments if pitch deck exists
     const attachments = getPitchDeckAttachment();
 
+    // Create transport with selected sender email
+    const transporter = createBrevoTransport(senderEmail || DEFAULT_SENDER_EMAIL);
+
     await transporter.sendMail({
-      from: EMAIL_USER,
+      from: senderEmail || DEFAULT_SENDER_EMAIL,
       to: email,
       subject: subject || 'Devoura NGO Collaboration',
       html: htmlContent,
@@ -108,7 +117,8 @@ export default async function handler(req, res) {
 
     res.status(200).json({ 
       message: 'Email sent successfully',
-      attachmentsIncluded: attachments.length > 0
+      attachmentsIncluded: attachments.length > 0,
+      senderEmail: senderEmail || DEFAULT_SENDER_EMAIL
     });
   } catch (error) {
     console.error('Bulk email error:', error);

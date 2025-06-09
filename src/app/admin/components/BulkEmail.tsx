@@ -18,6 +18,7 @@ interface Recipient {
   ngoType: string;
   status?: 'pending' | 'sending' | 'success' | 'failed';
   retries?: number;
+  senderEmail?: string;
 }
 
 interface EmailHistory {
@@ -50,9 +51,21 @@ const MAX_RETRIES = 3;
 const SUCCESS_DELAY = 2000; // 2 seconds
 const RETRY_DELAY = 5000; // 5 seconds
 
+// Add available sender emails
+const AVAILABLE_SENDER_EMAILS = [
+  'info.devoura@gmail.com',
+  'devoura.agency@gmail.com',
+  // Add more sender emails here as needed
+] as const;
+
 export default function BulkEmail() {
   const [recipients, setRecipients] = useState<Recipient[]>([]);
-  const [manualEntry, setManualEntry] = useState<Recipient>({ name: '', email: '', ngoType: '' });
+  const [manualEntry, setManualEntry] = useState<Recipient>({ 
+    name: '', 
+    email: '', 
+    ngoType: '',
+    senderEmail: AVAILABLE_SENDER_EMAILS[0] // Set default sender email
+  });
   const [sending, setSending] = useState(false);
   const [paused, setPaused] = useState(false);
   const [fileData, setFileData] = useState<Recipient[]>([]);
@@ -92,6 +105,7 @@ export default function BulkEmail() {
             name: row.name || row.Name || '',
             email: row.email || row.Email || '',
             ngoType: row.ngoType || row['ngo-type'] || row['NGO Type'] || '',
+            senderEmail: row.senderEmail || AVAILABLE_SENDER_EMAILS[0],
             status: 'pending' as const,
             retries: 0
           })).filter((r: Recipient) => r.email && r.name);
@@ -115,6 +129,7 @@ export default function BulkEmail() {
           name: row.name || row.Name || '',
           email: row.email || row.Email || '',
           ngoType: row.ngoType || row['ngo-type'] || row['NGO Type'] || '',
+          senderEmail: row.senderEmail || AVAILABLE_SENDER_EMAILS[0],
           status: 'pending' as const,
           retries: 0
         })).filter((r: Recipient) => r.email && r.name);
@@ -148,7 +163,7 @@ export default function BulkEmail() {
       return;
     }
     setRecipients([...recipients, { ...manualEntry, status: 'pending', retries: 0 }]);
-    setManualEntry({ name: '', email: '', ngoType: '' });
+    setManualEntry({ name: '', email: '', ngoType: '', senderEmail: AVAILABLE_SENDER_EMAILS[0] });
   };
 
   // Edit row
@@ -185,7 +200,8 @@ export default function BulkEmail() {
             name: recipient.name,
             email: recipient.email,
             ngoType: recipient.ngoType,
-            subject: 'Devoura NGO Collaboration'
+            subject: 'Devoura NGO Collaboration',
+            senderEmail: recipient.senderEmail
           }),
           signal: abortControllerRef.current?.signal
         });
@@ -410,6 +426,18 @@ export default function BulkEmail() {
             ))}
           </SelectContent>
         </Select>
+        <Select value={manualEntry.senderEmail} onValueChange={(value) => setManualEntry({ ...manualEntry, senderEmail: value })}>
+          <SelectTrigger className="w-[250px]">
+            <SelectValue placeholder="Select Sender Email" />
+          </SelectTrigger>
+          <SelectContent>
+            {AVAILABLE_SENDER_EMAILS.map(email => (
+              <SelectItem key={email} value={email}>
+                {email}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
         <Button onClick={handleAddManual}>Add</Button>
       </div>
       
@@ -434,6 +462,7 @@ export default function BulkEmail() {
                 <TableHead>Name</TableHead>
                 <TableHead>Email</TableHead>
                 <TableHead>NGO Type</TableHead>
+                <TableHead>Sender Email</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Actions</TableHead>
               </TableRow>
@@ -456,6 +485,20 @@ export default function BulkEmail() {
                         {NGO_TYPES.map(type => (
                           <SelectItem key={type} value={type}>
                             {type.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </TableCell>
+                  <TableCell>
+                    <Select value={r.senderEmail} onValueChange={(value) => handleEdit(idx, 'senderEmail', value)}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select Sender Email" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {AVAILABLE_SENDER_EMAILS.map(email => (
+                          <SelectItem key={email} value={email}>
+                            {email}
                           </SelectItem>
                         ))}
                       </SelectContent>
