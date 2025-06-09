@@ -1,22 +1,8 @@
-import { createTransport } from 'nodemailer';
 import dotenv from 'dotenv';
 import path from 'path';
 import fs from 'fs';
 
 dotenv.config();
-
-// Create Brevo SMTP transport
-const createBrevoTransport = () => {
-  return createTransport({
-    host: 'smtp-relay.brevo.com',
-    port: 587,
-    secure: false,
-    auth: {
-      user: 'info.devoura@gmail.com',
-      pass: 'I1GMR37nyC2qjJYs',
-    }
-  });
-};
 
 // Add website URL constant
 const WEBSITE_URL = 'https://devoura.vercel.app';
@@ -100,25 +86,45 @@ export default async function handler(req, res) {
     // Get attachments
     const attachments = getPitchDeckAttachment();
 
-    // Create transport
-    const transporter = createBrevoTransport();
-
-    // Prepare email
-    const mailOptions = {
-      from: senderEmail || 'info.devoura@gmail.com',
-      to: email,
+    // Prepare email data for Brevo API
+    const emailData = {
+      sender: {
+        name: 'Devoura',
+        email: senderEmail || 'info.devoura@gmail.com'
+      },
+      to: [{
+        email: email,
+        name: name
+      }],
       subject: subject || 'Devoura NGO Collaboration',
-      html: htmlContent,
-      attachments
+      htmlContent: htmlContent,
+      headers: {
+        'charset': 'utf-8'
+      }
     };
 
-    // Send email
-    const info = await transporter.sendMail(mailOptions);
-    console.log('Email sent:', info);
+    // Send email using Brevo API
+    const response = await fetch('https://api.brevo.com/v3/smtp/email', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'api-key': 'I1GMR37nyC2qjJYs'
+      },
+      body: JSON.stringify(emailData)
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'Failed to send email');
+    }
+
+    const result = await response.json();
+    console.log('Email sent successfully:', result);
 
     res.status(200).json({ 
       message: 'Email sent successfully',
-      messageId: info.messageId,
+      messageId: result.messageId,
       attachmentsIncluded: attachments.length > 0
     });
   } catch (error) {
