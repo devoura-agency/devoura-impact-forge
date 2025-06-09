@@ -10,15 +10,26 @@ const { BREVO_SMTP_KEY, DEFAULT_SENDER_EMAIL } = process.env;
 
 // Create Brevo SMTP transport
 const createBrevoTransport = (senderEmail) => {
-  return createTransport({
+  console.log('Creating transport with sender email:', senderEmail);
+  
+  // Create transport with more detailed configuration
+  const transport = createTransport({
     host: 'smtp-relay.brevo.com',
     port: 587,
     secure: false,
     auth: {
-      user: 'info.devoura@gmail.com', // Your Brevo SMTP username
-      pass: 'I1GMR37nyC2qjJYs', // Your Brevo SMTP key
+      user: 'info.devoura@gmail.com',
+      pass: 'I1GMR37nyC2qjJYs',
     },
+    tls: {
+      // Do not fail on invalid certs
+      rejectUnauthorized: false
+    },
+    debug: true, // Enable debug output
+    logger: true // Enable logger
   });
+
+  return transport;
 };
 
 // Add website URL constant
@@ -90,6 +101,7 @@ export default async function handler(req, res) {
 
   try {
     const { name, email, ngoType, subject, senderEmail } = req.body;
+    console.log('Received request:', { name, email, ngoType, subject, senderEmail });
 
     if (!name || !email || !ngoType) {
       return res.status(400).json({ error: 'Missing required fields' });
@@ -107,19 +119,41 @@ export default async function handler(req, res) {
     // Create transport with selected sender email
     const transporter = createBrevoTransport(senderEmail || DEFAULT_SENDER_EMAIL);
 
-    await transporter.sendMail({
-      from: senderEmail || DEFAULT_SENDER_EMAIL,
+    const mailOptions = {
+      from: {
+        name: 'Devoura',
+        address: senderEmail || DEFAULT_SENDER_EMAIL
+      },
       to: email,
       subject: subject || 'Devoura NGO Collaboration',
       html: htmlContent,
-      attachments
+      attachments,
+      headers: {
+        'X-Entity-Ref-ID': Date.now().toString()
+      }
+    };
+
+    console.log('Sending email with options:', {
+      from: mailOptions.from,
+      to: mailOptions.to,
+      subject: mailOptions.subject,
+      hasAttachments: attachments.length > 0
     });
 
-    res.status(200).json({ 
-      message: 'Email sent successfully',
-      attachmentsIncluded: attachments.length > 0,
-      senderEmail: senderEmail || DEFAULT_SENDER_EMAIL
-    });
+    try {
+      const info = await transporter.sendMail(mailOptions);
+      console.log('Email sent successfully:', info);
+      
+      res.status(200).json({ 
+        message: 'Email sent successfully',
+        attachmentsIncluded: attachments.length > 0,
+        senderEmail: senderEmail || DEFAULT_SENDER_EMAIL,
+        messageId: info.messageId
+      });
+    } catch (sendError) {
+      console.error('Error sending email:', sendError);
+      throw sendError;
+    }
   } catch (error) {
     console.error('Bulk email error:', error);
     res.status(500).json({ 
