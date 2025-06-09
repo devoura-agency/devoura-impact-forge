@@ -1,8 +1,14 @@
 import dotenv from 'dotenv';
 import path from 'path';
 import fs from 'fs';
+import SibApiV3Sdk from 'sib-api-v3-sdk';
 
 dotenv.config();
+
+// Configure Brevo API client
+const defaultClient = SibApiV3Sdk.ApiClient.instance;
+const apiKey = defaultClient.authentications['api-key'];
+apiKey.apiKey = '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';
 
 // Add website URL constant
 const WEBSITE_URL = 'https://devoura.vercel.app';
@@ -91,51 +97,35 @@ export default async function handler(req, res) {
     // Get attachments
     const attachments = getPitchDeckAttachment();
 
-    // Prepare email data for Brevo API
-    const emailData = {
-      sender: {
-        name: 'Devoura',
-        email: senderEmail || 'info.devoura@gmail.com'
-      },
-      to: [{
-        email: email,
-        name: name
-      }],
-      subject: subject || 'Devoura NGO Collaboration',
-      htmlContent: htmlContent,
-      headers: {
-        'charset': 'utf-8'
-      }
+    // Create API instance for transactional emails
+    const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
+
+    // Create email data
+    const sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
+    sendSmtpEmail.to = [{
+      email: email,
+      name: name
+    }];
+    sendSmtpEmail.sender = {
+      name: 'Devoura',
+      email: senderEmail || 'info.devoura@gmail.com'
     };
+    sendSmtpEmail.subject = subject || 'Devoura NGO Collaboration';
+    sendSmtpEmail.htmlContent = htmlContent;
 
     console.log('Sending email with data:', {
-      to: emailData.to,
-      subject: emailData.subject,
-      sender: emailData.sender
+      to: sendSmtpEmail.to,
+      subject: sendSmtpEmail.subject,
+      sender: sendSmtpEmail.sender
     });
 
-    // Send email using Brevo API
-    const response = await fetch('https://api.brevo.com/v3/smtp/email', {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'api-key': 'I1GMR37nyC2qjJYs'
-      },
-      body: JSON.stringify(emailData)
-    });
-
-    const responseData = await response.json();
-    console.log('Brevo API response:', responseData);
-
-    if (!response.ok) {
-      console.error('Brevo API error:', responseData);
-      throw new Error(responseData.message || 'Failed to send email');
-    }
+    // Send the email
+    const result = await apiInstance.sendTransacEmail(sendSmtpEmail);
+    console.log('Email sent successfully:', result);
 
     res.status(200).json({ 
       message: 'Email sent successfully',
-      messageId: responseData.messageId,
+      messageId: result.messageId,
       attachmentsIncluded: attachments.length > 0
     });
   } catch (error) {
