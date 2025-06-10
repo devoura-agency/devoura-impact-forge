@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -9,8 +9,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { collection, addDoc, query, orderBy, limit, getDocs } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { Progress } from '@/components/ui/progress';
-import { Pause, Play, History, Plus } from 'lucide-react';
+import { Pause, Play, History, Plus, Settings } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { getDailyLimit, setDailyLimit, incrementEmailCount, getRemainingEmails } from '@/lib/emailLimits';
 
 interface Recipient {
   name: string;
@@ -18,7 +19,6 @@ interface Recipient {
   ngoType: string;
   status?: 'pending' | 'sending' | 'success' | 'failed';
   retries?: number;
-  senderEmail?: string;
 }
 
 interface EmailHistory {
@@ -51,21 +51,9 @@ const MAX_RETRIES = 3;
 const SUCCESS_DELAY = 2000; // 2 seconds
 const RETRY_DELAY = 5000; // 5 seconds
 
-// Add available sender emails
-const AVAILABLE_SENDER_EMAILS = [
-  'info.devoura@gmail.com',
-  'devoura.agency@gmail.com',
-  // Add more sender emails here as needed
-] as const;
-
 export default function BulkEmail() {
   const [recipients, setRecipients] = useState<Recipient[]>([]);
-  const [manualEntry, setManualEntry] = useState<Recipient>({ 
-    name: '', 
-    email: '', 
-    ngoType: '',
-    senderEmail: AVAILABLE_SENDER_EMAILS[0] // Set default sender email
-  });
+  const [manualEntry, setManualEntry] = useState<Recipient>({ name: '', email: '', ngoType: '' });
   const [sending, setSending] = useState(false);
   const [paused, setPaused] = useState(false);
   const [fileData, setFileData] = useState<Recipient[]>([]);
@@ -75,6 +63,10 @@ export default function BulkEmail() {
   const [showHistory, setShowHistory] = useState(false);
   const { toast } = useToast();
   const abortControllerRef = useRef<AbortController | null>(null);
+  const [dailyLimit, setDailyLimitState] = useState(50);
+  const [remainingEmails, setRemainingEmails] = useState(50);
+  const [showLimitDialog, setShowLimitDialog] = useState(false);
+  const [newLimit, setNewLimit] = useState('50');
 
   // Load email history
   const loadEmailHistory = async () => {
@@ -91,6 +83,17 @@ export default function BulkEmail() {
     }
   };
 
+  // Load daily limit and remaining emails
+  useEffect(() => {
+    const loadLimits = async () => {
+      const limit = await getDailyLimit();
+      const remaining = await getRemainingEmails();
+      setDailyLimitState(limit);
+      setRemainingEmails(remaining);
+    };
+    loadLimits();
+  }, []);
+
   // Handle file upload and parse
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -105,7 +108,6 @@ export default function BulkEmail() {
             name: row.name || row.Name || '',
             email: row.email || row.Email || '',
             ngoType: row.ngoType || row['ngo-type'] || row['NGO Type'] || '',
-            senderEmail: row.senderEmail || AVAILABLE_SENDER_EMAILS[0],
             status: 'pending' as const,
             retries: 0
           })).filter((r: Recipient) => r.email && r.name);
@@ -129,7 +131,6 @@ export default function BulkEmail() {
           name: row.name || row.Name || '',
           email: row.email || row.Email || '',
           ngoType: row.ngoType || row['ngo-type'] || row['NGO Type'] || '',
-          senderEmail: row.senderEmail || AVAILABLE_SENDER_EMAILS[0],
           status: 'pending' as const,
           retries: 0
         })).filter((r: Recipient) => r.email && r.name);
@@ -163,7 +164,7 @@ export default function BulkEmail() {
       return;
     }
     setRecipients([...recipients, { ...manualEntry, status: 'pending', retries: 0 }]);
-    setManualEntry({ name: '', email: '', ngoType: '', senderEmail: AVAILABLE_SENDER_EMAILS[0] });
+    setManualEntry({ name: '', email: '', ngoType: '' });
   };
 
   // Edit row
@@ -176,10 +177,35 @@ export default function BulkEmail() {
     setRecipients(recipients.filter((_, i) => i !== idx));
   };
 
-  // Send single email with retry mechanism
-  const sendEmailWithRetry = async (recipient: Recipient): Promise<boolean> => {
+  // Handle limit update
+  const handleUpdateLimit = async () => {
+    const limit = parseInt(newLimit);
+    if (isNaN(limit) || limit < 1) {
+      toast({ title: 'Error', description: 'Please enter a valid limit', variant: 'destructive' });
+      return;
+    }
+    await setDailyLimit(limit);
+    setDailyLimitState(limit);
+    setRemainingEmails(limit);
+    setShowLimitDialog(false);
+    toast({ title: 'Success', description: 'Daily limit updated successfully' });
+  };
+
+  // Modify sendEmailWithRetry to check limits
+  const sendEmailWithRetry = async (recipient: Recipient) => {
     let attempts = 0;
     
+    // Check if we can send more emails today
+    const canSend = await incrementEmailCount();
+    if (!canSend) {
+      toast({
+        title: 'Daily Limit Reached',
+        description: `You have reached the daily limit of ${dailyLimit} emails.`,
+        variant: 'destructive'
+      });
+      return false;
+    }
+
     while (attempts < MAX_RETRIES) {
       try {
         if (paused) {
@@ -200,14 +226,14 @@ export default function BulkEmail() {
             name: recipient.name,
             email: recipient.email,
             ngoType: recipient.ngoType,
-            subject: 'Devoura NGO Collaboration',
-            senderEmail: recipient.senderEmail
+            subject: 'Devoura NGO Collaboration'
           }),
           signal: abortControllerRef.current?.signal
         });
 
         if (res.ok) {
           await new Promise(resolve => setTimeout(resolve, SUCCESS_DELAY));
+          setRemainingEmails(prev => Math.max(0, prev - 1));
           return true;
         }
         
@@ -346,39 +372,30 @@ export default function BulkEmail() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-semibold">Bulk Email Sender</h2>
-        <div className="flex gap-2">
-          <Dialog>
+        <div className="flex items-center gap-4">
+          <div className="text-sm text-gray-600">
+            Remaining today: {remainingEmails}/{dailyLimit}
+          </div>
+          <Dialog open={showLimitDialog} onOpenChange={setShowLimitDialog}>
             <DialogTrigger asChild>
-              <Button variant="outline" onClick={loadEmailHistory}>
-                <History className="w-4 h-4 mr-2" />
-                History
+              <Button variant="outline" size="sm">
+                <Settings className="w-4 h-4 mr-2" />
+                Set Daily Limit
               </Button>
             </DialogTrigger>
-            <DialogContent className="max-w-4xl">
+            <DialogContent>
               <DialogHeader>
-                <DialogTitle>Email History</DialogTitle>
+                <DialogTitle>Set Daily Email Limit</DialogTitle>
               </DialogHeader>
-              <div className="max-h-[60vh] overflow-y-auto">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Date</TableHead>
-                      <TableHead>Total</TableHead>
-                      <TableHead>Success</TableHead>
-                      <TableHead>Failed</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {emailHistory.map((batch) => (
-                      <TableRow key={batch.id}>
-                        <TableCell>{new Date(batch.sentAt).toLocaleString()}</TableCell>
-                        <TableCell>{batch.recipients.length}</TableCell>
-                        <TableCell>{batch.stats.success}</TableCell>
-                        <TableCell>{batch.stats.fail}</TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
+              <div className="space-y-4 py-4">
+                <Input
+                  type="number"
+                  value={newLimit}
+                  onChange={(e) => setNewLimit(e.target.value)}
+                  placeholder="Enter daily limit"
+                  min="1"
+                />
+                <Button onClick={handleUpdateLimit}>Update Limit</Button>
               </div>
             </DialogContent>
           </Dialog>
@@ -426,18 +443,6 @@ export default function BulkEmail() {
             ))}
           </SelectContent>
         </Select>
-        <Select value={manualEntry.senderEmail} onValueChange={(value) => setManualEntry({ ...manualEntry, senderEmail: value })}>
-          <SelectTrigger className="w-[250px]">
-            <SelectValue placeholder="Select Sender Email" />
-          </SelectTrigger>
-          <SelectContent>
-            {AVAILABLE_SENDER_EMAILS.map(email => (
-              <SelectItem key={email} value={email}>
-                {email}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
         <Button onClick={handleAddManual}>Add</Button>
       </div>
       
@@ -462,7 +467,6 @@ export default function BulkEmail() {
                 <TableHead>Name</TableHead>
                 <TableHead>Email</TableHead>
                 <TableHead>NGO Type</TableHead>
-                <TableHead>Sender Email</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Actions</TableHead>
               </TableRow>
@@ -485,20 +489,6 @@ export default function BulkEmail() {
                         {NGO_TYPES.map(type => (
                           <SelectItem key={type} value={type}>
                             {type.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </TableCell>
-                  <TableCell>
-                    <Select value={r.senderEmail} onValueChange={(value) => handleEdit(idx, 'senderEmail', value)}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select Sender Email" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {AVAILABLE_SENDER_EMAILS.map(email => (
-                          <SelectItem key={email} value={email}>
-                            {email}
                           </SelectItem>
                         ))}
                       </SelectContent>

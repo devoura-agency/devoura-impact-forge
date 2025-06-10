@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 import dotenv from 'dotenv';
 import path from 'path';
 import fs from 'fs';
@@ -9,6 +10,24 @@ dotenv.config();
 const defaultClient = SibApiV3Sdk.ApiClient.instance;
 const apiKey = defaultClient.authentications['api-key'];
 apiKey.apiKey = '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';
+=======
+import { createTransport } from 'nodemailer';
+import dotenv from 'dotenv';
+import path from 'path';
+import fs from 'fs';
+
+dotenv.config();
+
+const { EMAIL_USER, EMAIL_PASS } = process.env;
+
+const transporter = createTransport({
+  service: 'gmail',
+  auth: {
+    user: EMAIL_USER,
+    pass: EMAIL_PASS,
+  },
+});
+>>>>>>> Stashed changes
 
 // Add website URL constant
 const WEBSITE_URL = 'https://devoura.vercel.app';
@@ -35,6 +54,10 @@ const getPitchDeckAttachment = () => {
 // Function to get HTML template based on NGO type
 const getEmailTemplate = async (name, ngoType) => {
   try {
+<<<<<<< Updated upstream
+=======
+    // Map ngoType to template filename
+>>>>>>> Stashed changes
     const templateMap = {
       'education': 'education-template.html',
       'women-empowerment': 'women-empowerment-template.html',
@@ -54,6 +77,11 @@ const getEmailTemplate = async (name, ngoType) => {
     }
 
     let template = await fs.promises.readFile(templatePath, 'utf8');
+<<<<<<< Updated upstream
+=======
+    
+    // Replace placeholders in the template
+>>>>>>> Stashed changes
     template = template.replace(/{{name}}/g, name);
     template = template.replace(/{{website_url}}/g, WEBSITE_URL);
     
@@ -79,8 +107,12 @@ export default async function handler(req, res) {
   }
 
   try {
+<<<<<<< Updated upstream
     console.log('Received request body:', req.body);
     const { name, email, ngoType, subject, senderEmail } = req.body;
+=======
+    const { name, email, ngoType, subject } = req.body;
+>>>>>>> Stashed changes
 
     if (!name || !email || !ngoType) {
       console.error('Missing required fields:', { name, email, ngoType });
@@ -90,6 +122,7 @@ export default async function handler(req, res) {
     // Get HTML template
     const htmlContent = await getEmailTemplate(name, ngoType);
     if (!htmlContent) {
+<<<<<<< Updated upstream
       console.error('Failed to load email template for ngoType:', ngoType);
       return res.status(500).json({ error: 'Failed to load email template' });
     }
@@ -130,6 +163,28 @@ export default async function handler(req, res) {
     });
   } catch (error) {
     console.error('Email error:', error);
+=======
+      return res.status(500).json({ error: 'Failed to load email template' });
+    }
+
+    // Get attachments if pitch deck exists
+    const attachments = getPitchDeckAttachment();
+
+    await transporter.sendMail({
+      from: EMAIL_USER,
+      to: email,
+      subject: subject || 'Devoura NGO Collaboration',
+      html: htmlContent,
+      attachments
+    });
+
+    res.status(200).json({ 
+      message: 'Email sent successfully',
+      attachmentsIncluded: attachments.length > 0
+    });
+  } catch (error) {
+    console.error('Bulk email error:', error);
+>>>>>>> Stashed changes
     res.status(500).json({ 
       error: 'Failed to send email',
       details: error.message,
