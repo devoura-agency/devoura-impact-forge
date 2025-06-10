@@ -8,35 +8,36 @@ import { db } from '@/lib/firebase';
 
 const Hero = () => {
   const navigate = useNavigate();
-  const [currentTemplateIndex, setCurrentTemplateIndex] = useState(0);
-  const [templates, setTemplates] = useState<{ name: string; url: string }[]>([]);
+  const [currentCaseIndex, setCurrentCaseIndex] = useState(0);
+  const [caseStudies, setCaseStudies] = useState<{ name: string; url: string; category: string }[]>([]);
 
   useEffect(() => {
-    // Fetch templates from Firestore
-    const fetchTemplates = async () => {
+    // Fetch case studies from Firestore
+    const fetchCaseStudies = async () => {
       const q = query(collection(db, 'websites'), orderBy('createdAt', 'desc'));
       const snap = await getDocs(q);
       const data = snap.docs.map(doc => ({
-        name: doc.data().tag ? `${doc.data().tag} (${doc.data().category})` : doc.data().category,
+        name: doc.data().category,
         url: doc.data().link,
+        category: doc.data().category
       }));
-      setTemplates(data);
+      setCaseStudies(data);
     };
-    fetchTemplates();
+    fetchCaseStudies();
   }, []);
 
   useEffect(() => {
-    if (templates.length === 0) return;
+    if (caseStudies.length === 0) return;
     const interval = setInterval(() => {
-      setCurrentTemplateIndex((prev) => (prev + 1) % templates.length);
+      setCurrentCaseIndex((prev) => (prev + 1) % caseStudies.length);
     }, 3000);
     return () => clearInterval(interval);
-  }, [templates]);
+  }, [caseStudies]);
 
-  const handleTemplateClick = () => {
-    if (!templates.length) return;
-    const currentTemplate = templates[currentTemplateIndex];
-    navigate(`/website-viewer?url=${encodeURIComponent(currentTemplate.url)}&name=${encodeURIComponent(currentTemplate.name)}`);
+  const handleCaseStudyClick = () => {
+    if (!caseStudies.length) return;
+    const currentCase = caseStudies[currentCaseIndex];
+    navigate(`/website-viewer?url=${encodeURIComponent(currentCase.url)}&name=${encodeURIComponent(currentCase.name)}`);
   };
 
   const scrollToSection = (sectionId: string) => {
@@ -46,12 +47,12 @@ const Hero = () => {
     }
   };
 
-  if (!templates.length) {
+  if (!caseStudies.length) {
     return (
       <section className="pt-32 pb-20 bg-gradient-to-br from-brand-cream via-white to-brand-gold/10 overflow-hidden relative">
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-6xl mx-auto text-center py-24">
-            <div className="text-2xl text-brand-green font-semibold mb-4">Loading templates...</div>
+            <div className="text-2xl text-brand-green font-semibold mb-4">Loading case studies...</div>
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-green mx-auto"></div>
           </div>
         </div>
@@ -119,7 +120,7 @@ const Hero = () => {
                   size="lg"
                   className="bg-brand-green hover:bg-brand-green-light text-white px-8 py-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300"
                 >
-                  Start Building Your Website
+                  Start Your Project
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
                 
@@ -130,7 +131,7 @@ const Hero = () => {
                   className="border-brand-green text-brand-green hover:bg-brand-green hover:text-white px-8 py-4 rounded-full transition-all duration-300"
                 >
                   <Play className="mr-2 h-5 w-5" />
-                  View Our Work
+                  View Case Studies
                 </Button>
               </motion.div>
 
@@ -160,7 +161,7 @@ const Hero = () => {
               </motion.div>
             </motion.div>
 
-            {/* Right Content - Interactive Monitor with Live Templates */}
+            {/* Right Content - Interactive Case Study Preview */}
             <motion.div 
               initial={{ opacity: 0, x: 50 }}
               animate={{ opacity: 1, x: 0 }}
@@ -169,7 +170,7 @@ const Hero = () => {
             >
               <div 
                 className="relative bg-white rounded-2xl shadow-2xl p-6 border border-brand-cream cursor-pointer hover:shadow-3xl transition-shadow"
-                onClick={handleTemplateClick}
+                onClick={handleCaseStudyClick}
               >
                 {/* Monitor-style header */}
                 <div className="flex items-center gap-3 mb-4">
@@ -177,36 +178,36 @@ const Hero = () => {
                   <div className="w-3 h-3 bg-yellow-400 rounded-full"></div>
                   <div className="w-3 h-3 bg-green-400 rounded-full"></div>
                   <div className="flex-1 bg-gray-100 h-6 rounded ml-4 flex items-center px-3 text-sm text-gray-600">
-                    {templates[currentTemplateIndex].name}
+                    {caseStudies[currentCaseIndex].name}
                   </div>
                 </div>
                 
                 {/* Live website iframe */}
                 <div className="aspect-video relative overflow-hidden rounded-lg bg-gray-100">
                   <iframe
-                    src={templates[currentTemplateIndex].url}
+                    src={caseStudies[currentCaseIndex].url}
                     className="w-full h-full border-0 transform scale-75 origin-top-left pointer-events-none"
                     style={{ 
                       width: '133.33%', 
                       height: '133.33%',
                     }}
-                    title={templates[currentTemplateIndex].name}
+                    title={caseStudies[currentCaseIndex].name}
                   />
                   {/* Click overlay */}
                   <div className="absolute inset-0 bg-transparent hover:bg-brand-green/10 transition-colors flex items-center justify-center">
                     <div className="bg-brand-green/80 text-white px-4 py-2 rounded-full opacity-0 hover:opacity-100 transition-opacity">
-                      Click to view full site
+                      View Case Study
                     </div>
                   </div>
                 </div>
 
-                {/* Template indicator dots */}
+                {/* Case Study indicator dots */}
                 <div className="flex justify-center gap-2 mt-4">
-                  {templates.map((_, index) => (
+                  {caseStudies.map((_, index) => (
                     <div
                       key={index}
                       className={`w-2 h-2 rounded-full transition-colors ${
-                        index === currentTemplateIndex ? 'bg-brand-green' : 'bg-gray-300'
+                        index === currentCaseIndex ? 'bg-brand-green' : 'bg-gray-300'
                       }`}
                     />
                   ))}
