@@ -6,6 +6,7 @@ import { useState, useEffect } from 'react';
 import { collection, getDocs, query, orderBy } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 
+
 const Hero = () => {
   const navigate = useNavigate();
   const [currentCaseIndex, setCurrentCaseIndex] = useState(0);
@@ -62,6 +63,35 @@ const Hero = () => {
 
   return (
     <section className="pt-32 pb-20 bg-gradient-to-br from-brand-cream via-white to-brand-gold/10 overflow-hidden relative">
+      {/* Special Offer Banner - TOP (responsive) */}
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="mb-10 w-full flex justify-center px-2"
+      >
+        <div className="w-full max-w-2xl md:max-w-3xl rounded-2xl bg-gradient-to-r from-brand-green to-brand-green-light text-white p-6 md:p-10 shadow-xl flex flex-col items-center text-center relative z-10">
+          <h2 className="text-2xl md:text-3xl font-bold mb-3 flex items-center justify-center gap-2">
+            Special Launch Offer! <span className="text-xl md:text-2xl">🎉</span>
+          </h2>
+          <p className="text-base md:text-xl mb-2 font-medium">
+            Get 50% off on all website packages for the first 50 NGOs!
+          </p>
+          <div className="text-xl md:text-2xl font-extrabold mb-3">
+            Starting at just <span className="font-bold">₹1,999</span>
+          </div>
+          <p className="text-xs md:text-sm opacity-90 mb-5">
+            Limited time offer. Don't miss this opportunity to establish your NGO's digital presence at an unbeatable price!
+          </p>
+          <Button
+            onClick={() => navigate('/wizard')}
+            className="bg-white text-brand-green hover:bg-gray-100 px-6 md:px-8 py-4 md:py-6 text-base md:text-lg font-bold rounded-xl md:rounded-2xl"
+          >
+            Claim Your Offer Now
+            <ArrowRight className="w-5 h-5 ml-2" />
+          </Button>
+        </div>
+      </motion.div>
+
       {/* Background decorative elements */}
       <div className="absolute inset-0 bg-gradient-to-r from-brand-green/5 to-transparent"></div>
       <div className="absolute top-20 right-10 w-72 h-72 bg-brand-gold/10 rounded-full blur-3xl"></div>

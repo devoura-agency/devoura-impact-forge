@@ -1,7 +1,6 @@
-
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { Home } from 'lucide-react';
+import { Home, ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -101,6 +100,31 @@ const PricingPage = () => {
         <div className="container mx-auto px-4">
           <div className="max-w-7xl mx-auto">
             
+            {/* Special Offer Banner */}
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="bg-gradient-to-r from-brand-green to-brand-green-light text-white rounded-2xl p-8 mb-12 text-center"
+            >
+              <h2 className="text-3xl font-bold mb-3">Special Launch Offer! 🎉</h2>
+              <p className="text-xl mb-4">
+                Get 50% off on all website packages for the first 50 NGOs!
+              </p>
+              <div className="text-2xl font-bold mb-4">
+                Starting at just ₹1,999
+              </div>
+              <p className="text-sm opacity-90 mb-6">
+                Limited time offer. Don't miss this opportunity to establish your NGO's digital presence at an unbeatable price!
+              </p>
+              <Button
+                onClick={() => navigate('/wizard')}
+                className="bg-white text-brand-green hover:bg-gray-100 px-8 py-6 text-lg font-bold"
+              >
+                Claim Your Offer Now
+                <ArrowRight className="w-5 h-5 ml-2" />
+              </Button>
+            </motion.div>
+
             {/* Go To Home Button */}
             <div className="mb-6">
               <Button
