@@ -14,7 +14,7 @@ interface Website {
   id: string;
   category: string;
   link: string;
-  tag: string;
+  description: string;
   createdAt: string;
 }
 
@@ -22,6 +22,7 @@ const PortfolioPage = () => {
   const navigate = useNavigate();
   const [websites, setWebsites] = useState<Website[]>([]);
   const [filter, setFilter] = useState('all');
+  const [categories, setCategories] = useState<string[]>([]);
 
   useEffect(() => {
     const fetchWebsites = async () => {
@@ -33,6 +34,10 @@ const PortfolioPage = () => {
           ...doc.data()
         })) as Website[];
         setWebsites(websitesData);
+        
+        // Extract unique categories
+        const uniqueCategories = Array.from(new Set(websitesData.map(website => website.category)));
+        setCategories(uniqueCategories);
       } catch (error) {
         console.error('Error fetching websites:', error);
       }
@@ -47,7 +52,7 @@ const PortfolioPage = () => {
 
   const filteredWebsites = filter === 'all' 
     ? websites 
-    : websites.filter(website => website.tag === filter);
+    : websites.filter(website => website.category === filter);
 
   const getTagColor = (tag: string) => {
     switch (tag) {
@@ -60,11 +65,10 @@ const PortfolioPage = () => {
   };
 
   const formatCategory = (category: string) => {
-    // Convert kebab-case to Title Case and add NGO
     return category
       .split('-')
       .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(' ') + ' NGO';
+      .join(' ');
   };
 
   return (
@@ -102,8 +106,7 @@ const PortfolioPage = () => {
                 transition={{ delay: 0.1 }}
                 className="text-xl text-gray-700 max-w-3xl mx-auto"
               >
-                Explore our collection of beautiful, functional websites designed specifically for NGOs. 
-                Each template is crafted to help organizations amplify their impact and reach more supporters.
+                xplore our portfolio of custom websites, built to demonstrate our capabilities. Use these projects as inspiration for the unique digital experience we can create for your NGO.
               </motion.p>
             </div>
 
@@ -114,36 +117,18 @@ const PortfolioPage = () => {
                 variant={filter === 'all' ? 'default' : 'outline'}
                 className={filter === 'all' ? 'bg-brand-green text-white' : 'border-brand-green text-brand-green hover:bg-brand-green hover:text-white'}
               >
-                All Templates
+                All Case Studies
               </Button>
-              <Button
-                onClick={() => setFilter('starter')}
-                variant={filter === 'starter' ? 'default' : 'outline'}
-                className={filter === 'starter' ? 'bg-brand-green text-white' : 'border-brand-green text-brand-green hover:bg-brand-green hover:text-white'}
-              >
-                Starter
-              </Button>
-              <Button
-                onClick={() => setFilter('pro')}
-                variant={filter === 'pro' ? 'default' : 'outline'}
-                className={filter === 'pro' ? 'bg-brand-green text-white' : 'border-brand-green text-brand-green hover:bg-brand-green hover:text-white'}
-              >
-                Pro
-              </Button>
-              <Button
-                onClick={() => setFilter('impact pack')}
-                variant={filter === 'impact pack' ? 'default' : 'outline'}
-                className={filter === 'impact pack' ? 'bg-brand-green text-white' : 'border-brand-green text-brand-green hover:bg-brand-green hover:text-white'}
-              >
-                Impact Pack
-              </Button>
-              <Button
-                onClick={() => setFilter('superpack')}
-                variant={filter === 'superpack' ? 'default' : 'outline'}
-                className={filter === 'superpack' ? 'bg-brand-green text-white' : 'border-brand-green text-brand-green hover:bg-brand-green hover:text-white'}
-              >
-                Super Pack
-              </Button>
+              {categories.map((category) => (
+                <Button
+                  key={category}
+                  onClick={() => setFilter(category)}
+                  variant={filter === category ? 'default' : 'outline'}
+                  className={filter === category ? 'bg-brand-green text-white' : 'border-brand-green text-brand-green hover:bg-brand-green hover:text-white'}
+                >
+                  {formatCategory(category)}
+                </Button>
+              ))}
             </div>
 
             {/* Portfolio Grid */}
@@ -173,23 +158,24 @@ const PortfolioPage = () => {
                         {/* Overlay for click protection */}
                         <div className="absolute inset-0 bg-transparent"></div>
                       </div>
-                      <Badge className={`absolute top-4 right-4 ${getTagColor(website.tag)}`}>
-                        {website.tag}
-                      </Badge>
                     </div>
                     
                     <CardContent className="p-6">
                       <h3 className="text-xl font-bold text-brand-green mb-2">
                         {formatCategory(website.category)}
                       </h3>
-                      
+                      {website.description && (
+                        <p className="text-gray-600 mb-4">
+                          {website.description}
+                        </p>
+                      )}
                       <div className="flex gap-3">
                         <Button
                           onClick={() => handleViewWebsite(website)}
                           className="flex-1 bg-brand-green hover:bg-brand-green-light text-white"
                         >
                           <ExternalLink className="w-4 h-4 mr-2" />
-                          View Full Site
+                          View Case Study
                         </Button>
                       </div>
                     </CardContent>
@@ -209,14 +195,14 @@ const PortfolioPage = () => {
                 Ready to Create Your NGO's Website?
               </h3>
               <p className="text-xl text-gray-700 mb-8 max-w-2xl mx-auto">
-                Choose a template that resonates with your mission and let's customize it to tell your unique story.
+                Let's work together to create a digital presence that amplifies your impact and tells your unique story.
               </p>
               <Button 
                 onClick={() => navigate('/wizard')}
                 size="lg"
                 className="bg-brand-green hover:bg-brand-green-light text-white px-8 py-4"
               >
-                Start Building Your Website
+                Start Your Project
               </Button>
             </motion.div>
           </div>

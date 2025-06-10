@@ -1,7 +1,7 @@
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Monitor, Tablet, Smartphone } from 'lucide-react';
+import { ArrowLeft, Monitor, Tablet, Smartphone, MessageCircle } from 'lucide-react';
 
 const DEVICE_SIZES = {
   desktop: { w: 1200, h: 800 },
@@ -55,7 +55,7 @@ const WebsiteViewer = () => {
       </div>
 
       <div
-        className="bg-white rounded-2xl shadow-2xl border-4 border-brand-green overflow-hidden"
+        className="bg-white rounded-2xl shadow-2xl border-4 border-brand-green overflow-hidden relative"
         style={{
           width: iframeWidth + 24,
           height: iframeHeight + 24,
@@ -64,12 +64,27 @@ const WebsiteViewer = () => {
           alignItems: 'center',
         }}
       >
+        {/* Banner Overlay */}
+        <div className="absolute top-0 left-0 right-0 bg-brand-green/90 text-white p-4 z-10 flex items-center justify-between">
+          <p className="text-sm md:text-base">
+            Inspired by this project? Devoura can build a unique, custom website for your NGO. Let's discuss your vision.
+          </p>
+          <Button
+            onClick={() => navigate('/wizard')}
+            variant="secondary"
+            className="ml-4 bg-white text-brand-green hover:bg-brand-green hover:text-white"
+          >
+            <MessageCircle className="w-4 h-4 mr-2" />
+            Start Discussion
+          </Button>
+        </div>
+
         <iframe
           src={url}
           title={name}
           width={iframeWidth}
           height={iframeHeight}
-          className="rounded-xl"
+          className="rounded-xl mt-12" // Added margin-top to account for banner
           style={{
             border: 0,
             background: '#fff',
