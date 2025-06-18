@@ -536,7 +536,7 @@ export default function BulkEmail() {
             <li>Emotionally engaging content that creates urgency</li>
             <li>Specific benefits and statistics for each sector</li>
             <li>Our pitch deck as a PDF attachment (if available)</li>
-            <li>A link to our website (https://devoura.vercel.app)</li>
+            <li>A link to our website (https://devoura.work)</li>
           </ul>
           <p className="mt-2 text-amber-600">
             Make sure the pitch deck PDF is placed in the public/pitch-deck.pdf location

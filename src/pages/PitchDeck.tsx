@@ -510,7 +510,7 @@ const PitchDeck = () => {
             </div>
             
             <div className="bg-brand-green/10 text-brand-green px-8 py-4 rounded-full inline-block text-lg font-medium">
-              ✨ Start with a free consultation • devoura.vercel.app • devoura.agency@gmail.com
+              ✨ Start with a free consultation • devoura.work • devoura.agency@gmail.com
             </div>
           </motion.div>
         </div>
@@ -544,7 +544,7 @@ const PitchDeck = () => {
                 <div className="space-y-4">
                   <div className="flex items-center gap-4">
                     <Globe className="w-6 h-6 text-brand-gold" />
-                    <span className="text-xl">devoura.vercel.app</span>
+                    <span className="text-xl">devoura.work</span>
                   </div>
                   <div className="flex items-center gap-4">
                     <Mail className="w-6 h-6 text-brand-gold" />

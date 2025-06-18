@@ -30,7 +30,7 @@ const transporter = createTransport({
 >>>>>>> Stashed changes
 
 // Add website URL constant
-const WEBSITE_URL = 'https://devoura.vercel.app';
+const WEBSITE_URL = 'https://devoura.work';
 
 // Function to check if pitch deck exists
 const getPitchDeckAttachment = () => {

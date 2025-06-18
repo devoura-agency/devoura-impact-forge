@@ -23,8 +23,8 @@ Every child deserves quality education, but are outdated systems holding your ed
 Your mission is too important to be limited by technology barriers. You are changing lives - let us amplify that change.
 
 *Ready to transform education digitally?*
-🌐 Visit: https://devoura.vercel.app
-📞 Book a free consultation: https://devoura.vercel.app/wizard
+🌐 Visit: https://devoura.work
+📞 Book a free consultation: https://devoura.work/wizard
 
 *The Devoura Team*
 Empowering NGOs with 2+ Years of Digital Excellence`,
@@ -50,8 +50,8 @@ Every woman deserves equal opportunities, but are digital barriers limiting your
 Your work empowers half the world's population - your digital presence should empower your organization's growth.
 
 *Ready to digitally empower women everywhere?*
-🌐 Visit: https://devoura.vercel.app
-📞 Book a free consultation: https://devoura.vercel.app/wizard
+🌐 Visit: https://devoura.work
+📞 Book a free consultation: https://devoura.work/wizard
 
 *The Devoura Team*
 Empowering Women's Rights NGOs with Digital Excellence`,
@@ -77,8 +77,8 @@ Every species matters, but are outdated digital systems limiting your wildlife c
 Your work protects our planet's precious wildlife - your digital presence should protect and expand your conservation reach.
 
 *Ready to digitally transform wildlife conservation?*
-🌐 Visit: https://devoura.vercel.app
-📞 Book a free consultation: https://devoura.vercel.app/wizard
+🌐 Visit: https://devoura.work
+📞 Book a free consultation: https://devoura.work/wizard
 
 *The Devoura Team*
 Empowering Wildlife Conservation with Digital Innovation`,
@@ -104,8 +104,8 @@ Every community deserves to thrive, but are digital limitations preventing your 
 Your work builds stronger communities - your digital presence should build stronger organizational capacity.
 
 *Ready to digitally transform community service?*
-🌐 Visit: https://devoura.vercel.app
-📞 Book a free consultation: https://devoura.vercel.app/wizard
+🌐 Visit: https://devoura.work
+📞 Book a free consultation: https://devoura.work/wizard
 
 *The Devoura Team*
 Empowering Community Service with Digital Excellence`,
@@ -131,8 +131,8 @@ Every life matters, but are outdated systems limiting your health NGO's ability 
 Your work saves lives - your digital presence should save time and expand your healing reach.
 
 *Ready to digitally transform healthcare delivery?*
-🌐 Visit: https://devoura.vercel.app
-📞 Book a free consultation: https://devoura.vercel.app/wizard
+🌐 Visit: https://devoura.work
+📞 Book a free consultation: https://devoura.work/wizard
 
 *The Devoura Team*
 Empowering Healthcare NGOs with Life-Saving Digital Tools`,
@@ -158,8 +158,8 @@ When disaster strikes, every second counts, but are slow systems preventing your
 Your work saves lives in crisis - your digital presence should be crisis-ready and lightning-fast.
 
 *Ready to digitally transform disaster response?*
-🌐 Visit: https://devoura.vercel.app
-📞 Book a free consultation: https://devoura.vercel.app/wizard
+🌐 Visit: https://devoura.work
+📞 Book a free consultation: https://devoura.work/wizard
 
 *The Devoura Team*
 Empowering Disaster Response with Digital Speed`,
@@ -185,8 +185,8 @@ Every person deserves equal access and opportunities, but are inaccessible digit
 Your work creates equal opportunities - your digital presence should be equally accessible to everyone.
 
 *Ready to digitally transform disability support?*
-🌐 Visit: https://devoura.vercel.app
-📞 Book a free consultation: https://devoura.vercel.app/wizard
+🌐 Visit: https://devoura.work
+📞 Book a free consultation: https://devoura.work/wizard
 
 *The Devoura Team*
 Empowering Disability Support with Accessible Digital Solutions`,
@@ -212,8 +212,8 @@ Every senior deserves dignity and care, but are outdated systems limiting your e
 Your work honors our elders - your digital presence should honor their legacy with excellence.
 
 *Ready to digitally transform elderly care?*
-🌐 Visit: https://devoura.vercel.app
-📞 Book a free consultation: https://devoura.vercel.app/wizard
+🌐 Visit: https://devoura.work
+📞 Book a free consultation: https://devoura.work/wizard
 
 *The Devoura Team*
 Empowering Elderly Care with Respectful Digital Solutions`,
@@ -239,8 +239,8 @@ Every drop of clean water and breath of fresh air matters, but are outdated syst
 Your work protects our planet - your digital presence should protect and expand your environmental reach.
 
 *Ready to digitally transform environmental conservation?*
-🌐 Visit: https://devoura.vercel.app
-📞 Book a free consultation: https://devoura.vercel.app/wizard
+🌐 Visit: https://devoura.work
+📞 Book a free consultation: https://devoura.work/wizard
 
 *The Devoura Team*
 Empowering Environmental Protection with Green Digital Solutions`,
@@ -266,8 +266,8 @@ Every child deserves safety and a bright future, but are outdated systems limiti
 Your work protects the most vulnerable - your digital presence should protect and expand your ability to serve children.
 
 *Ready to digitally transform child protection?*
-🌐 Visit: https://devoura.vercel.app
-📞 Book a free consultation: https://devoura.vercel.app/wizard
+🌐 Visit: https://devoura.work
+📞 Book a free consultation: https://devoura.work/wizard
 
 *The Devoura Team*
 Empowering Child Welfare with Secure Digital Solutions`,
@@ -293,8 +293,8 @@ No one should go hungry in a world of abundance, but are outdated systems preven
 Your work feeds communities - your digital presence should feed your organization's growth and efficiency.
 
 *Ready to digitally transform hunger relief?*
-🌐 Visit: https://devoura.vercel.app
-📞 Book a free consultation: https://devoura.vercel.app/wizard
+🌐 Visit: https://devoura.work
+📞 Book a free consultation: https://devoura.work/wizard
 
 *The Devoura Team*
 Empowering Food Security with Nourishing Digital Solutions`,
@@ -320,8 +320,8 @@ Your NGO's mission is unique, and your digital presence should be too. Are gener
 Your mission is one-of-a-kind - your digital presence should be too.
 
 *Ready to create something truly unique?*
-🌐 Visit: https://devoura.vercel.app
-📞 Book a free consultation: https://devoura.vercel.app/wizard
+🌐 Visit: https://devoura.work
+📞 Book a free consultation: https://devoura.work/wizard
 
 *The Devoura Team*
 Creating Custom Digital Solutions for Unique Missions`
